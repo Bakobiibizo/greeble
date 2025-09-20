@@ -7,3 +7,9 @@ repos:
         language: system
         pass_filenames: false
         stages: [pre-commit]
+
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v3.30.0
+    hooks:
+      - id: commitizen
+        stages: [commit-msg]

@@ -1,6 +1,6 @@
 [project]
 name = "greeble"
-version = "0.1.0"
+version = "0.0.3"
 description = "HTML-first component library that delivers copy and paste snippets powered by HTMX for rapid UI construction"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -71,4 +71,12 @@ disallow_untyped_defs = true
 addopts = "-q"
 testpaths = ["tests"]
 asyncio_mode = "auto"
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+# Read version from [project] (PEP 621) so a single source of truth is used.
+version_provider = "pep621"
+tag_format = "v$version"
+update_changelog_on_bump = true
+changelog_file = "CHANGELOG.md"
 

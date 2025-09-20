@@ -13,6 +13,8 @@ Subcommands:
   - check      -> ruff check (--fix locally) + ruff format . + mypy . + pytest -q
   - version    -> dev version [current|bump <major|minor|patch>]
   - release    -> dev release rc  (create and push the release-candidate branch)
+  - branch-finalize -> merge the current branch into release-candidate and push
+  - release-pr -> open a PR from release-candidate to main (uses latest CHANGELOG)
   - protect-main -> attempt to enable branch protection via gh CLI
 
 Pass-through args after the subcommand are forwarded to the underlying tool.
@@ -26,6 +28,7 @@ import re
 import subprocess
 import sys
 from collections.abc import Iterable, Sequence
+from contextlib import suppress
 from datetime import date
 from pathlib import Path
 from typing import Literal, cast
@@ -63,6 +66,8 @@ def main(argv: list[str] | None = None) -> int:
             "check",
             "version",
             "release",
+            "branch-finalize",
+            "release-pr",
             "protect-main",
         ],
         help="task to run",
@@ -119,6 +124,10 @@ def main(argv: list[str] | None = None) -> int:
             return handle_version(passthrough)
         case "release":
             return handle_release(passthrough)
+        case "branch-finalize":
+            return handle_branch_finalize()
+        case "release-pr":
+            return handle_release_pr()
         case "protect-main":
             return handle_protect_main()
     parser.error("unknown subcommand")
@@ -186,7 +195,8 @@ def handle_version(args: Sequence[str]) -> int:
 
     # Commit and tag
     git(["add", str(pyproject), str(changelog)])
-    git(["commit", "-m", f"chore(release): v{new_version}"])
+    # Use --no-verify to avoid pre-commit failing the release commit if it reformats files
+    git(["commit", "--no-verify", "-m", f"chore(release): v{new_version}"])
     git(["tag", "-a", f"v{new_version}", "-m", f"Release v{new_version}"])
     print(f"Bumped version: {current_version} -> {new_version}")
     print(f"Created tag v{new_version}. Push with: git push && git push --tags")
@@ -288,6 +298,187 @@ def handle_release(args: Sequence[str]) -> int:
     return 0
 
 
+def handle_branch_finalize() -> int:
+    """Merge the current branch into 'release-candidate' and push.
+
+    - Detect the current branch (must not be 'release-candidate').
+    - Checkout 'release-candidate' based on (in order): origin/release-candidate, origin/main, main.
+    - Merge the current branch with a no-fast-forward merge.
+    - Push 'release-candidate' (creates upstream if needed).
+    - Switch back to the original branch on success.
+    """
+    try:
+        current = git(["rev-parse", "--abbrev-ref", "HEAD"], capture_output=True)
+    except subprocess.CalledProcessError:
+        sys.stderr.write("error: not a git repository or cannot determine current branch\n")
+        return 2
+    current = current.strip()
+    if current == "release-candidate":
+        sys.stderr.write(
+            "error: you're already on 'release-candidate'. Run this from a feature branch.\n"
+        )
+        return 2
+
+    # Try to fetch remotes to get latest refs
+    with suppress(subprocess.CalledProcessError):
+        git(["fetch", "--all"])
+
+    # Checkout release-candidate with sensible base
+    if not checkout_release_candidate_with_base():
+        sys.stderr.write(
+            "error: could not checkout 'release-candidate'. "
+            "Ensure 'main' exists locally or on origin.\n"
+        )
+        return 2
+
+    # Merge current branch
+    try:
+        git(["merge", "--no-ff", current])
+    except subprocess.CalledProcessError:
+        print(
+            "Merge conflicts detected while merging into 'release-candidate'.\n"
+            "Resolve conflicts, commit the merge, then push with:\n"
+            "  git push -u origin release-candidate\n"
+        )
+        return 1
+
+    # Push RC
+    try:
+        git(["push", "-u", "origin", "release-candidate"])
+        pushed = True
+    except subprocess.CalledProcessError:
+        pushed = False
+        print(
+            "Could not push 'release-candidate' automatically. Push manually with:\n"
+            "  git push -u origin release-candidate\n"
+        )
+
+    # Switch back to original branch
+    with suppress(subprocess.CalledProcessError):
+        # stay on RC if we cannot switch back
+        git(["checkout", current])
+
+    if pushed:
+        print("Merged current branch into 'release-candidate' and pushed upstream.")
+        return 0
+    print("Merged current branch into 'release-candidate'. Not pushed.")
+    return 0
+
+
+def checkout_release_candidate_with_base() -> bool:
+    """Checkout 'release-candidate' creating/updating it from the best available base."""
+    bases = [
+        "origin/release-candidate",
+        "origin/main",
+        "main",
+    ]
+    for base in bases:
+        try:
+            git(["checkout", "-B", "release-candidate", base])
+            return True
+        except subprocess.CalledProcessError:
+            continue
+    # Last resort: try to just create the branch if no base is available
+    try:
+        git(["checkout", "-B", "release-candidate"])  # detached from any base
+        return True
+    except subprocess.CalledProcessError:
+        return False
+
+
+def handle_release_pr() -> int:
+    """Open a GitHub PR from release-candidate to main using the latest changelog.
+
+    Requires the GitHub CLI (gh). The PR title will default to "Release vX.Y.Z" if the
+    latest CHANGELOG section header is of the form `## [X.Y.Z] - YYYY-MM-DD`, otherwise
+    it will be "Release candidate to main". The PR body will be the content of the
+    latest section.
+    """
+    if shutil_which("gh") is None:
+        print(
+            "GitHub CLI (gh) not found. Install from https://cli.github.com/ and run:\n"
+            "  gh auth login\n"
+            "Then re-run: uv run dev release-pr\n"
+        )
+        return 2
+
+    # Ensure release-candidate exists locally
+    with suppress(subprocess.CalledProcessError):
+        git(["fetch", "--all"])
+    try:
+        git(["rev-parse", "--verify", "release-candidate"], capture_output=True)
+    except subprocess.CalledProcessError:
+        sys.stderr.write(
+            "error: 'release-candidate' branch not found. Create it first with "
+            "'uv run dev release rc' or 'uv run dev branch-finalize'.\n"
+        )
+        return 2
+
+    root = find_project_root()
+    changelog_path = root / "CHANGELOG.md"
+    version, section_body = parse_changelog_latest_section(changelog_path)
+    title = f"Release v{version}" if version else "Release candidate to main"
+    body = section_body or "(No changelog entries found)"
+
+    # Create PR with gh
+    cmd = [
+        "gh",
+        "pr",
+        "create",
+        "--base",
+        "main",
+        "--head",
+        "release-candidate",
+        "--title",
+        title,
+        "--body",
+        body,
+    ]
+    proc = subprocess.run(cmd, check=False)
+    if proc.returncode == 0:
+        print("Opened pull request from release-candidate to main.")
+        return 0
+    print("Failed to open pull request via gh CLI. Ensure you are authenticated.")
+    return 1
+
+
+def parse_changelog_latest_section(
+    changelog_path: Path,
+) -> tuple[str | None, str]:
+    """Return (version, section_body) for the latest changelog section.
+
+    The expected header format is: `## [X.Y.Z] - YYYY-MM-DD`.
+    If the file or header is missing, returns (None, "").
+    """
+    if not changelog_path.exists():
+        return None, ""
+    lines = changelog_path.read_text(encoding="utf-8").splitlines()
+    header_re = re.compile(r"^## \[(?P<ver>\d+\.\d+\.\d+)\] - ")
+    version: str | None = None
+    start_idx: int | None = None
+    end_idx: int | None = None
+    for i, line in enumerate(lines):
+        m = header_re.match(line.strip())
+        if m:
+            if start_idx is None:
+                start_idx = i
+                version = m.group("ver")
+            elif end_idx is None:
+                end_idx = i
+                break
+    if start_idx is None:
+        return None, ""
+    if end_idx is None:
+        end_idx = len(lines)
+    # Section body excludes the header and ends before next section header
+    body_lines = lines[start_idx + 1 : end_idx]
+    # Trim leading blank lines
+    while body_lines and not body_lines[0].strip():
+        body_lines.pop(0)
+    # Keep body as markdown
+    return version, "\n".join(body_lines).strip()
+
+
 def find_project_root() -> Path:
     """Find the project root containing a pyproject.toml."""
     cur = Path.cwd()
@@ -309,9 +500,13 @@ def read_project_version(pyproject_path: Path) -> str:
 
 def write_project_version(pyproject_path: Path, new_version: str) -> None:
     content = pyproject_path.read_text(encoding="utf-8")
+
     # Replace the first occurrence of version = "..." under [project]
     # Simple, assumes a single project.version key.
-    new_content, n = re.subn(r"(?m)^(version\s*=\s*)\"[^\"]+\"", rf"\1\"{new_version}\"", content)
+    def _repl(m: re.Match[str]) -> str:
+        return f'{m.group(1)}"{new_version}"'
+
+    new_content, n = re.subn(r"(?m)^(version\s*=\s*)\"[^\"]+\"", _repl, content)
     if n == 0:
         raise ValueError("Could not update version in pyproject.toml")
     pyproject_path.write_text(new_content, encoding="utf-8")
@@ -365,8 +560,8 @@ def collect_conventional_commits(since_tag: str | None) -> list[tuple[str, str, 
 
 def tag_exists(tag: str) -> bool:
     try:
-        git(["rev-parse", tag], capture_output=True)
-        return True
+        out = git(["tag", "-l", tag], capture_output=True)
+        return any(line.strip() == tag for line in out.splitlines())
     except subprocess.CalledProcessError:
         return False
 

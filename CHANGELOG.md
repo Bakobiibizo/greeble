@@ -1,3 +1,5 @@
+# Changelog
+
 ## [0.0.3] - 2025-09-20
 
 ### feat
@@ -52,5 +54,5 @@
 ### other
 - Initial commit (fcbcabd)
 
-# Changelog
+
 

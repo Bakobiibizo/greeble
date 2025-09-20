@@ -1,0 +1,9 @@
+repos:
+  - repo: local
+    hooks:
+      - id: greeble-dev-check
+        name: greeble dev check (ruff + format + mypy + pytest)
+        entry: uv run dev check
+        language: system
+        pass_filenames: false
+        stages: [commit]

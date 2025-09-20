@@ -6,4 +6,4 @@ repos:
         entry: uv run dev check
         language: system
         pass_filenames: false
-        stages: [commit]
+        stages: [pre-commit]

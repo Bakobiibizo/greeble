@@ -103,7 +103,7 @@ def main(argv: list[str] | None = None) -> int:
                 return rc
             if (rc := run(["ruff", "format", "."])) != 0:
                 return rc
-            return run_mypy_then(["pytest", "-q"])
+            return run_mypy_then_pytest_quiet()
     parser.error("unknown subcommand")
     return 2
 
@@ -113,6 +113,14 @@ def run_mypy_then(final_cmd: list[str]) -> int:
     if (rc := run(["mypy", "."])) != 0:
         return rc
     return run(final_cmd)
+
+
+def run_mypy_then_pytest_quiet() -> int:
+    """Run mypy then pytest -q, treating pytest's exit code 5 (no tests) as success."""
+    if (rc := run(["mypy", "."])) != 0:
+        return rc
+    rc = run(["pytest", "-q"]) or 0
+    return 0 if rc in (0, 5) else rc
 
 
 def lint_main() -> int:
@@ -137,6 +145,7 @@ def check_main() -> int:
 
 def precommit_main() -> int:
     return main(["precommit"])  # pre-commit run --all-files
+
 
 if __name__ == "__main__":
     raise SystemExit(main())

@@ -1,0 +1,34 @@
+[project]
+name = "greeble"
+version = "0.1.0"
+description = "HTML-first component library that delivers copy and paste snippets powered by HTMX for rapid UI construction"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "mypy>=1.18.2",
+    "pre-commit>=4.3.0",
+    "pytest>=8.4.2",
+    "pytest-asyncio>=1.2.0",
+    "pytest-cov>=7.0.0",
+    "ruff>=0.13.1",
+]
+
+[project.scripts]
+dev = "greeble.scripts.dev:main"
+
+
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+# Ensure the development dependencies are included by default when uv manages the
+# project environment (uv sync / uv run).
+default-groups = ["dev"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/greeble"]
+

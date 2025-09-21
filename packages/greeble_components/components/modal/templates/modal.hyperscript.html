@@ -1,0 +1,11 @@
+<!--
+Modal Hyperscript (Placeholder)
+Purpose: Small behaviors like sending focus to modal panel on load.
+Inputs: None.
+Outputs: Behavior bound to modal partial.
+Dependencies: Hyperscript runtime available in the page.
+-->
+<script type="text/hyperscript">
+  on load from #greeble-modal
+    call #greeble-modal.querySelector('.greeble-modal__panel').focus()
+</script>

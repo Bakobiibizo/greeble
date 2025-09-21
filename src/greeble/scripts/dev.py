@@ -14,6 +14,8 @@ Subcommands:
   - version    -> dev version [current|bump <major|minor|patch>]
   - release    -> dev release rc  (create and push the release-candidate branch)
   - branch-finalize -> merge the current branch into release-candidate and push
+  - branch-rebase -> rebase current branch onto latest release-candidate
+  - branch-create -> create a new branch from release-candidate (prompts if omitted)
   - release-pr -> open a PR from release-candidate to main (uses latest CHANGELOG)
   - protect-main -> attempt to enable branch protection via gh CLI
 
@@ -67,6 +69,8 @@ def main(argv: list[str] | None = None) -> int:
             "version",
             "release",
             "branch-finalize",
+            "branch-rebase",
+            "branch-create",
             "release-pr",
             "protect-main",
         ],
@@ -126,6 +130,10 @@ def main(argv: list[str] | None = None) -> int:
             return handle_release(passthrough)
         case "branch-finalize":
             return handle_branch_finalize()
+        case "branch-rebase":
+            return handle_branch_rebase()
+        case "branch-create":
+            return handle_branch_create(passthrough)
         case "release-pr":
             return handle_release_pr()
         case "protect-main":
@@ -136,9 +144,7 @@ def main(argv: list[str] | None = None) -> int:
 
 def run_mypy_then(final_cmd: list[str]) -> int:
     """Run mypy first, then the provided final command if type-checking passes."""
-    if (rc := run(["mypy", "."])) != 0:
-        return rc
-    return run(final_cmd)
+    return rc if (rc := run(["mypy", "."])) != 0 else run(final_cmd)
 
 
 def run_mypy_then_pytest_quiet() -> int:
@@ -237,11 +243,10 @@ def handle_protect_main() -> int:
         ]
         # Feed JSON via stdin
         proc = subprocess.run(gh_cmd, input=payload.encode(), check=False)
-        if proc.returncode == 0:
-            print("Branch protection for main configured via gh CLI.")
-            return 0
-        else:
+        if proc.returncode != 0:
             raise RuntimeError("gh api command failed")
+        print("Branch protection for main configured via gh CLI.")
+        return 0
     except Exception as e:  # noqa: BLE001 - we want a friendly message
         print(
             (
@@ -386,6 +391,126 @@ def checkout_release_candidate_with_base() -> bool:
         return False
 
 
+def handle_branch_create(args: Sequence[str]) -> int:
+    """Create a new branch from 'release-candidate'.
+
+    Usage:
+      dev branch-create [<tag>/<branch-name>]
+
+    If the name is omitted, the user will be prompted. Allowed tags are:
+    feat, fix, docs, chore, refactor, perf, test, build, ci.
+    """
+    allowed = {"feat", "fix", "docs", "chore", "refactor", "perf", "test", "build", "ci"}
+
+    name = args[0].strip() if args else ""
+    if not name:
+        try:
+            name = input("Enter new branch (e.g., feat/my-change): ").strip()
+        except EOFError:
+            sys.stderr.write("error: branch name required\n")
+            return 2
+
+    if "/" not in name:
+        sys.stderr.write("error: name must be in the form <tag>/<branch-name>\n")
+        return 2
+    tag, _, rest = name.partition("/")
+    if tag not in allowed:
+        sys.stderr.write("error: tag must be one of: " + ", ".join(sorted(allowed)) + "\n")
+        return 2
+    if not re.fullmatch(r"[A-Za-z0-9._\-][A-Za-z0-9._\-/]*", rest):
+        sys.stderr.write("error: branch name contains invalid characters\n")
+        return 2
+
+    # Prepare base branch 'release-candidate'
+    with suppress(subprocess.CalledProcessError):
+        git(["fetch", "--all"])
+    # Ensure we can checkout/update RC
+    if not checkout_release_candidate_with_base():
+        sys.stderr.write(
+            "error: could not prepare 'release-candidate'. "
+            "Ensure 'main' exists locally or on origin.\n"
+        )
+        return 2
+
+    # Create the branch from RC
+    try:
+        git(["checkout", "-B", name, "release-candidate"])
+    except subprocess.CalledProcessError:
+        sys.stderr.write("error: failed to create branch from release-candidate\n")
+        return 1
+
+    # Try to push and set upstream
+    try:
+        git(["push", "-u", "origin", name])
+        print(f"Created and pushed branch '{name}' from release-candidate.")
+        return 0
+    except subprocess.CalledProcessError:
+        print(
+            f"Created branch '{name}' from release-candidate.\n"
+            f"Push manually with: git push -u origin {name}\n"
+        )
+        return 0
+
+
+def handle_branch_rebase() -> int:
+    """Rebase the current branch on top of the latest 'release-candidate'.
+
+    - Ensures we're on a feature branch (not 'main' or 'release-candidate').
+    - Fetches remotes and prepares RC via checkout_release_candidate_with_base().
+    - Rebases the current branch onto 'release-candidate'.
+    - Attempts a normal push; if it fails (non-fast-forward), suggests
+      `git push --force-with-lease`.
+    """
+    try:
+        current = git(["rev-parse", "--abbrev-ref", "HEAD"], capture_output=True).strip()
+    except subprocess.CalledProcessError:
+        sys.stderr.write("error: not a git repository or cannot determine current branch\n")
+        return 2
+    if current in {"main", "release-candidate"}:
+        sys.stderr.write(
+            "error: rebase should be run from a feature branch "
+            "(not 'main' or 'release-candidate')\n"
+        )
+        return 2
+
+    with suppress(subprocess.CalledProcessError):
+        git(["fetch", "--all"])
+    if not checkout_release_candidate_with_base():
+        sys.stderr.write(
+            "error: could not prepare 'release-candidate'. "
+            "Ensure 'main' exists locally or on origin.\n"
+        )
+        return 2
+
+    # Switch back to the feature branch and rebase
+    try:
+        git(["checkout", current])
+    except subprocess.CalledProcessError:
+        sys.stderr.write("error: failed to return to current branch after preparing RC\n")
+        return 1
+    try:
+        git(["rebase", "release-candidate"])
+    except subprocess.CalledProcessError:
+        print(
+            "Rebase encountered conflicts. Resolve them and continue with:\n"
+            "  git add -A\n  git rebase --continue\n"
+            "Or abort rebase with:\n  git rebase --abort\n"
+        )
+        return 1
+
+    # Try a normal push; if rejected, advise force-with-lease
+    try:
+        git(["push"])  # upstream assumed already set
+        print("Rebased on 'release-candidate' and pushed successfully.")
+        return 0
+    except subprocess.CalledProcessError:
+        print(
+            "Rebased on 'release-candidate'. Upstream rejected push.\n"
+            "Push with: git push --force-with-lease\n"
+        )
+        return 0
+
+
 def handle_release_pr() -> int:
     """Open a GitHub PR from release-candidate to main using the latest changelog.
 
@@ -458,11 +583,10 @@ def parse_changelog_latest_section(
     start_idx: int | None = None
     end_idx: int | None = None
     for i, line in enumerate(lines):
-        m = header_re.match(line.strip())
-        if m:
+        if m := header_re.match(line.strip()):
             if start_idx is None:
                 start_idx = i
-                version = m.group("ver")
+                version = m["ver"]
             elif end_idx is None:
                 end_idx = i
                 break
@@ -537,7 +661,7 @@ def collect_conventional_commits(since_tag: str | None) -> list[tuple[str, str, 
     """Return list of (type, subject, short_sha) since a tag (or from start)."""
     fmt = "%h\t%s"
     range_spec = f"{since_tag}..HEAD" if since_tag and tag_exists(since_tag) else None
-    log_cmd = ["log", "--pretty=format:" + fmt, "--no-merges"]
+    log_cmd = ["log", f"--pretty=format:{fmt}", "--no-merges"]
     if range_spec:
         log_cmd.append(range_spec)
     out = git(log_cmd, capture_output=True)
@@ -552,8 +676,8 @@ def collect_conventional_commits(since_tag: str | None) -> list[tuple[str, str, 
         except ValueError:
             continue
         m = cc_re.match(subject)
-        ctype = m.group("type") if m else "other"
-        csubject = m.group("subject") if m else subject
+        ctype = m["type"] if m else "other"
+        csubject = m["subject"] if m else subject
         entries.append((ctype, csubject, sha))
     return entries
 
@@ -612,9 +736,7 @@ def parse_owner_repo(remote_url: str) -> tuple[str, str] | None:
     # Support SSH and HTTPS
     # git@github.com:owner/repo.git or https://github.com/owner/repo.git
     m = re.search(r"github.com[:/](?P<owner>[^/]+)/(?P<repo>[^/.]+)", remote_url)
-    if not m:
-        return None
-    return m.group("owner"), m.group("repo")
+    return (m["owner"], m["repo"]) if m else None
 
 
 def lint_main() -> int:

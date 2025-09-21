@@ -4,3 +4,89 @@ Inputs: greeble_core tokens.
 Outputs: Visual presentation only.
 Dependencies: greeble_core tokens.
 */
+/*
+Modal styles
+
+Depends on CSS variables from greeble_core (see docs/architecture.md §21):
+  --greeble-color-background
+  --greeble-color-foreground
+  --greeble-color-muted
+  --greeble-color-accent
+  --greeble-radius-medium
+  --greeble-shadow-1
+  --greeble-shadow-2
+  --greeble-spacing-2
+  --greeble-spacing-3
+  --greeble-spacing-4
+  --greeble-focus-ring
+*/
+
+.greeble-modal {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  z-index: 1000;
+}
+
+.greeble-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.greeble-modal__panel {
+  position: relative;
+  min-width: min(640px, 96vw);
+  max-width: 96vw;
+  background: #101014;
+  color: var(--greeble-color-foreground);
+  border-radius: var(--greeble-radius-medium);
+  padding: var(--greeble-spacing-4);
+  box-shadow: var(--greeble-shadow-2);
+}
+
+.greeble-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--greeble-spacing-2);
+  margin-bottom: var(--greeble-spacing-3);
+}
+
+.greeble-modal__body {
+  display: block;
+}
+
+.greeble-icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  background: transparent;
+  color: var(--greeble-color-foreground);
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.greeble-icon-button:focus-visible {
+  outline: none;
+  box-shadow: var(--greeble-focus-ring);
+}
+
+.greeble-button {
+  padding: var(--greeble-spacing-2) var(--greeble-spacing-4);
+  border-radius: var(--greeble-radius-medium);
+  border: 1px solid #2a2a32;
+  background: #151518;
+  color: var(--greeble-color-foreground);
+  box-shadow: var(--greeble-shadow-1);
+}
+
+.greeble-button--accent {
+  background: var(--greeble-color-accent);
+  color: #0b0b0c;
+  border-color: transparent;
+}

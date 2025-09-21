@@ -144,9 +144,7 @@ def main(argv: list[str] | None = None) -> int:
 
 def run_mypy_then(final_cmd: list[str]) -> int:
     """Run mypy first, then the provided final command if type-checking passes."""
-    if (rc := run(["mypy", "."])) != 0:
-        return rc
-    return run(final_cmd)
+    return rc if (rc := run(["mypy", "."])) != 0 else run(final_cmd)
 
 
 def run_mypy_then_pytest_quiet() -> int:
@@ -245,11 +243,10 @@ def handle_protect_main() -> int:
         ]
         # Feed JSON via stdin
         proc = subprocess.run(gh_cmd, input=payload.encode(), check=False)
-        if proc.returncode == 0:
-            print("Branch protection for main configured via gh CLI.")
-            return 0
-        else:
+        if proc.returncode != 0:
             raise RuntimeError("gh api command failed")
+        print("Branch protection for main configured via gh CLI.")
+        return 0
     except Exception as e:  # noqa: BLE001 - we want a friendly message
         print(
             (
@@ -586,11 +583,10 @@ def parse_changelog_latest_section(
     start_idx: int | None = None
     end_idx: int | None = None
     for i, line in enumerate(lines):
-        m = header_re.match(line.strip())
-        if m:
+        if m := header_re.match(line.strip()):
             if start_idx is None:
                 start_idx = i
-                version = m.group("ver")
+                version = m["ver"]
             elif end_idx is None:
                 end_idx = i
                 break
@@ -665,7 +661,7 @@ def collect_conventional_commits(since_tag: str | None) -> list[tuple[str, str, 
     """Return list of (type, subject, short_sha) since a tag (or from start)."""
     fmt = "%h\t%s"
     range_spec = f"{since_tag}..HEAD" if since_tag and tag_exists(since_tag) else None
-    log_cmd = ["log", "--pretty=format:" + fmt, "--no-merges"]
+    log_cmd = ["log", f"--pretty=format:{fmt}", "--no-merges"]
     if range_spec:
         log_cmd.append(range_spec)
     out = git(log_cmd, capture_output=True)
@@ -680,8 +676,8 @@ def collect_conventional_commits(since_tag: str | None) -> list[tuple[str, str, 
         except ValueError:
             continue
         m = cc_re.match(subject)
-        ctype = m.group("type") if m else "other"
-        csubject = m.group("subject") if m else subject
+        ctype = m["type"] if m else "other"
+        csubject = m["subject"] if m else subject
         entries.append((ctype, csubject, sha))
     return entries
 
@@ -740,9 +736,7 @@ def parse_owner_repo(remote_url: str) -> tuple[str, str] | None:
     # Support SSH and HTTPS
     # git@github.com:owner/repo.git or https://github.com/owner/repo.git
     m = re.search(r"github.com[:/](?P<owner>[^/]+)/(?P<repo>[^/.]+)", remote_url)
-    if not m:
-        return None
-    return m.group("owner"), m.group("repo")
+    return (m["owner"], m["repo"]) if m else None
 
 
 def lint_main() -> int:

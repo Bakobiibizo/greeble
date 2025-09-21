@@ -1,0 +1,19 @@
+<!--
+Modal Partial (Placeholder)
+Purpose: Server-rendered modal dialog fragment.
+Inputs: Context from server; form fields as needed.
+Outputs: HTML fragment for insertion; may include out-of-band toasts.
+Dependencies: greeble_core; optional Hyperscript for focus.
+-->
+<div id="greeble-modal" role="dialog" aria-modal="true" aria-labelledby="greeble-modal-title" class="greeble-modal">
+  <div class="greeble-modal__backdrop" hx-get="/modal/close" hx-target="#modal-root" hx-swap="innerHTML"></div>
+  <div class="greeble-modal__panel" tabindex="-1">
+    <header class="greeble-modal__header">
+      <h2 id="greeble-modal-title" class="greeble-heading-2">Example modal</h2>
+      <button class="greeble-icon-button" aria-label="Close" hx-get="/modal/close" hx-target="#modal-root" hx-swap="innerHTML">×</button>
+    </header>
+    <div class="greeble-modal__body">
+      <!-- Content placeholder -->
+    </div>
+  </div>
+</div>

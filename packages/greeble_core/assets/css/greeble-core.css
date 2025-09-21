@@ -1,0 +1,25 @@
+/*
+Greeble Core Tokens and Utilities (Placeholder)
+
+Purpose:
+  Define CSS variables and minimal utilities used by all components.
+
+Inputs:
+  - None; optionally overridden by application via :root or a theme scope.
+
+Outputs:
+  - Design tokens usable by CSS and Tailwind preset.
+
+Dependencies:
+  - None required.
+
+Notes:
+  See token starter in docs/architecture.md §21 for the intended content.
+*/
+
+/* TODO: Implement tokens. Example variables (do not rely in production yet):
+:root {
+  --greeble-color-background: #0b0b0c;
+  --greeble-color-foreground: #e8e8ea;
+}
+*/

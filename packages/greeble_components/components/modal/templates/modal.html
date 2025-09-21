@@ -1,0 +1,9 @@
+<!--
+Modal Trigger (Placeholder)
+Purpose: Trigger button that requests modal partial.
+Inputs: None besides hx-*.
+Outputs: Requests server to return modal.partial.html into target.
+Dependencies: HTMX; greeble_core.
+-->
+<button class="greeble-button" hx-get="/modal/example" hx-target="#modal-root" hx-swap="innerHTML">Open Modal</button>
+<div id="modal-root" aria-live="polite"></div>

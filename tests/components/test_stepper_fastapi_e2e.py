@@ -20,9 +20,15 @@ def build_stepper_app() -> FastAPI:
     def home(request: Request) -> HTMLResponse:
         return templates.TemplateResponse(request, "stepper.html")
 
-    @app.get("/stepper/example", response_class=HTMLResponse)
-    def step_partial() -> HTMLResponse:
-        return HTMLResponse("<section>Step content</section>")
+    partial_html = (tpl_dir / "stepper.partial.html").read_text(encoding="utf-8")
+
+    @app.get("/stepper/plan", response_class=HTMLResponse)
+    def plan_step() -> HTMLResponse:
+        return HTMLResponse(partial_html)
+
+    @app.get("/stepper/enable", response_class=HTMLResponse)
+    def enable_step() -> HTMLResponse:
+        return HTMLResponse(partial_html.replace('data-step="plan"', 'data-step="enable"'))
 
     return app
 
@@ -34,6 +40,7 @@ def test_stepper_home_renders() -> None:
     r = client.get("/")
     assert r.status_code == 200
     assert 'class="greeble-stepper"' in r.text
+    assert 'data-step="plan"' in r.text
     assert 'id="stepper-panel"' in r.text
 
 
@@ -41,6 +48,7 @@ def test_stepper_partial_endpoint() -> None:
     app = build_stepper_app()
     client = TestClient(app)
 
-    r = client.get("/stepper/example")
+    r = client.get("/stepper/plan")
     assert r.status_code == 200
-    assert "Step content" in r.text
+    assert 'class="greeble-stepper__content"' in r.text
+    assert "Continue to enablement" in r.text

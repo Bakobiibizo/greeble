@@ -8,6 +8,15 @@
 - Accessibility: Uses native `<button>` semantics; icon buttons require `aria-label`; loading buttons set `aria-live` and `disabled`.
 - Theming hooks: Relies on `greeble_core` tokens; override `--_btn-*` custom properties per variant.
 
+## Server integration
+
+- Buttons are usually paired with HTMX attributes (`hx-get`, `hx-post`, `hx-delete`) that target a
+  container (`hx-target`) and define the swap behaviour (`hx-swap`).
+- Emit additional metadata with `hx-vals='{"key": "value"}'` when the server needs structured
+  payloads.
+- Use `HX-Trigger` headers in the response to emit `greeble:click` (or any custom event) so other
+  components can react.
+
 ## Copy & Paste
 
 ```html

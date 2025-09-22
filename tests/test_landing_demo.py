@@ -131,8 +131,8 @@ def test_tabs_endpoints(client: TestClient) -> None:
     pricing = client.get("/tabs/pricing")
     assert overview.status_code == 200
     assert pricing.status_code == 200
-    assert "mission control" in overview.text
-    assert "Usage-based pricing" in pricing.text
+    assert "mission control" in overview.text.lower()
+    assert "usage-based pricing" in pricing.text.lower()
 
     missing = client.get("/tabs/missing")
     assert missing.status_code == 404
@@ -141,7 +141,7 @@ def test_tabs_endpoints(client: TestClient) -> None:
 def test_drawer_open_and_close(client: TestClient) -> None:
     opened = client.get("/drawer/open")
     assert opened.status_code == 200
-    assert "drawer-overlay" in opened.text
+    assert "greeble-drawer__panel" in opened.text
 
     closed = client.get("/drawer/close")
     assert closed.status_code == 200

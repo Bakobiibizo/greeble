@@ -1,5 +1,47 @@
-<!-- Palette Trigger (Placeholder) -->
-<form hx-post="/palette/search" hx-target="#palette-results" hx-swap="innerHTML">
-  <input name="q" class="greeble-input" placeholder="Search..." />
-</form>
-<div id="palette-results" role="listbox"></div>
+<!-- Command Palette (Copy & Paste Ready)
+Form submits to /palette/search and swaps new results into #palette-results. Selecting an item posts
+back to /palette/select, updating #palette-detail.
+-->
+<section class="greeble-palette" aria-labelledby="palette-heading">
+  <header class="greeble-palette__header">
+    <h2 id="palette-heading" class="greeble-heading-2">Command palette</h2>
+    <p class="greeble-palette__description">
+      Search shortcuts, people, and workspaces. Use arrow keys to move through the results and
+      <kbd>Enter</kbd> to select.
+    </p>
+  </header>
+
+  <form
+    class="greeble-palette__form"
+    role="search"
+    hx-post="/palette/search"
+    hx-trigger="submit, keyup changed delay:250ms from:input[name=q]"
+    hx-target="#palette-results"
+    hx-swap="innerHTML"
+    autocomplete="off"
+  >
+    <label class="greeble-field__label" for="palette-query">Search commands</label>
+    <input
+      id="palette-query"
+      name="q"
+      class="greeble-input"
+      type="search"
+      placeholder="Search by command, teammate, or workspace"
+      aria-describedby="palette-hint"
+    />
+    <p class="greeble-field__hint" id="palette-hint">Try typing "invite" or ":settings"</p>
+  </form>
+
+  <div class="greeble-palette__layout">
+    <div class="greeble-palette__results" role="region" aria-live="polite">
+      <h3 class="greeble-heading-3">Results</h3>
+      <div id="palette-results" role="listbox" aria-label="Command results">
+        <p class="greeble-palette__empty">Start typing to see matches.</p>
+      </div>
+    </div>
+    <div id="palette-detail" class="greeble-palette__detail" aria-live="polite">
+      <h3 class="greeble-heading-3">Selection</h3>
+      <p>Select a result to preview details.</p>
+    </div>
+  </div>
+</section>

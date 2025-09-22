@@ -27,3 +27,11 @@
 - Updated TemplateResponse usage across tests/adapters to Starlette request-first signature; `uv run dev test` now runs clean.
 - Landing demo now imports component CSS, uses refreshed button/input/modal/table markup, and exposes HTMX endpoints for table search/export/details and toast dismissal.
 - Added mypy exclude for demo folders and annotated pytest fixtures so `uv run dev check` completes without the fastapi-demo package warning.
+- Customer-facing docs expanded: README quick-start, component catalogue, and individual component
+  guides now document server contracts and out-of-band patterns.
+- Upgraded remaining components (drawer, dropdown, palette, stepper, tabs, infinite list, validated
+  form) with production markup, CSS, docs, and tests mirroring the landing demo flows.
+- Landing demo now consumes the refreshed component templates (dropdown, palette, stepper, validated
+  form, drawer, infinite list) with matching HTMX endpoints and out-of-band toasts.
+- Implemented greeble CLI (`list`, `add`, `sync`, `remove`, `doctor`) with manifest-driven copy
+  logic, documentation, and tests; README and docs now include a detailed CLI + adapter walkthrough.

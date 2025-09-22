@@ -22,9 +22,11 @@ def build_infinite_list_app() -> FastAPI:
     def home(request: Request) -> HTMLResponse:
         return templates.TemplateResponse(request, "infinite-list.html")
 
+    partial_html = (tpl_dir / "infinite-list.partial.html").read_text(encoding="utf-8")
+
     @app.get("/list", response_class=HTMLResponse)
     def list_items() -> HTMLResponse:
-        return HTMLResponse("<li>New Item</li>")
+        return HTMLResponse(partial_html)
 
     return app
 
@@ -35,8 +37,9 @@ def test_infinite_list_home_renders() -> None:
 
     r = client.get("/")
     assert r.status_code == 200
+    assert 'class="greeble-feed__list"' in r.text
     assert 'id="infinite-list"' in r.text
-    assert 'hx-get="/list"' in r.text
+    assert 'id="infinite-list-sentinel"' in r.text
 
 
 def test_infinite_list_endpoint_returns_partial() -> None:
@@ -45,4 +48,5 @@ def test_infinite_list_endpoint_returns_partial() -> None:
 
     r = client.get("/list")
     assert r.status_code == 200
-    assert "<li>New Item</li>" in r.text
+    assert "greeble-feed__item" in r.text
+    assert "Automation queued" in r.text

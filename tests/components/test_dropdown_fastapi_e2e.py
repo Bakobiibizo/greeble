@@ -30,4 +30,5 @@ def test_dropdown_home_renders() -> None:
     r = client.get("/")
     assert r.status_code == 200
     assert 'class="greeble-dropdown"' in r.text
-    assert 'role="menu"' in r.text
+    assert "Workspace actions" in r.text
+    assert "greeble-dropdown__panel" in r.text

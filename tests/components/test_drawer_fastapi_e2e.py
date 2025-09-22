@@ -21,7 +21,7 @@ def build_drawer_app() -> FastAPI:
 
     @app.get("/", response_class=HTMLResponse)
     def home(request: Request) -> HTMLResponse:
-        return templates.TemplateResponse("drawer.html", {"request": request})
+        return templates.TemplateResponse(request, "drawer.html")
 
     @app.get("/drawer/open", response_class=HTMLResponse)
     def open_drawer(request: Request) -> Response:

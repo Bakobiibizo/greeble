@@ -1,6 +1,9 @@
 from __future__ import annotations
 
+import html
+import json
 import re
+from collections.abc import Iterator
 
 import pytest
 from fastapi.testclient import TestClient
@@ -9,7 +12,7 @@ from examples.site import landing
 
 
 @pytest.fixture(scope="module")
-def client() -> TestClient:
+def client() -> Iterator[TestClient]:
     with TestClient(landing.app) as test_client:
         yield test_client
 
@@ -34,13 +37,13 @@ def test_newsletter_subscribe_toast(client: TestClient) -> None:
     resp = client.post("/newsletter/subscribe")
     assert resp.status_code == 200
     assert "greeble-toast--info" in resp.text
-    assert "Subscribed to launch updates." in resp.text
+    assert "launch list" in resp.text
 
 
 def test_palette_search_and_select(client: TestClient) -> None:
     search = client.post("/palette/search", data={"q": "orbit"})
     assert search.status_code == 200
-    assert "role=\"option\"" in search.text
+    assert 'role="option"' in search.text
 
     detail = client.post("/palette/select", data={"sku": "orbit-kit"})
     assert detail.status_code == 200
@@ -52,18 +55,75 @@ def test_table_pagination_and_sorting(client: TestClient) -> None:
     first_page = client.get("/table", params={"page": 1})
     assert first_page.status_code == 200
     assert "<tr>" in first_page.text
-    assert first_page.headers.get("HX-Trigger") == "featured-table-updated"
+    trigger_header = first_page.headers.get("HX-Trigger")
+    assert trigger_header is not None
+    assert json.loads(trigger_header) == {"greeble:table:update": {"page": 1, "sort": "org:asc"}}
+    body = html.unescape(first_page.text)
+    expected_page_one = sorted(landing.ACCOUNTS, key=lambda a: a.org.lower())[:3]
+    for account in expected_page_one:
+        assert account.org in body
 
-    sorted_desc = client.get("/table", params={"page": 1, "sort": "price:desc"})
+    sorted_desc = client.get("/table", params={"page": 1, "sort": "seats:desc"})
     assert sorted_desc.status_code == 200
-    # Highest priced product should surface first when sorting desc
-    top_product = max(landing.PRODUCTS, key=lambda p: p.price)
-    assert top_product.name in sorted_desc.text
+    # Highest utilization account should surface first when sorting desc
+    sorted_body = html.unescape(sorted_desc.text)
+    top_account = max(landing.ACCOUNTS, key=lambda a: a.seats_used / a.seats_total)
+    assert top_account.org in sorted_body
 
-    second_page = client.get("/table", params={"page": 2, "sort": "name:asc"})
+    second_page = client.get("/table", params={"page": 2, "sort": "org:asc"})
     assert second_page.status_code == 200
     # Ensure the second page shows different results
     assert second_page.text != first_page.text
+
+
+def test_table_search_and_actions(client: TestClient) -> None:
+    search = client.post("/table/search", data={"q": "nova"})
+    assert search.status_code == 200
+    assert "Nova Civic" in html.unescape(search.text)
+
+    no_match = client.post("/table/search", data={"q": "zzz"})
+    assert no_match.status_code == 200
+    assert "No accounts match" in no_match.text
+
+    export = client.post("/table/export")
+    assert export.status_code == 200
+    assert "greeble-toast" in export.text
+    assert json.loads(export.headers["HX-Trigger"]) == {"greeble:toast": {"level": "info"}}
+
+    active_account = next(acc for acc in landing.ACCOUNTS if acc.status == "active")
+    view = client.get(f"/table/accounts/{landing._account_slug(active_account)}")
+    assert view.status_code == 200
+    assert "Account opened" in html.unescape(view.text)
+    assert json.loads(view.headers["HX-Trigger"]) == {
+        "greeble:table:view": {"org": active_account.org}
+    }
+
+    pending_account = next(acc for acc in landing.ACCOUNTS if acc.status == "pending")
+    remind = client.post(f"/table/accounts/{landing._account_slug(pending_account)}/remind")
+    assert remind.status_code == 200
+    assert "Reminder sent" in html.unescape(remind.text)
+    assert json.loads(remind.headers["HX-Trigger"]) == {
+        "greeble:table:remind": {"org": pending_account.org}
+    }
+
+    delinquent_account = next(acc for acc in landing.ACCOUNTS if acc.status == "delinquent")
+    escalate = client.post(f"/table/accounts/{landing._account_slug(delinquent_account)}/escalate")
+    assert escalate.status_code == 200
+    assert "Escalation logged" in html.unescape(escalate.text)
+    assert json.loads(escalate.headers["HX-Trigger"]) == {
+        "greeble:table:escalate": {"org": delinquent_account.org}
+    }
+
+    archive = client.delete(f"/table/accounts/{landing._account_slug(active_account)}")
+    assert archive.status_code == 200
+    assert "Archived" in html.unescape(archive.text)
+    assert json.loads(archive.headers["HX-Trigger"]) == {
+        "greeble:table:archive": {"org": active_account.org}
+    }
+
+    dismiss = client.get("/toast/dismiss")
+    assert dismiss.status_code == 200
+    assert dismiss.text == ""
 
 
 def test_tabs_endpoints(client: TestClient) -> None:
@@ -86,6 +146,7 @@ def test_drawer_open_and_close(client: TestClient) -> None:
     closed = client.get("/drawer/close")
     assert closed.status_code == 200
     assert closed.text == ""
+
 
 def test_sign_in_validation_and_submit(client: TestClient) -> None:
     invalid = client.post("/auth/validate", data={"email": "invalid"})

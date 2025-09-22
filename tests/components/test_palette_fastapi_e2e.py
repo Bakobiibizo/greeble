@@ -18,7 +18,7 @@ def build_palette_app() -> FastAPI:
 
     @app.get("/", response_class=HTMLResponse)
     def home(request: Request) -> HTMLResponse:
-        return templates.TemplateResponse("palette.html", {"request": request})
+        return templates.TemplateResponse(request, "palette.html")
 
     @app.post("/palette/search", response_class=HTMLResponse)
     def search(q: str = Form("")) -> HTMLResponse:

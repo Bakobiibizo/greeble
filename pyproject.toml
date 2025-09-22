@@ -74,6 +74,7 @@ check_untyped_defs = true
 no_implicit_optional = true
 disallow_incomplete_defs = true
 disallow_untyped_defs = true
+exclude = "examples/(fastapi-demo|django-demo|flask-demo)"
 
 [tool.pytest.ini_options]
 addopts = "-q"
@@ -87,4 +88,3 @@ version_provider = "pep621"
 tag_format = "v$version"
 update_changelog_on_bump = true
 changelog_file = "CHANGELOG.md"
-

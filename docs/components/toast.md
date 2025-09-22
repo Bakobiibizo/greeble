@@ -1,27 +1,27 @@
 # Toasts
 
-- Purpose: Global toast queue (OOB swaps).
-- Inputs: Messages from server events.
-- Endpoints: Any endpoint may return toast OOB fragments.
-- Events: `greeble:toast`.
-- Accessibility: aria-live=assertive; labeled dismiss.
-- States: Info/success/warn/error variants; timeout.
-- Theming hooks: Toast colors; shadows.
+- Purpose: Surface transient feedback via out-of-band HTMX swaps.
+- Structure: Persistent root `#greeble-toasts` (`role="region"`, `aria-live="polite"`, `aria-atomic="false"`). Returned items use `.greeble-toast` with variant modifiers (`--success`, `--info`, `--warn`, `--danger`).
+- Inputs: Servers return HTML that includes dismiss buttons targeting `closest .greeble-toast`.
+- Events: Optionally emit `HX-Trigger` payloads such as `{ "greeble:toast": { "level": "success" } }`.
+- Accessibility: Each toast is `role="status"`; dismiss buttons include `aria-label`; icons are decorative `aria-hidden`.
+- Theming hooks: Override custom properties (`--_toast-*`) or variant colors to match brand guidelines.
 
-## Copy & Paste Usage
+## Copy & Paste
 
-- Include the root once in your layout:
-  ```html
-  <div id="greeble-toasts" aria-live="assertive"></div>
-  ```
-- Return an item out-of-band from any endpoint:
-  ```html
-  <div id="greeble-toasts" hx-swap-oob="true">
-    <div class="greeble-toast greeble-toast--success" role="status">Saved!</div>
+```html
+<div id="greeble-toasts" class="greeble-toast-region" aria-live="polite" aria-label="Notifications"></div>
+```
+
+```html
+<div id="greeble-toasts" hx-swap-oob="true">
+  <div class="greeble-toast greeble-toast--success" role="status">
+    <div class="greeble-toast__icon" aria-hidden="true">✔</div>
+    <div class="greeble-toast__body">
+      <p class="greeble-toast__title">Settings saved</p>
+      <p class="greeble-toast__message">Your updates are live.</p>
+    </div>
+    <button class="greeble-icon-button greeble-toast__dismiss" aria-label="Dismiss" hx-get="/toast/dismiss" hx-target="closest .greeble-toast" hx-swap="outerHTML">×</button>
   </div>
-  ```
-- Dismiss pattern (endpoint returns empty string):
-  ```html
-  <button hx-get="/toast/dismiss" hx-target="closest .greeble-toast" hx-swap="outerHTML">×</button>
-  ```
-- Servers may emit `HX-Trigger` headers (e.g., `{"greeble:toast": {"level":"success"}}`).
+</div>
+```

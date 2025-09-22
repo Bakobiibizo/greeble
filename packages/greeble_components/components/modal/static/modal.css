@@ -1,92 +1,133 @@
-/* Modal Styles (Placeholder)
-Purpose: Backdrop and panel styling.
-Inputs: greeble_core tokens.
-Outputs: Visual presentation only.
-Dependencies: greeble_core tokens.
-*/
-/*
-Modal styles
-
-Depends on CSS variables from greeble_core (see docs/architecture.md §21):
-  --greeble-color-background
-  --greeble-color-foreground
-  --greeble-color-muted
-  --greeble-color-accent
-  --greeble-radius-medium
-  --greeble-shadow-1
-  --greeble-shadow-2
-  --greeble-spacing-2
-  --greeble-spacing-3
-  --greeble-spacing-4
-  --greeble-focus-ring
-*/
-
 .greeble-modal {
   position: fixed;
   inset: 0;
+  z-index: 1000;
   display: grid;
   place-items: center;
-  z-index: 1000;
+  padding: var(--greeble-spacing-4, 1rem);
 }
 
 .greeble-modal__backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(9, 9, 15, 0.72);
+  backdrop-filter: blur(4px);
 }
 
 .greeble-modal__panel {
   position: relative;
-  min-width: min(640px, 96vw);
-  max-width: 96vw;
+  inline-size: min(560px, 92vw);
+  max-height: calc(100vh - 4rem);
+  overflow-y: auto;
+  border-radius: var(--greeble-radius-medium, 12px);
   background: #101014;
-  color: var(--greeble-color-foreground);
-  border-radius: var(--greeble-radius-medium);
-  padding: var(--greeble-spacing-4);
-  box-shadow: var(--greeble-shadow-2);
+  color: var(--greeble-color-foreground, #e8e8ea);
+  padding: clamp(1.5rem, 3vw, 2rem);
+  box-shadow: var(--greeble-shadow-2, 0 8px 30px rgba(0, 0, 0, 0.35));
+  display: grid;
+  gap: var(--greeble-spacing-3, 0.75rem);
 }
 
 .greeble-modal__header {
   display: flex;
-  align-items: center;
+  gap: var(--greeble-spacing-3, 0.75rem);
   justify-content: space-between;
-  gap: var(--greeble-spacing-2);
-  margin-bottom: var(--greeble-spacing-3);
+  align-items: flex-start;
 }
 
-.greeble-modal__body {
-  display: block;
+.greeble-modal__heading {
+  display: grid;
+  gap: var(--greeble-spacing-2, 0.5rem);
 }
 
-.greeble-icon-button {
+.greeble-badge {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border: 0;
+  gap: 0.35em;
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: rgba(106, 161, 255, 0.12);
+  color: var(--greeble-color-accent, #6aa1ff);
+}
+
+.greeble-modal__support {
+  margin: 0;
+  color: rgba(232, 232, 234, 0.72);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.greeble-modal__close {
+  inline-size: 2.5rem;
+  block-size: 2.5rem;
+  border-radius: 50%;
   background: transparent;
-  color: var(--greeble-color-foreground);
+  font-size: 1.5rem;
+  color: inherit;
+  border: 0;
+}
+
+.greeble-modal__form {
+  display: grid;
+  gap: var(--greeble-spacing-3, 0.75rem);
+}
+
+.greeble-modal .greeble-field {
+  display: grid;
+  gap: var(--greeble-spacing-2, 0.5rem);
+}
+
+.greeble-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--greeble-spacing-2, 0.5rem);
   cursor: pointer;
-  border-radius: 8px;
+  font-size: 0.95rem;
+  color: rgba(232, 232, 234, 0.9);
 }
 
-.greeble-icon-button:focus-visible {
-  outline: none;
-  box-shadow: var(--greeble-focus-ring);
-}
-
-.greeble-button {
-  padding: var(--greeble-spacing-2) var(--greeble-spacing-4);
-  border-radius: var(--greeble-radius-medium);
-  border: 1px solid #2a2a32;
+.greeble-checkbox__input {
+  inline-size: 1rem;
+  block-size: 1rem;
+  border-radius: 0.35rem;
+  border: 1px solid rgba(255, 255, 255, 0.25);
   background: #151518;
-  color: var(--greeble-color-foreground);
-  box-shadow: var(--greeble-shadow-1);
 }
 
-.greeble-button--accent {
-  background: var(--greeble-color-accent);
-  color: #0b0b0c;
+.greeble-checkbox__input:checked {
+  background: var(--greeble-color-accent, #6aa1ff);
   border-color: transparent;
+}
+
+.greeble-checkbox__input:focus-visible {
+  outline: none;
+  box-shadow: var(--greeble-focus-ring, 0 0 0 3px rgba(106, 161, 255, 0.5));
+}
+
+.greeble-modal__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--greeble-spacing-2, 0.5rem);
+  justify-content: flex-end;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .greeble-modal__panel {
+    transform: translateY(4px);
+    animation: greeble-modal-enter 0.18s ease-out forwards;
+  }
+}
+
+@keyframes greeble-modal-enter {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

@@ -18,7 +18,7 @@ def build_input_app() -> FastAPI:
 
     @app.get("/", response_class=HTMLResponse)
     def home(request: Request) -> HTMLResponse:
-        return templates.TemplateResponse("input.html", {"request": request})
+        return templates.TemplateResponse(request, "input.html")
 
     return app
 
@@ -29,5 +29,6 @@ def test_input_home_renders() -> None:
 
     r = client.get("/")
     assert r.status_code == 200
-    assert 'class="greeble-input"' in r.text
-    assert 'type="text"' in r.text
+    assert "greeble-field-list" in r.text
+    assert "greeble-field__error" in r.text
+    assert 'hx-post="/input/validate"' in r.text

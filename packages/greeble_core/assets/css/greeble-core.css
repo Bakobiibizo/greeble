@@ -64,7 +64,7 @@ html, body {
   border: 1px solid #2a2a32;
   cursor: pointer;
 }
-.greeble-button--accent {
+.greeble-button--primary {
   background: var(--greeble-color-accent);
   color: #0b0b0c;
 }
@@ -75,6 +75,43 @@ html, body {
   border: 1px solid #2a2a32;
   padding: var(--greeble-spacing-2) var(--greeble-spacing-3);
   border-radius: 10px;
+}
+
+/* Headings */
+.greeble-heading-1 {
+  font-size: clamp(2rem, 3vw, 2.75rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.greeble-heading-2 {
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.greeble-heading-3 {
+  font-size: clamp(1.25rem, 1.6vw, 1.5rem);
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Checkbox primitive */
+.greeble-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--greeble-spacing-2);
+}
+
+.greeble-checkbox__input {
+  inline-size: 1rem;
+  block-size: 1rem;
+}
+
+.greeble-checkbox__label {
+  line-height: 1.4;
 }
 
 /* Modal primitives (used by modal component markup) */

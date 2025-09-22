@@ -20,7 +20,7 @@ def build_infinite_list_app() -> FastAPI:
 
     @app.get("/", response_class=HTMLResponse)
     def home(request: Request) -> HTMLResponse:
-        return templates.TemplateResponse("infinite-list.html", {"request": request})
+        return templates.TemplateResponse(request, "infinite-list.html")
 
     @app.get("/list", response_class=HTMLResponse)
     def list_items() -> HTMLResponse:

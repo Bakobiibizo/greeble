@@ -8,3 +8,22 @@
 ## Notes (2025-09-21)
 - Landing hero now operates as an email sign-in flow (`/auth/validate`, `/auth/sign-in`) with newsletter opt-in emitting info toasts via `/newsletter/subscribe`.
 - Drawer overlay renders custom markup (`DRAWER_PARTIAL`) so the promotions panel anchors to the right with backdrop and close affordances.
+
+## TODO (2025-09-22)
+- [x] Review architecture alignment between docs/architecture.md and current implementation.
+- [x] Enumerate outstanding implementation gaps tied to roadmap milestones.
+
+## Notes (2025-09-22)
+- Component templates and CSS remain high-level placeholders aside from modal/drawer; landing demo hosts the only production-level flows.
+- FastAPI adapter helpers live in src/greeble/adapters/fastapi.py; Django/Flask adapters and CLI scaffolds are still placeholders.
+- Docs site, Tailwind preset, and Hyperscript packages exist only as stubs; no generated documentation yet.
+
+## TODO (2025-09-22) – Upcoming
+- [x] Ship v0.1 component vertical slice (buttons → table) with production markup/docs/tests.
+- [ ] Implement CLI copy workflow + docs site live examples.
+- [ ] Build out Django/Flask adapter parity after tooling lands.
+
+## Notes (2025-09-22 – late)
+- Updated TemplateResponse usage across tests/adapters to Starlette request-first signature; `uv run dev test` now runs clean.
+- Landing demo now imports component CSS, uses refreshed button/input/modal/table markup, and exposes HTMX endpoints for table search/export/details and toast dismissal.
+- Added mypy exclude for demo folders and annotated pytest fixtures so `uv run dev check` completes without the fastapi-demo package warning.

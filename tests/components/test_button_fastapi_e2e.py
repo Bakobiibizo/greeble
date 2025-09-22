@@ -18,7 +18,7 @@ def build_button_app() -> FastAPI:
 
     @app.get("/", response_class=HTMLResponse)
     def home(request: Request) -> HTMLResponse:
-        return templates.TemplateResponse("button.html", {"request": request})
+        return templates.TemplateResponse(request, "button.html")
 
     return app
 
@@ -29,5 +29,6 @@ def test_button_home_renders() -> None:
 
     r = client.get("/")
     assert r.status_code == 200
-    assert 'class="greeble-button"' in r.text
-    assert 'type="button"' in r.text
+    assert "greeble-button-group" in r.text
+    assert "greeble-button--primary" in r.text
+    assert "greeble-button--loading" in r.text

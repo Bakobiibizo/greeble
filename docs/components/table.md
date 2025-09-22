@@ -1,34 +1,26 @@
 # Table
 
-- Purpose: Sortable, pageable table.
-- Inputs: Query params `page`, `sort`.
-- Endpoints: GET /table?page=<n>&sort=<field>:<dir>
-- Events: `greeble:table:sorted`, `greeble:table:paged`.
-- Accessibility: Caption; scope attributes; summaries.
-- States: Empty, loading, error; sorted indicators.
-- Theming hooks: Table borders, row hovers.
+- Purpose: Display tabular data with HTMX-backed sorting, filtering, and pagination.
+- Structure: `.greeble-table-shell` wraps header, actions, table container, and pagination. `tbody#table-body` hydrates via `hx-get` calls.
+- Endpoints: `GET /table` returns row partials; optional `POST /table/search` or `POST /table/export` extend interactions.
+- Sorting: Header buttons use `hx-get="/table?page=1&sort=field:dir"` and swap the partial into `#table-body`.
+- Accessibility: Table keeps native semantics with `<th scope="row">`; status chips include visually hidden text where necessary; live updates announce via `aria-live="polite"` on the tbody.
+- Events: Servers can set `HX-Trigger: {"greeble:table:update": {"page": 2}}` to coordinate other components.
+- Theming hooks: Override `.greeble-table__status--*` colors or container background to match brand palette.
 
-## Copy & Paste Usage
-
-Include the table markup and wire your endpoint at `/table`:
+## Copy & Paste
 
 ```html
-<table class="greeble-table">
-  <caption>Example Table</caption>
-  <thead>
-    <tr>
-      <th scope="col">
-        <button type="button" hx-get="/table?page=1&sort=col:asc" hx-target="#table-body" hx-swap="innerHTML">Col ▲</button>
-        <button type="button" hx-get="/table?page=1&sort=col:desc" hx-target="#table-body" hx-swap="innerHTML">Col ▼</button>
-      </th>
-    </tr>
-  </thead>
-  <tbody id="table-body" hx-get="/table?page=1" hx-trigger="load" hx-swap="innerHTML"></tbody>
-</table>
-<nav class="greeble-pagination" aria-label="Pagination">
-  <button type="button" hx-get="/table?page=1" hx-target="#table-body" hx-swap="innerHTML">1</button>
-  <button type="button" hx-get="/table?page=2" hx-target="#table-body" hx-swap="innerHTML">2</button>
-</nav>
+<section class="greeble-table-shell">
+  <div class="greeble-table__container">
+    <table class="greeble-table">
+      <thead>…</thead>
+      <tbody id="table-body" hx-get="/table?page=1" hx-trigger="load" hx-target="this" hx-swap="innerHTML"></tbody>
+    </table>
+  </div>
+  <nav class="greeble-pagination" aria-label="Pagination">
+    <button class="greeble-button" type="button" hx-get="/table?page=1" hx-target="#table-body" hx-swap="innerHTML">1</button>
+    <button class="greeble-button" type="button" hx-get="/table?page=2" hx-target="#table-body" hx-swap="innerHTML">2</button>
+  </nav>
+</section>
 ```
-
-Server returns a `<tr>...</tr>` fragment (200 OK). You may include `HX-Trigger` headers to emit `greeble:table:sorted` or `greeble:table:paged` events.

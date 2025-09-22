@@ -1,8 +1,8 @@
-# Input Components (Placeholder)
+# Input Components
 
-- **Purpose:** Text input, textarea, select, and combobox pattern.
-- **Inputs:** Element attributes and optional `aria-describedby`.
-- **Outputs:** Optional server validation responses when used with HTMX.
-- **Dependencies:** `greeble_core` tokens; optional HTMX.
-- **Events:** Optional `greeble:validate`.
-- **Accessibility:** Labels required; associate errors via `aria-describedby`.
+- **Purpose:** Collect structured data with consistent styling for text, email, select, and textarea controls.
+- **Inputs:** Native attributes (`required`, `autocomplete`, etc.); error messages referenced via `aria-describedby`.
+- **Outputs:** Validation endpoints return updated field fragments (`hx-swap="outerHTML"`).
+- **Dependencies:** `greeble_core` tokens and component CSS for invalid state, hints, and select arrow.
+- **Events:** Optional HX-Trigger payloads like `{ "greeble:validate": { "field": "email" } }`.
+- **Accessibility:** Visible labels, hint text, and `role="alert"` errors ensure screen readers receive updates.

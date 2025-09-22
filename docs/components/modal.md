@@ -1,20 +1,18 @@
 # Modal
 
-- Purpose: Dialog with focus trap and backdrop.
-- Inputs: Trigger (hx-get), inner form inputs.
-- Endpoints: GET /modal/example, GET /modal/close, POST /modal/submit
-- Events: `greeble:modal:open`, `greeble:modal:close`.
-- Accessibility: role=dialog; aria-modal; focus management.
-- States: Open, closing, error in form body.
-- Theming hooks: Panel, backdrop classes; tokens.
+- Purpose: Present blocking workflows (invite teammates, confirm actions) with server-rendered dialogs.
+- Trigger: Button uses `hx-get="/modal/example"` to render into an empty `#modal-root` container.
+- Endpoints: `GET /modal/example` returns the dialog; `GET /modal/close` clears the root; `POST /modal/submit` handles form submission and may emit HX-Trigger events or out-of-band toasts.
+- Structure: Wrapper `.greeble-modal` with backdrop and focusable panel `.greeble-modal__panel`; header includes a close button; body hosts form content.
+- Accessibility: `role="dialog"`, `aria-modal="true"`, labelled via `aria-labelledby`/`aria-describedby`; panel receives focus via `tabindex="-1"`; close button carries `aria-label`.
+- Events: Emit `HX-Trigger: {"greeble:modal:open": true}` when returning the partial and `HX-Trigger-After-Swap` to signal closing.
+- Theming hooks: Panel and actions inherit tokens; `.greeble-badge`, `.greeble-modal__actions`, `.greeble-checkbox` expose specific styling knobs.
 
-## Copy & Paste Usage
-
-Trigger markup:
+## Copy & Paste
 
 ```html
-<button class="greeble-button" hx-get="/modal/example" hx-target="#modal-root" hx-swap="innerHTML">Open Modal</button>
+<button class="greeble-button greeble-button--primary" hx-get="/modal/example" hx-target="#modal-root" hx-swap="innerHTML">Invite teammates</button>
 <div id="modal-root" aria-live="polite"></div>
 ```
 
-Returned partial contains a body with a sample form that posts to `/modal/submit` and close controls that `hx-get` `/modal/close` to clear the root. Servers can return an out-of-band toast on submit success and/or set `HX-Trigger` headers (e.g., `{"greeble:modal:close": true}`).
+Return the modal partial example to hydrate the dialog. Close endpoints should respond with an empty string to remove the modal from the DOM.

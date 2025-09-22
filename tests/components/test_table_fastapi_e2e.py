@@ -19,16 +19,12 @@ def build_table_app() -> FastAPI:
     @app.get("/", response_class=HTMLResponse)
     def home(request: Request) -> HTMLResponse:
         # Serve base table page with tbody target and pagination container
-        return templates.TemplateResponse("table.html", {"request": request})
+        return templates.TemplateResponse(request, "table.html")
 
     @app.get("/table", response_class=HTMLResponse)
     def table(request: Request) -> HTMLResponse:
-        # Simulate server pagination/sort by echoing params in the row for test visibility
-        q = request.query_params
-        page = q.get("page", "1")
-        sort = q.get("sort", "")
-        html = f"<tr><td>Row page={page} sort={sort}</td></tr>"
-        return HTMLResponse(html)
+        # Return the canonical table partial. Real apps would tailor rows based on query params.
+        return templates.TemplateResponse(request, "table.partial.html")
 
     return app
 
@@ -39,10 +35,10 @@ def test_table_home_renders() -> None:
 
     r = client.get("/")
     assert r.status_code == 200
-    # Be flexible to allow additional attributes (hx-*) on the tbody
+    assert 'class="greeble-table"' in r.text
     assert 'id="table-body"' in r.text
-    # Pagination container exists
-    assert "greeble-pagination" in r.text
+    # Sort buttons expose hx-get for server swaps
+    assert 'hx-get="/table?page=1&sort=org:asc"' in r.text
 
 
 def test_table_endpoint_returns_partial_and_respects_query() -> None:
@@ -51,6 +47,6 @@ def test_table_endpoint_returns_partial_and_respects_query() -> None:
 
     r = client.get("/table", params={"page": 2, "sort": "name:asc"})
     assert r.status_code == 200
-    assert "<tr>" in r.text and "</tr>" in r.text
-    assert "page=2" in r.text
-    assert "sort=name:asc" in r.text
+    assert "greeble-table__status" in r.text
+    assert "Orbit Labs" in r.text
+    assert "Nova Civic" in r.text

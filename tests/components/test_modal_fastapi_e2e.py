@@ -22,7 +22,7 @@ def build_modal_app() -> FastAPI:
     @app.get("/", response_class=HTMLResponse)
     def home(request: Request) -> Response:
         # Use the trigger markup as the home page content
-        return templates.TemplateResponse("modal.html", {"request": request})
+        return templates.TemplateResponse(request, "modal.html")
 
     @app.get("/modal/example", response_class=HTMLResponse)
     def modal_example(request: Request) -> Response:

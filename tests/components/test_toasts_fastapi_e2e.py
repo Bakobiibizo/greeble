@@ -20,16 +20,14 @@ def build_toast_app() -> FastAPI:
     @app.get("/", response_class=HTMLResponse)
     def home(request: Request) -> HTMLResponse:
         # Serve the toast root container
-        return templates.TemplateResponse("toast.root.html", {"request": request})
+        return templates.TemplateResponse(request, "toast.root.html")
+
+    item_html = (toast_tpl_dir / "toast.item.html").read_text(encoding="utf-8")
 
     @app.post("/notify", response_class=HTMLResponse)
     def notify() -> HTMLResponse:
         # Return an out-of-band update that appends a toast item
-        html = (
-            '<div id="greeble-toasts" hx-swap-oob="true">'
-            '<div class="greeble-toast greeble-toast--info" role="status">Hello!</div>'
-            "</div>"
-        )
+        html = f'<div id="greeble-toasts" hx-swap-oob="true">{item_html}</div>'
         return HTMLResponse(html)
 
     return app
@@ -51,5 +49,6 @@ def test_notify_returns_oob_toast() -> None:
     r = client.post("/notify")
     assert r.status_code == 200
     assert 'hx-swap-oob="true"' in r.text
-    assert 'class="greeble-toast' in r.text
+    assert 'class="greeble-toast greeble-toast--success"' in r.text
+    assert 'class="greeble-toast__message"' in r.text
     assert 'role="status"' in r.text

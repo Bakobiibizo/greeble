@@ -21,17 +21,13 @@ def build_form_app() -> FastAPI:
 
     @app.get("/", response_class=HTMLResponse)
     def home(request: Request) -> Response:
-        return templates.TemplateResponse("form.html", {"request": request})
+        return templates.TemplateResponse(request, "form.html")
 
     @app.post("/form/validate", response_class=HTMLResponse)
-    def validate(email: str = Form("")) -> Response:
+    def validate(request: Request, email: str = Form("")) -> Response:
         if not email or "@" not in email:
             # Return an invalid group partial
-            return templates.TemplateResponse(
-                "form.partial.html",
-                {"request": Request({"type": "http"})},
-                status_code=400,
-            )
+            return templates.TemplateResponse(request, "form.partial.html", status_code=400)
         return HTMLResponse('<div class="greeble-valid">OK</div>')
 
     @app.post("/form/submit", response_class=HTMLResponse)

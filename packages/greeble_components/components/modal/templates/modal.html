@@ -1,9 +1,15 @@
-<!--
-Modal Trigger (Placeholder)
-Purpose: Trigger button that requests modal partial.
-Inputs: None besides hx-*.
-Outputs: Requests server to return modal.partial.html into target.
-Dependencies: HTMX; greeble_core.
+<!-- Modal Trigger (Copy & Paste Ready)
+Place the trigger in your page and include an empty #modal-root container.
 -->
-<button class="greeble-button" hx-get="/modal/example" hx-target="#modal-root" hx-swap="innerHTML">Open Modal</button>
-<div id="modal-root" aria-live="polite"></div>
+<button
+  class="greeble-button greeble-button--primary"
+  type="button"
+  hx-get="/modal/example"
+  hx-target="#modal-root"
+  hx-swap="innerHTML"
+  hx-trigger="click"
+  hx-vals='{"source": "primary"}'
+>
+  Invite teammates
+</button>
+<div id="modal-root" aria-live="polite" aria-busy="false"></div>

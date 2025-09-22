@@ -141,12 +141,11 @@ def template_response(
     """
     # Ensure the Request object is present in the template context
     ctx = dict(context)
-    ctx.setdefault("request", request)
 
     use_partial = partial is True or (partial is None and is_hx_request(request))
     name = partial_template if (use_partial and partial_template) else template_name
 
-    resp = templates.TemplateResponse(name, ctx, status_code=status_code)
+    resp = templates.TemplateResponse(request, name, ctx, status_code=status_code)
 
     if headers:
         for k, v in headers.items():

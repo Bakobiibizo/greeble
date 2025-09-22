@@ -1,6 +1,78 @@
-/* Input Styles (Placeholder)
-Purpose: Baseline input styling.
-Inputs: greeble_core CSS variables.
-Outputs: Visual presentation only.
-Dependencies: greeble_core tokens.
-*/
+.greeble-field-list {
+  display: grid;
+  gap: var(--greeble-spacing-4, 1rem);
+}
+
+.greeble-field {
+  display: grid;
+  gap: var(--greeble-spacing-2, 0.5rem);
+}
+
+.greeble-field__label {
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.greeble-field__hint {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--greeble-color-muted, #a0a0a7);
+}
+
+.greeble-field__error {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #f87171;
+}
+
+.greeble-input {
+  display: block;
+  inline-size: 100%;
+  min-height: 2.5rem;
+  padding: var(--greeble-spacing-2, 0.5rem) var(--greeble-spacing-3, 0.75rem);
+  border-radius: 10px;
+  border: 1px solid #2a2a32;
+  background: #151518;
+  color: var(--greeble-color-foreground, #e8e8ea);
+  box-shadow: inset 0 0 0 1px transparent;
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.greeble-input::placeholder {
+  color: rgba(232, 232, 234, 0.5);
+}
+
+.greeble-input:focus-visible {
+  outline: none;
+  border-color: transparent;
+  box-shadow: var(--greeble-focus-ring, 0 0 0 3px rgba(106, 161, 255, 0.5));
+}
+
+.greeble-field--invalid .greeble-input {
+  border-color: rgba(248, 113, 113, 0.7);
+}
+
+.greeble-field--invalid .greeble-input:focus-visible {
+  box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.35);
+}
+
+.greeble-input[disabled],
+.greeble-input[aria-disabled="true"] {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.greeble-input--select {
+  appearance: none;
+  padding-right: calc(var(--greeble-spacing-4, 1rem) * 1.5);
+  background-image: linear-gradient(45deg, transparent 50%, currentColor 50%),
+    linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position: right 1rem top 50%, right 0.75rem top 50%;
+  background-size: 0.5rem 0.5rem;
+  background-repeat: no-repeat;
+}
+
+.greeble-input--textarea {
+  min-height: 6.5rem;
+  resize: vertical;
+}

@@ -18,7 +18,7 @@ def build_stepper_app() -> FastAPI:
 
     @app.get("/", response_class=HTMLResponse)
     def home(request: Request) -> HTMLResponse:
-        return templates.TemplateResponse("stepper.html", {"request": request})
+        return templates.TemplateResponse(request, "stepper.html")
 
     @app.get("/stepper/example", response_class=HTMLResponse)
     def step_partial() -> HTMLResponse:

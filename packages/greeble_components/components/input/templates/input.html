@@ -1,8 +1,65 @@
-<!--
-Inputs (Placeholder)
-Purpose: Provide styled inputs and patterns.
-Inputs: Standard form attributes; optional hx-post to validate.
-Outputs: None directly; server may return validation fragments.
-Dependencies: greeble_core tokens; optional HTMX.
+<!-- Input Patterns (Copy & Paste Ready)
+Includes text, email, select, and textarea examples with optional HTMX validation flow.
 -->
-<input class="greeble-input" type="text" />
+<div class="greeble-field-list">
+  <div class="greeble-field">
+    <label class="greeble-field__label" for="demo-name">Full name</label>
+    <input
+      class="greeble-input"
+      id="demo-name"
+      name="name"
+      type="text"
+      autocomplete="name"
+      placeholder="Ada Lovelace"
+      required
+    />
+    <p class="greeble-field__hint" id="demo-name-hint">Use the name that should appear on invoices.</p>
+  </div>
+
+  <div
+    class="greeble-field greeble-field--invalid"
+    id="demo-email-field"
+    hx-post="/input/validate"
+    hx-trigger="change delay:400ms from:#demo-email, blur from:#demo-email"
+    hx-target="#demo-email-field"
+    hx-include="#demo-email"
+    hx-swap="outerHTML"
+  >
+    <label class="greeble-field__label" for="demo-email">Work email</label>
+    <input
+      class="greeble-input"
+      id="demo-email"
+      name="email"
+      type="email"
+      autocomplete="email"
+      aria-describedby="demo-email-hint demo-email-error"
+      aria-invalid="true"
+      required
+    />
+    <p class="greeble-field__hint" id="demo-email-hint">We'll send a verification link.</p>
+    <p class="greeble-field__error" id="demo-email-error" role="alert">Enter a valid work email.</p>
+  </div>
+
+  <div class="greeble-field">
+    <label class="greeble-field__label" for="demo-role">Role</label>
+    <select class="greeble-input greeble-input--select" id="demo-role" name="role">
+      <option value="">Select a role</option>
+      <option value="founder">Founder</option>
+      <option value="product">Product manager</option>
+      <option value="engineering">Engineering lead</option>
+    </select>
+    <p class="greeble-field__hint">Used to personalize onboarding flows.</p>
+  </div>
+
+  <div class="greeble-field">
+    <label class="greeble-field__label" for="demo-notes">Notes</label>
+    <textarea
+      class="greeble-input greeble-input--textarea"
+      id="demo-notes"
+      name="notes"
+      rows="4"
+      placeholder="Tell us about your launch timeline..."
+    ></textarea>
+    <p class="greeble-field__hint">Markdown supported.</p>
+  </div>
+</div>

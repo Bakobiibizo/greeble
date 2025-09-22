@@ -1,5 +1,15 @@
-<!-- Drawer Partial (Placeholder) -->
+<!-- Drawer Partial -->
 <aside role="dialog" aria-labelledby="drawer-title" class="greeble-drawer">
-  <header><h2 id="drawer-title">Drawer</h2></header>
-  <button class="greeble-button" hx-get="/drawer/close" hx-target="#drawer-root" hx-swap="innerHTML">Close</button>
+  <div class="greeble-drawer__backdrop" hx-get="/drawer/close" hx-target="#drawer-root" hx-swap="innerHTML"></div>
+  <div class="greeble-drawer__panel" tabindex="-1">
+    <header class="greeble-drawer__header">
+      <h2 id="drawer-title" class="greeble-heading-2">Drawer</h2>
+    </header>
+    <div class="greeble-drawer__body">
+      <p>Drawer content...</p>
+    </div>
+    <footer class="greeble-drawer__footer">
+      <button class="greeble-button" hx-get="/drawer/close" hx-target="#drawer-root" hx-swap="innerHTML">Close</button>
+    </footer>
+  </div>
 </aside>

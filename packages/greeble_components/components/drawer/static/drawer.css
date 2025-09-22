@@ -1,1 +1,45 @@
-/* Drawer Styles (Placeholder) */
+/* Drawer Component Styles */
+
+.greeble-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+}
+
+.greeble-drawer__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, .45);
+}
+
+.greeble-drawer__panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  inline-size: min(480px, 92vw);
+  background: #101014;
+  color: var(--greeble-color-foreground);
+  border-left: 1px solid #2a2a32;
+  box-shadow: var(--greeble-shadow-2);
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+.greeble-drawer__header,
+.greeble-drawer__footer {
+  padding: var(--greeble-spacing-4);
+  border-block-end: 1px solid #2a2a32;
+}
+
+.greeble-drawer__footer { border-block-start: 1px solid #2a2a32; border-block-end: none; }
+
+.greeble-drawer__body {
+  padding: var(--greeble-spacing-4);
+  overflow: auto;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .greeble-drawer__panel { transform: translateX(0); transition: transform .2s ease-out; }
+}
+

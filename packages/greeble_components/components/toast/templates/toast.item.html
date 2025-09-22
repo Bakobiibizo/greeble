@@ -1,2 +1,17 @@
-<!-- Toast Item (Placeholder) -->
-<div class="greeble-toast" role="status">Message</div>
+<!-- Toast Item (Copy & Paste Ready)
+Dismiss pattern:
+  - Button targets closest .greeble-toast and swaps it out with an empty response.
+  - Implement a lightweight `/toast/dismiss` endpoint that returns an empty string.
+Events:
+  - Servers may also emit HX-Trigger headers to notify other components.
+-->
+<div class="greeble-toast" role="status">
+  <div class="greeble-toast__content">Message</div>
+  <button
+    class="greeble-icon-button"
+    aria-label="Dismiss"
+    hx-get="/toast/dismiss"
+    hx-target="closest .greeble-toast"
+    hx-swap="outerHTML"
+  >×</button>
+</div>

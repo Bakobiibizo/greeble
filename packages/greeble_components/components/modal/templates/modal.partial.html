@@ -13,7 +13,16 @@ Dependencies: greeble_core; optional Hyperscript for focus.
       <button class="greeble-icon-button" aria-label="Close" hx-get="/modal/close" hx-target="#modal-root" hx-swap="innerHTML">×</button>
     </header>
     <div class="greeble-modal__body">
-      <!-- Content placeholder -->
+      <!-- Example form: POST /modal/submit returns either errors or closes modal with success toast -->
+      <form
+        hx-post="/modal/submit"
+        hx-target="#modal-root"
+        hx-swap="innerHTML"
+      >
+        <label class="greeble-label" for="modal-email">Email</label>
+        <input id="modal-email" name="email" type="email" required class="greeble-input" />
+        <button class="greeble-button greeble-button--accent" type="submit">Submit</button>
+      </form>
     </div>
   </div>
 </div>

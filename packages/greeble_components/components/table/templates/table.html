@@ -1,9 +1,21 @@
-<!-- Table (Placeholder) -->
+<!-- Table (Copy & Paste Ready)
+Expected endpoints:
+  GET /table/rows?page=<n>&sort=<field>:<dir>
+-->
 <table class="greeble-table">
   <caption>Example Table</caption>
-  <thead><tr><th scope="col">Col</th></tr></thead>
-  <tbody id="table-body"></tbody>
+  <thead>
+    <tr>
+      <th scope="col">
+        <button type="button" hx-get="/table?page=1&sort=col:asc" hx-target="#table-body" hx-swap="innerHTML">Col ▲</button>
+        <button type="button" hx-get="/table?page=1&sort=col:desc" hx-target="#table-body" hx-swap="innerHTML">Col ▼</button>
+      </th>
+    </tr>
+  </thead>
+  <tbody id="table-body" hx-get="/table?page=1" hx-trigger="load" hx-swap="innerHTML"></tbody>
+  
 </table>
-<nav class="greeble-pagination">
-  <!-- pagination triggers -->
+<nav class="greeble-pagination" aria-label="Pagination">
+  <button type="button" hx-get="/table?page=1" hx-target="#table-body" hx-swap="innerHTML">1</button>
+  <button type="button" hx-get="/table?page=2" hx-target="#table-body" hx-swap="innerHTML">2</button>
 </nav>

@@ -1,6 +1,21 @@
-<!-- Form (Placeholder) -->
-<form hx-post="/form/submit">
-  <input name="email" type="email" class="greeble-input" aria-describedby="email-help" required />
-  <div id="email-help" class="visually-hidden">Enter a valid email</div>
+<!-- Form with Validation (Copy & Paste Ready)
+Expected endpoints:
+  POST /form/validate -> returns an invalid group partial on error
+  POST /form/submit   -> returns success toast OOB or invalid group
+-->
+<form class="stack" hx-post="/form/submit">
+  <div id="email-group"
+       hx-post="/form/validate"
+       hx-trigger="change from:#email, keyup delay:500ms from:#email, blur from:#email"
+       hx-include="#email"
+       hx-target="#email-group"
+       hx-swap="outerHTML">
+    <label class="greeble-label" for="email">Email</label>
+    <input id="email" name="email" type="email" class="greeble-input" aria-describedby="email-help" required />
+    <div id="email-help" class="visually-hidden">Enter a valid email</div>
+  </div>
   <button class="greeble-button" type="submit">Submit</button>
+  <!-- Toast root recommended somewhere in the page layout: -->
+  <!-- <div id="greeble-toasts" aria-live="assertive"></div> -->
+  
 </form>

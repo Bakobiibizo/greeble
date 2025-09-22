@@ -1,5 +1,22 @@
-<!-- Stepper (Placeholder) -->
-<nav class="greeble-stepper">
-  <!-- steps -->
+<!-- Stepper (Copy & Paste Ready)
+Expected endpoints:
+  GET /stepper/{stepKey} -> returns the partial for that step
+-->
+<nav class="greeble-stepper" aria-label="Steps">
+  <button
+    type="button"
+    aria-current="step"
+    hx-get="/stepper/one"
+    hx-target="#stepper-panel"
+    hx-swap="innerHTML"
+  >Step One</button>
+
+  <button
+    type="button"
+    hx-get="/stepper/two"
+    hx-target="#stepper-panel"
+    hx-swap="innerHTML"
+  >Step Two</button>
 </nav>
-<div id="stepper-panel"></div>
+
+<div id="stepper-panel" role="region" aria-live="polite"></div>

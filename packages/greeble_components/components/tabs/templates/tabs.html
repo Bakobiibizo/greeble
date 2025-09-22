@@ -1,6 +1,10 @@
-<!-- Tabs Trigger (Placeholder) -->
+<!-- Tabs (Copy & Paste Ready)
+Expected endpoints:
+  GET /tabs/{tabKey}
+-->
 <div class="greeble-tabs" role="tablist">
-  <button role="tab" aria-selected="true" hx-get="/tabs/one" hx-target="#tab-panel" hx-swap="innerHTML">One</button>
-  <button role="tab" aria-selected="false" hx-get="/tabs/two" hx-target="#tab-panel" hx-swap="innerHTML">Two</button>
+  <button role="tab" aria-selected="true" aria-controls="tab-panel" hx-get="/tabs/one" hx-target="#tab-panel" hx-swap="innerHTML">One</button>
+  <button role="tab" aria-selected="false" aria-controls="tab-panel" hx-get="/tabs/two" hx-target="#tab-panel" hx-swap="innerHTML">Two</button>
+  
 </div>
-<div id="tab-panel" role="tabpanel"></div>
+<div id="tab-panel" role="tabpanel" hx-get="/tabs/one" hx-trigger="load" hx-swap="innerHTML"></div>

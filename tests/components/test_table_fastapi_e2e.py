@@ -39,8 +39,10 @@ def test_table_home_renders() -> None:
 
     r = client.get("/")
     assert r.status_code == 200
-    assert '<tbody id="table-body">' in r.text
-    assert '<nav class="greeble-pagination">' in r.text
+    # Be flexible to allow additional attributes (hx-*) on the tbody
+    assert 'id="table-body"' in r.text
+    # Pagination container exists
+    assert "greeble-pagination" in r.text
 
 
 def test_table_endpoint_returns_partial_and_respects_query() -> None:

@@ -1,23 +1,66 @@
 # Stepper
 
-- Purpose: Multi-step wizard.
-- Inputs: Step key and form data.
-- Endpoints: GET /stepper/{stepKey}; POST /stepper/{stepKey}
-- Events: `greeble:stepper:change`.
-- Accessibility: Announce step changes; disable invalid next.
-- States: Per-step loading/validation.
-- Theming hooks: Step indicators; panels.
+- Purpose: Break complex workflows into ordered steps with server-rendered content.
+- Structure: Navigation buttons (`.greeble-stepper__step`) call `hx-get` endpoints that replace the
+  panel content. Use `aria-current="step"` to highlight progress.
+- Endpoints: `GET /stepper/{stepKey}` for each step. Optional `POST /stepper/{stepKey}` to validate
+  before continuing.
+- Events: Emit `HX-Trigger: {"greeble:stepper:change": {"step": "enable"}}` or
+  `{ "greeble:stepper:complete": true }` in responses.
+- Accessibility: Panel is `aria-live="polite"`; steps use badges and `aria-current` for clarity.
+- Theming hooks: `.greeble-stepper__badge`, `.greeble-stepper__step[aria-current]`, and
+  `.greeble-stepper__panel`.
 
-## Copy & Paste Usage
-
-Markup:
+## Copy & Paste
 
 ```html
-<nav class="greeble-stepper" aria-label="Steps">
-  <button type="button" aria-current="step" hx-get="/stepper/one" hx-target="#stepper-panel" hx-swap="innerHTML">Step One</button>
-  <button type="button" hx-get="/stepper/two" hx-target="#stepper-panel" hx-swap="innerHTML">Step Two</button>
-</nav>
-<div id="stepper-panel" role="region" aria-live="polite"></div>
+<section class="greeble-stepper" aria-labelledby="stepper-heading">
+  <header class="greeble-stepper__header">
+    <h2 id="stepper-heading" class="greeble-heading-2">Launch readiness checklist</h2>
+    <p class="greeble-stepper__description">Complete each milestone before launch day.</p>
+  </header>
+  <ol class="greeble-stepper__list" role="list">
+    <li class="greeble-stepper__item">
+      <button class="greeble-stepper__step" type="button" data-step="plan" aria-current="step"
+              hx-get="/stepper/plan" hx-target="#stepper-panel" hx-swap="innerHTML">
+        <span class="greeble-stepper__badge">1</span>
+        <span class="greeble-stepper__meta">
+          <strong>Plan launch</strong>
+          <small>Outline timeline, owners, and messaging.</small>
+        </span>
+      </button>
+    </li>
+    <!-- Additional steps -->
+  </ol>
+  <div id="stepper-panel" class="greeble-stepper__panel" role="region" aria-live="polite"
+       hx-get="/stepper/plan" hx-trigger="load" hx-target="this" hx-swap="innerHTML">
+    <p>Loading step…</p>
+  </div>
+</section>
 ```
 
-Server returns a fragment for the requested step (200 OK). You may emit `HX-Trigger` headers like `{"greeble:stepper:change": {"step": "two"}}`. For validation flows, return 400 with the updated group or panel content.
+Example step content:
+
+```html
+<section class="greeble-stepper__content" data-step="plan">
+  <h3 class="greeble-heading-3">Plan launch</h3>
+  <p>Confirm the launch checklist and share timelines with stakeholders.</p>
+  <ul class="greeble-stepper__tasks">
+    <li>Align on launch date and success metrics.</li>
+    <li>Draft customer messaging and enablement docs.</li>
+    <li>Schedule dry run across teams.</li>
+  </ul>
+  <div class="greeble-stepper__actions">
+    <button class="greeble-button" type="button" hx-get="/stepper/intro" hx-target="#stepper-panel" hx-swap="innerHTML">
+      Back
+    </button>
+    <button class="greeble-button greeble-button--primary" type="button"
+            hx-get="/stepper/enable" hx-target="#stepper-panel" hx-swap="innerHTML">
+      Continue to enablement
+    </button>
+  </div>
+</section>
+```
+
+Handle validation by returning the same step content with inline error messaging and an HTTP 400
+status.

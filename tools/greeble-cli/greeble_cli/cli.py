@@ -1,14 +1,6 @@
-"""
-CLI Entrypoint (Placeholder)
+from greeble_cli.cli import *  # noqa: F401,F403
 
-Purpose:
-    Parse commands (e.g., `greeble add <component>`, `greeble theme init`, `greeble doctor`).
-Inputs:
-    - Command-line arguments; manifest file path.
-Outputs:
-    - File operations and user guidance printed to stdout.
-Dependencies:
-    - CLI framework (click or typer); YAML parsing.
+if __name__ == "__main__":
+    from greeble_cli.cli import main
 
-Note: No executable code included in scaffold.
-"""
+    raise SystemExit(main())

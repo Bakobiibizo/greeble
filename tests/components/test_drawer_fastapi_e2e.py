@@ -47,6 +47,7 @@ def test_drawer_home_renders() -> None:
 
     r = client.get("/")
     assert r.status_code == 200
+    assert 'class="greeble-drawer-trigger"' in r.text
     assert 'hx-get="/drawer/open"' in r.text
     assert 'id="drawer-root"' in r.text
 
@@ -57,7 +58,8 @@ def test_drawer_open_and_close() -> None:
 
     r_open = client.get("/drawer/open", headers={HX_REQUEST_HEADER: "true"})
     assert r_open.status_code == 200
-    assert 'role="dialog"' in r_open.text
+    assert 'class="greeble-drawer__panel"' in r_open.text
+    assert "Request walkthrough" in r_open.text
 
     r_close = client.get("/drawer/close")
     assert r_close.status_code == 200

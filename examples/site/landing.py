@@ -9,6 +9,7 @@ from dataclasses import dataclass
 from html import escape
 from pathlib import Path
 from string import Template
+from typing import TypedDict
 
 from fastapi import FastAPI, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse, StreamingResponse
@@ -22,38 +23,19 @@ CPTS = ROOT / "packages" / "greeble_components" / "components"
 CORE_ASSETS = ROOT / "packages" / "greeble_core" / "assets" / "css"
 
 MODAL_PARTIAL = (CPTS / "modal" / "templates" / "modal.partial.html").read_text(encoding="utf-8")
-DRAWER_PARTIAL = """
-<div class="drawer-overlay">
-  <button
-    class="drawer-backdrop"
-    hx-get="/drawer/close"
-    hx-target="#drawer-root"
-    hx-swap="innerHTML"
-    aria-label="Close promotions"
-  ></button>
-  <aside class="drawer-panel" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
-    <header class="drawer-panel__header">
-      <h2 id="drawer-title" class="greeble-heading-2">Promotions</h2>
-      <button class="greeble-icon-button" aria-label="Close"
-              hx-get="/drawer/close" hx-target="#drawer-root" hx-swap="innerHTML">×</button>
-    </header>
-    <div class="stack">
-      <p>Unlock expansion-ready features designed for launch teams.</p>
-      <ul class="stack">
-        <li><strong>Priority Support:</strong> 24/7 incident routing and shared slack channel.</li>
-        <li><strong>Workflow Builders:</strong> Automate approvals and cross-team updates.</li>
-        <li><strong>Insights Pack:</strong> Deeper analytics with alerting templates.</li>
-      </ul>
-      <button class="greeble-button greeble-button--primary" type="button"
-              hx-post="/newsletter/subscribe"
-              hx-target="#drawer-root"
-              hx-swap="none">
-        Notify me about upgrades
-      </button>
-    </div>
-  </aside>
-</div>
-"""
+DRAWER_TRIGGER = (CPTS / "drawer" / "templates" / "drawer.html").read_text(encoding="utf-8")
+DRAWER_PARTIAL = (CPTS / "drawer" / "templates" / "drawer.partial.html").read_text(encoding="utf-8")
+PALETTE_TEMPLATE = (CPTS / "palette" / "templates" / "palette.html").read_text(encoding="utf-8")
+TABS_TEMPLATE = (CPTS / "tabs" / "templates" / "tabs.html").read_text(encoding="utf-8")
+INFINITE_LIST_TEMPLATE = (CPTS / "infinite-list" / "templates" / "infinite-list.html").read_text(
+    encoding="utf-8"
+)
+DROPDOWN_TEMPLATE = (CPTS / "dropdown" / "templates" / "dropdown.html").read_text(encoding="utf-8")
+STEPPER_TEMPLATE = (CPTS / "stepper" / "templates" / "stepper.html").read_text(encoding="utf-8")
+FORM_TEMPLATE = (CPTS / "form-validated" / "templates" / "form.html").read_text(encoding="utf-8")
+FORM_INVALID_PARTIAL = (CPTS / "form-validated" / "templates" / "form.partial.html").read_text(
+    encoding="utf-8"
+)
 
 COMPONENT_STYLE_PATHS = [
     CPTS / "button" / "static" / "button.css",
@@ -61,6 +43,13 @@ COMPONENT_STYLE_PATHS = [
     CPTS / "modal" / "static" / "modal.css",
     CPTS / "toast" / "static" / "toast.css",
     CPTS / "table" / "static" / "table.css",
+    CPTS / "drawer" / "static" / "drawer.css",
+    CPTS / "dropdown" / "static" / "dropdown.css",
+    CPTS / "palette" / "static" / "palette.css",
+    CPTS / "stepper" / "static" / "stepper.css",
+    CPTS / "infinite-list" / "static" / "infinite-list.css",
+    CPTS / "form-validated" / "static" / "form.css",
+    CPTS / "tabs" / "static" / "tabs.css",
 ]
 COMPONENT_CSS = "\n".join(path.read_text(encoding="utf-8") for path in COMPONENT_STYLE_PATHS)
 
@@ -208,6 +197,56 @@ ACCOUNTS: tuple[Account, ...] = (
 )
 
 _FEED_COUNTER = itertools.count(1)
+FEED_MESSAGES = (
+    "Automation queued background job.",
+    "Webhook delivered to analytics partner.",
+    "Status page updated for customers.",
+)
+
+
+class TabContent(TypedDict):
+    title: str
+    description: str
+    items: list[str]
+
+
+class StepContent(TypedDict):
+    title: str
+    description: str
+    tasks: list[str]
+    prev: str | None
+    next: str | None
+
+
+_TAB_CONTENT: dict[str, TabContent] = {
+    "overview": {
+        "title": "Mission control",
+        "description": "Consolidate launches, async updates, and approvals in one workspace.",
+        "items": [
+            "Track blockers and owners in real time.",
+            "Broadcast launch status to every stakeholder.",
+            "Pipe alerts to Slack, Teams, and email.",
+        ],
+    },
+    "pricing": {
+        "title": "Usage-based pricing",
+        "description": "Volume discounts unlock after 50 seats with custom invoicing support.",
+        "items": [
+            "$24/month starter tier with 10 seats included.",
+            "Scale tier adds workflow automation and advanced analytics.",
+            "Enterprise tier includes SSO, audit logs, and 24/7 support.",
+        ],
+    },
+    "integrations": {
+        "title": "Integrations",
+        "description": "Connect your launch tooling ecosystem in a few clicks.",
+        "items": [
+            "Slack & Teams updates for status announcements.",
+            "Linear issue syncing for launch blockers.",
+            "Segment and RudderStack event streaming.",
+        ],
+    },
+}
 
 
 def render_page(body_html: str) -> HTMLResponse:
@@ -471,43 +510,24 @@ def build_sign_in_section() -> str:
     """
 
 
-def build_palette_section() -> str:
-    default_products = PRODUCTS[:4]
-    initial_results = _render_palette_results(default_products)
-    initial_detail = _render_palette_detail(PRODUCTS[0]) if PRODUCTS else "<p>No products yet.</p>"
+def build_dropdown_section() -> str:
     return f"""
-<section class="demo" id="product-search">
+<section class="demo" id="workspace-actions">
   <header>
-    <h2 class="greeble-heading-2">Product Search & Command Palette</h2>
-    <p>Use keyboard-friendly search to populate a listbox and update the detail preview.</p>
+    <h2 class="greeble-heading-2">Workspace actions</h2>
+    <p>Trigger HTMX-powered commands directly from a dropdown menu.</p>
   </header>
-  <form class="stack"
-        hx-post="/palette/search"
-        hx-trigger="submit, keyup changed delay:300ms from:input[name=q]"
-        hx-target="#palette-results"
-        hx-swap="innerHTML"
-        autocomplete="off">
-    <label class="greeble-label" for="palette-query">Search the catalog</label>
-    <input
-      id="palette-query"
-      name="q"
-      class="greeble-input"
-      type="search"
-      placeholder="Search by name or category"
-    />
-  </form>
-  <div class="grid-two">
-    <div>
-      <h3 class="greeble-heading-3">Results</h3>
-      <div id="palette-results" role="listbox" aria-label="Product matches">
-        {initial_results}
-      </div>
-    </div>
-    <div id="palette-detail" class="stack" aria-live="polite">
-      <h3 class="greeble-heading-3">Selection</h3>
-      {initial_detail}
-    </div>
-  </div>
+  {DROPDOWN_TEMPLATE}
+  <div id="workspace-panel" class="greeble-card" aria-live="polite"></div>
+  <div id="invite-root" aria-live="polite"></div>
+</section>
+    """
+
+
+def build_palette_section() -> str:
+    return f"""
+<section class="demo" id="command-palette-demo">
+  {PALETTE_TEMPLATE}
 </section>
     """
 
@@ -526,113 +546,45 @@ def build_table_section() -> str:
 
 
 def build_tabs_section() -> str:
-    return """
+    return f"""
 <section class="demo" id="product-tabs-section">
-  <header>
-    <h2 class="greeble-heading-2">Product Tabs</h2>
-    <p>Lazy-load deeper product content while maintaining accessible tab semantics.</p>
-  </header>
-  <div class="stack" role="region">
-    <div id="product-tablist" class="greeble-tabs" role="tablist">
-      <button
-        role="tab"
-        data-tab="overview"
-        aria-selected="true"
-        aria-controls="product-tab-panel"
-        hx-get="/tabs/overview"
-        hx-target="#product-tab-panel"
-        hx-swap="innerHTML"
-        class="greeble-button greeble-button--ghost"
-        data-active
-      >
-        Overview
-      </button>
-      <button
-        role="tab"
-        data-tab="pricing"
-        aria-selected="false"
-        aria-controls="product-tab-panel"
-        hx-get="/tabs/pricing"
-        hx-target="#product-tab-panel"
-        hx-swap="innerHTML"
-        class="greeble-button greeble-button--ghost"
-      >
-        Pricing
-      </button>
-      <button
-        role="tab"
-        data-tab="integrations"
-        aria-selected="false"
-        aria-controls="product-tab-panel"
-        hx-get="/tabs/integrations"
-        hx-target="#product-tab-panel"
-        hx-swap="innerHTML"
-        class="greeble-button greeble-button--ghost"
-      >
-        Integrations
-      </button>
-    </div>
-    <div
-      id="product-tab-panel"
-      role="tabpanel"
-      aria-live="polite"
-      hx-get="/tabs/overview"
-      hx-trigger="load"
-      hx-target="this"
-      hx-swap="innerHTML"
-    >
-      <p>Loading tab content…</p>
-    </div>
-  </div>
+  {TABS_TEMPLATE}
 </section>
     """
 
 
 def build_drawer_section() -> str:
-    return """
+    return f"""
 <section class="demo" id="promotions">
   <header>
     <h2 class="greeble-heading-2">Promotions Drawer</h2>
-    <p>Offer contextual upgrades in a non-blocking side panel.</p>
+    <p>Open the drawer to explore upgrade perks and request a walkthrough.</p>
   </header>
-  <button class="greeble-button" hx-get="/drawer/open" hx-target="#drawer-root" hx-swap="innerHTML">
-    Open Promotions
-  </button>
-  <p>
-    The drawer returns a partial fragment; clicking the backdrop or close button clears the
-    target.
-  </p>
+  {DRAWER_TRIGGER}
 </section>
     """
 
 
 def build_infinite_list_section() -> str:
-    return """
+    return f"""
 <section class="demo" id="infinite-updates">
-  <header>
-    <h2 class="greeble-heading-2">Infinite Updates</h2>
-    <p>Stream activity with both auto-revealed sentinels and manual "Load more" controls.</p>
-  </header>
-  <ul id="updates-list" class="stack" aria-live="polite">
-    <li>Deployment complete — baseline telemetry online.</li>
-    <li>Feature flags synced for the beta cohort.</li>
-  </ul>
-  <div
-    id="updates-sentinel"
-    hx-get="/list"
-    hx-trigger="revealed"
-    hx-target="#updates-list"
-    hx-swap="beforeend"
-  ></div>
-  <div class="feed-controls">
-    <span>Sentinel appends items when scrolled into view.</span>
-    <button class="greeble-button" type="button"
-            hx-get="/list"
-            hx-target="#updates-list"
-            hx-swap="beforeend">
-      Load more
-    </button>
-  </div>
+  {INFINITE_LIST_TEMPLATE}
+</section>
+    """
+
+
+def build_stepper_section() -> str:
+    return f"""
+<section class="demo" id="launch-stepper">
+  {STEPPER_TEMPLATE}
+</section>
+    """
+
+
+def build_validated_form_section() -> str:
+    return f"""
+<section class="demo" id="request-access-form">
+  {FORM_TEMPLATE}
 </section>
     """
 
@@ -655,10 +607,13 @@ async def landing() -> HTMLResponse:
     sections = "".join(
         [
             build_sign_in_section(),
+            build_dropdown_section(),
             build_palette_section(),
+            build_validated_form_section(),
             build_table_section(),
             build_tabs_section(),
             build_drawer_section(),
+            build_stepper_section(),
             build_infinite_list_section(),
             build_sse_section(),
         ]
@@ -706,6 +661,27 @@ async def newsletter_subscribe() -> HTMLResponse:
     return HTMLResponse(html)
 
 
+@app.get("/workspace/settings", response_class=HTMLResponse)
+async def workspace_settings() -> HTMLResponse:
+    html = """
+<div id="workspace-panel" class="greeble-card">
+  Settings panel loaded. Adjust billing and integrations here.
+</div>
+    """
+    return HTMLResponse(html)
+
+
+@app.post("/workspace/invite", response_class=HTMLResponse)
+async def workspace_invite(email: str = Form("")) -> HTMLResponse:
+    toast = _toast_fragment("success", "Invite queued", "We'll email your teammate a magic link.")
+    body = (
+        '<div id="invite-root">Invite request received.</div>'
+        + f'<div id="greeble-toasts" hx-swap-oob="true">{toast}</div>'
+    )
+    headers = {"HX-Trigger": json.dumps({"greeble:menu:select": {"action": "invite"}})}
+    return HTMLResponse(body, headers=headers)
+
+
 def _filter_products(query: str) -> Iterable[Product]:
     q = query.lower()
     for product in PRODUCTS:
@@ -718,18 +694,22 @@ def _filter_products(query: str) -> Iterable[Product]:
 
 def _render_palette_results(products: Iterable[Product]) -> str:
     items: list[str] = []
-    for product in products:
+    for idx, product in enumerate(products):
+        selected = "true" if idx == 0 else "false"
         items.append(
             Template(
                 """
-<li role=\"option\" data-sku=\"$sku\">
-  <button type=\"button\" class=\"greeble-button greeble-button--ghost\"
-          hx-post=\"/palette/select\"
-          hx-target=\"#palette-detail\"
-          hx-swap=\"innerHTML\"
+<li role="option" data-sku="$sku" aria-selected="$selected">
+  <button class="greeble-palette__result" type="button"
+          hx-post="/palette/select"
+          hx-target="#palette-detail"
+          hx-swap="innerHTML"
           hx-vals='{"sku": "$sku"}'>
-    <strong>$name</strong><br />
-    <span>$tagline</span>
+    <div class="greeble-palette__result-label">
+      <strong>$name</strong>
+      <span>$tagline</span>
+    </div>
+    <span class="greeble-palette__result-kbd">$category</span>
   </button>
 </li>
                 """
@@ -737,14 +717,20 @@ def _render_palette_results(products: Iterable[Product]) -> str:
                 sku=escape(product.sku),
                 name=escape(product.name),
                 tagline=escape(product.tagline),
+                category=escape(product.category),
+                selected=selected,
             )
         )
 
     if not items:
-        return '<p role="status">No results. Try a different name or category.</p>'
+        return (
+            '<p class="greeble-palette__empty" role="status">'
+            "No results. Try a different keyword."
+            "</p>"
+        )
 
     return (
-        '<ul class="demo-listbox" role="listbox" aria-label="Matching products">'
+        '<ul class="greeble-palette__list" role="listbox" aria-label="Command results">'
         + "".join(items)
         + "</ul>"
     )
@@ -753,12 +739,12 @@ def _render_palette_results(products: Iterable[Product]) -> str:
 def _render_palette_detail(product: Product) -> str:
     return Template(
         """
-<article>
+<article class="greeble-palette__detail-card" data-sku="$sku">
   <header>
     <h3 class="greeble-heading-3">$name</h3>
     <p>$tagline</p>
   </header>
-  <dl class="stack">
+  <dl class="greeble-palette__meta">
     <div><dt>SKU</dt><dd>$sku</dd></div>
     <div><dt>Category</dt><dd>$category</dd></div>
     <div><dt>Price</dt><dd>$price_fmt</dd></div>
@@ -781,12 +767,10 @@ def _render_palette_detail(product: Product) -> str:
 @app.post("/palette/search", response_class=HTMLResponse)
 async def palette_search(q: str = Form("")) -> HTMLResponse:
     query = q.strip()
-    if not query:
-        return HTMLResponse("<p>Type at least one character to search.</p>")
-
-    matches = list(_filter_products(query))
+    matches = list(_filter_products(query)) if query else list(PRODUCTS[:4])
     html = _render_palette_results(matches)
-    return HTMLResponse(html)
+    headers = {"HX-Trigger": json.dumps({"greeble:palette:results": {"count": len(matches)}})}
+    return HTMLResponse(html, headers=headers)
 
 
 @app.post("/palette/select", response_class=HTMLResponse)
@@ -794,7 +778,9 @@ async def palette_select(sku: str = Form(...)) -> HTMLResponse:
     product = _PRODUCTS_BY_SKU.get(sku)
     if not product:
         raise HTTPException(status_code=404, detail="Unknown product")
-    return HTMLResponse(_render_palette_detail(product))
+    detail_html = _render_palette_detail(product)
+    headers = {"HX-Trigger": json.dumps({"greeble:palette:select": {"sku": sku}})}
+    return HTMLResponse(detail_html, headers=headers)
 
 
 def _sort_accounts(accounts: Iterable[Account], field: str, direction: str) -> list[Account]:
@@ -901,6 +887,122 @@ def _render_account_rows(accounts: Iterable[Account]) -> str:
 
 
 _ACCOUNTS_BY_SLUG = {_account_slug(account): account for account in ACCOUNTS}
+
+
+def _render_feed_items(batch_size: int = 3) -> str:
+    items: list[str] = []
+    messages = itertools.islice(itertools.cycle(FEED_MESSAGES), batch_size)
+    for message in messages:
+        idx = next(_FEED_COUNTER)
+        items.append(
+            Template(
+                """
+<li class="greeble-feed__item">
+  <strong>Update #$idx</strong>
+  <span>$message</span>
+</li>
+                """
+            ).substitute(idx=idx, message=escape(message))
+        )
+    return "".join(items)
+
+
+_STEPPER_STEPS: dict[str, StepContent] = {
+    "plan": {
+        "title": "Plan launch",
+        "description": "Confirm timeline, owners, and announcement strategy.",
+        "tasks": [
+            "Align on launch date and success metrics.",
+            "Draft internal enablement notes.",
+            "Schedule dry run with support and marketing.",
+        ],
+        "prev": None,
+        "next": "enable",
+    },
+    "enable": {
+        "title": "Enable teams",
+        "description": "Share launch briefs, escalation paths, and FAQ updates.",
+        "tasks": [
+            "Distribute go-live checklist to stakeholders.",
+            "Update support macros and status responses.",
+            "Confirm metrics dashboard owners.",
+        ],
+        "prev": "plan",
+        "next": "launch",
+    },
+    "launch": {
+        "title": "Go live",
+        "description": "Monitor rollout, communicate status, and capture feedback.",
+        "tasks": [
+            "Monitor health metrics and alert thresholds.",
+            "Post launch status to customers and partners.",
+            "Collect feedback for the retro.",
+        ],
+        "prev": "enable",
+        "next": None,
+    },
+}
+
+
+def _render_stepper_content(step_key: str) -> str:
+    data = _STEPPER_STEPS.get(step_key)
+    if not data:
+        raise HTTPException(status_code=404, detail="Unknown step")
+
+    tasks_html = "\n".join(f"    <li>{escape(task)}</li>" for task in data["tasks"])
+
+    actions: list[str] = []
+    prev_key = data["prev"]
+    next_key = data["next"]
+    if prev_key:
+        actions.append(
+            Template(
+                """
+<button class="greeble-button" type="button"
+        hx-get="/stepper/$prev"
+        hx-target="#stepper-panel"
+        hx-swap="innerHTML">
+  Back
+</button>
+                """
+            ).substitute(prev=prev_key)
+        )
+    if next_key:
+        actions.append(
+            Template(
+                """
+<button class="greeble-button greeble-button--primary" type="button"
+        hx-get="/stepper/$next"
+        hx-target="#stepper-panel"
+        hx-swap="innerHTML">
+  Continue
+</button>
+                """
+            ).substitute(next=next_key)
+        )
+
+    actions_html = "\n".join(actions)
+
+    return Template(
+        """
+<section class="greeble-stepper__content" data-step="$key">
+  <h3 class="greeble-heading-3">$title</h3>
+  <p>$description</p>
+  <ul class="greeble-stepper__tasks">
+$tasks
+  </ul>
+  <div class="greeble-stepper__actions">
+$actions
+  </div>
+</section>
+        """
+    ).substitute(
+        key=escape(step_key),
+        title=escape(data["title"]),
+        description=escape(data["description"]),
+        tasks=tasks_html,
+        actions=actions_html,
+    )
 
 
 def _get_account_by_slug(slug: str) -> Account:
@@ -1076,22 +1178,31 @@ async def toast_dismiss() -> HTMLResponse:
 
 @app.get("/tabs/{tab_key}", response_class=HTMLResponse)
 async def load_tab(tab_key: str) -> HTMLResponse:
-    content_map = {
-        "overview": (
-            "<p>Consolidate launches, async updates, and approvals in a single mission control.</p>"
-        ),
-        "pricing": (
-            "<p>Usage-based pricing starts at $24/month with volume discounts after 50 seats.</p>"
-        ),
-        "integrations": (
-            '<ul class="stack"><li>Slack + Teams alerts</li><li>Linear issues sync</li>'
-            "<li>Segment + RudderStack events</li></ul>"
-        ),
-    }
-    html = content_map.get(tab_key)
-    if not html:
+    data = _TAB_CONTENT.get(tab_key)
+    if not data:
         raise HTTPException(status_code=404, detail="Unknown tab")
-    return HTMLResponse(html)
+
+    items_html = "\n".join(f"    <li>{escape(item)}</li>" for item in data["items"])
+    html = Template(
+        """
+<section class="greeble-tabs__content" data-tab="$key">
+  <h3 class="greeble-heading-3">$title</h3>
+  <p>$description</p>
+  <ul class="greeble-tabs__list">
+$items
+  </ul>
+</section>
+        """
+    ).substitute(
+        key=escape(tab_key),
+        title=escape(data["title"]),
+        description=escape(data["description"]),
+        items=items_html,
+    )
+    headers = {
+        "HX-Trigger": json.dumps({"greeble:tab:change": {"tab": tab_key}}),
+    }
+    return HTMLResponse(html, headers=headers)
 
 
 @app.get("/drawer/open", response_class=HTMLResponse)
@@ -1102,6 +1213,42 @@ async def drawer_open() -> HTMLResponse:
 @app.get("/drawer/close", response_class=HTMLResponse)
 async def drawer_close() -> HTMLResponse:
     return HTMLResponse("")
+
+
+@app.post("/drawer/subscribe", response_class=HTMLResponse)
+async def drawer_subscribe(email: str = Form("")) -> HTMLResponse:
+    value = email.strip()
+    if not value or "@" not in value:
+        toast = _toast_fragment(
+            "danger",
+            "Try again",
+            "Enter a valid work email to receive updates.",
+        )
+        body = f'<div id="greeble-toasts" hx-swap-oob="true">{toast}</div>'
+        return HTMLResponse(body, status_code=400)
+
+    toast = _toast_fragment(
+        "success",
+        "Walkthrough requested",
+        f"We'll contact {escape(value)} shortly.",
+    )
+    body = (
+        '<div id="drawer-root" hx-swap-oob="true"></div>'
+        f'<div id="greeble-toasts" hx-swap-oob="true">{toast}</div>'
+    )
+    headers = {
+        "HX-Trigger": json.dumps({"greeble:drawer:close": True}),
+    }
+    return HTMLResponse(body, headers=headers)
+
+
+@app.get("/stepper/{step_key}", response_class=HTMLResponse)
+async def stepper_step(step_key: str) -> HTMLResponse:
+    html = _render_stepper_content(step_key)
+    headers = {
+        "HX-Trigger": json.dumps({"greeble:stepper:change": {"step": step_key}}),
+    }
+    return HTMLResponse(html, headers=headers)
 
 
 def _render_signin_group(email: str, error: str | None, *, swap_oob: bool) -> str:
@@ -1163,6 +1310,38 @@ def _render_signin_group(email: str, error: str | None, *, swap_oob: bool) -> st
     )
 
 
+def _render_valid_email_group(email: str, *, swap_oob: bool) -> str:
+    attrs = [
+        'id="form-email-group"',
+        'class="greeble-field"',
+        'hx-post="/form/validate"',
+        (
+            'hx-trigger="change from:#form-email, keyup delay:400ms from:#form-email, '
+            'blur from:#form-email"'
+        ),
+        'hx-target="#form-email-group"',
+        'hx-swap="outerHTML"',
+        'hx-include="#form-email"',
+    ]
+    if swap_oob:
+        attrs.append('hx-swap-oob="true"')
+
+    value_attr = f'value="{escape(email, quote=True)}"' if email else ""
+
+    return Template(
+        """
+<div $attrs>
+  <label class="greeble-field__label" for="form-email">Work email</label>
+  <input class="greeble-input" id="form-email" name="email" type="email"
+         autocomplete="email" aria-describedby="form-email-hint" required $value />
+  <p class="greeble-field__hint" id="form-email-hint">
+    Use your company domain for faster approval.
+  </p>
+</div>
+        """
+    ).substitute(attrs=" ".join(attrs), value=value_attr)
+
+
 def _validate_signin_email(email: str) -> str | None:
     value = email.strip()
     if not value:
@@ -1199,13 +1378,40 @@ async def auth_sign_in(email: str = Form("")) -> HTMLResponse:
     return HTMLResponse(reset_group + toast_html + status_area)
 
 
+@app.post("/form/validate", response_class=HTMLResponse)
+async def validated_form_check(email: str = Form("")) -> HTMLResponse:
+    error = _validate_signin_email(email)
+    if error:
+        return HTMLResponse(FORM_INVALID_PARTIAL, status_code=400)
+    return HTMLResponse(_render_valid_email_group(email, swap_oob=False))
+
+
+@app.post("/form/submit", response_class=HTMLResponse)
+async def validated_form_submit(email: str = Form("")) -> HTMLResponse:
+    error = _validate_signin_email(email)
+    if error:
+        return HTMLResponse(FORM_INVALID_PARTIAL, status_code=400)
+
+    reset_group = _render_valid_email_group("", swap_oob=True)
+    toast = _toast_fragment(
+        "success",
+        "Request received",
+        "We will reach out with onboarding steps shortly.",
+    )
+    body = (
+        reset_group
+        + f'<div id="greeble-toasts" hx-swap-oob="true">{toast}</div>'
+        + '<div id="form-status">Thanks! We\'ll reach out with next steps.</div>'
+    )
+    headers = {
+        "HX-Trigger": json.dumps({"greeble:form:submitted": True}),
+    }
+    return HTMLResponse(body, headers=headers)
+
+
 @app.get("/list", response_class=HTMLResponse)
 async def infinite_list() -> HTMLResponse:
-    items = []
-    for _ in range(3):
-        idx = next(_FEED_COUNTER)
-        items.append(f"<li>Update #{idx}: Background job completed.</li>")
-    return HTMLResponse("".join(items))
+    return HTMLResponse(_render_feed_items())
 
 
 async def _clock_stream(test_mode: bool) -> AsyncIterator[str]:

@@ -8,6 +8,15 @@
 - Events: Emit `HX-Trigger: {"greeble:modal:open": true}` when returning the partial and `HX-Trigger-After-Swap` to signal closing.
 - Theming hooks: Panel and actions inherit tokens; `.greeble-badge`, `.greeble-modal__actions`, `.greeble-checkbox` expose specific styling knobs.
 
+## Server contract
+
+- `GET /modal/example` returns the modal partial. Include `HX-Trigger: {"greeble:modal:open": true}`
+  if other components need to know the modal opened.
+- `GET /modal/close` should return an empty string. HTMX clears `#modal-root` immediately.
+- `POST /modal/submit` handles the form. On success, return an empty modal root plus an out-of-band
+  toast to close the dialog and inform the user. On validation failure, return the modal partial
+  with inline errors and set the status to 400 so HTMX keeps the dialog mounted.
+
 ## Copy & Paste
 
 ```html

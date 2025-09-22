@@ -20,11 +20,12 @@ def build_palette_app() -> FastAPI:
     def home(request: Request) -> HTMLResponse:
         return templates.TemplateResponse(request, "palette.html")
 
+    results_partial = (tpl_dir / "palette.partial.html").read_text(encoding="utf-8")
+
     @app.post("/palette/search", response_class=HTMLResponse)
     def search(q: str = Form("")) -> HTMLResponse:
-        # Return results partial (ignore query content for placeholder)
-        html = '<ul role="listbox"><li role="option">Result</li></ul>'
-        return HTMLResponse(html)
+        # Return canonical results markup regardless of query for testing
+        return HTMLResponse(results_partial)
 
     return app
 
@@ -35,6 +36,7 @@ def test_palette_home_renders() -> None:
 
     r = client.get("/")
     assert r.status_code == 200
+    assert 'class="greeble-palette"' in r.text
     assert 'hx-post="/palette/search"' in r.text
     assert 'id="palette-results"' in r.text
 
@@ -45,5 +47,5 @@ def test_palette_search_returns_partial() -> None:
 
     r = client.post("/palette/search", data={"q": "abc"})
     assert r.status_code == 200
-    assert 'role="listbox"' in r.text
-    assert 'role="option"' in r.text
+    assert "greeble-palette__list" in r.text
+    assert 'hx-post="/palette/select"' in r.text

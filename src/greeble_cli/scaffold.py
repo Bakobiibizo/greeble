@@ -80,8 +80,8 @@ def ensure_within_project(project_root: Path, destinations: Iterable[CopyPlan]) 
 def execute_plan(plans: Iterable[CopyPlan], *, force: bool, dry_run: bool) -> list[Path]:
     written: list[Path] = []
     for plan in plans:
-        dest_parent = plan.destination.parent
         if not dry_run:
+            dest_parent = plan.destination.parent
             dest_parent.mkdir(parents=True, exist_ok=True)
         if plan.destination.exists() and not force and not dry_run:
             raise ScaffoldError(f"File already exists: {plan.destination}")
@@ -108,8 +108,5 @@ def component_sources(manifest: Manifest, component: Component) -> list[Path]:
     sources: list[Path] = []
     for relative in component.files:
         rel_path = Path(relative)
-        if rel_path.parts[0] == "docs":
-            sources.append(_resolve_source(manifest, component, rel_path))
-        else:
-            sources.append(_resolve_source(manifest, component, rel_path))
+        sources.append(_resolve_source(manifest, component, rel_path))
     return sources

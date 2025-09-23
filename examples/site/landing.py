@@ -4,16 +4,22 @@ import asyncio
 import itertools
 import json
 import os
-from collections.abc import AsyncIterator, Iterable
+from collections.abc import AsyncIterator, Iterable, Iterator
 from dataclasses import dataclass
 from html import escape
 from pathlib import Path
 from string import Template
-from typing import TypedDict
+from typing import Any, TypedDict, cast
 
 from fastapi import FastAPI, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
+
+import greeble.demo as demo
+from greeble.demo import (
+    load_component_stylesheets,
+    load_component_template,
+)
 
 HOST = os.getenv("HOST", "127.0.0.1")
 PORT = int(os.getenv("PORT", 8045))
@@ -22,36 +28,74 @@ ROOT = Path(__file__).resolve().parents[2]
 CPTS = ROOT / "packages" / "greeble_components" / "components"
 CORE_ASSETS = ROOT / "packages" / "greeble_core" / "assets" / "css"
 
-MODAL_PARTIAL = (CPTS / "modal" / "templates" / "modal.partial.html").read_text(encoding="utf-8")
-DRAWER_TRIGGER = (CPTS / "drawer" / "templates" / "drawer.html").read_text(encoding="utf-8")
-DRAWER_PARTIAL = (CPTS / "drawer" / "templates" / "drawer.partial.html").read_text(encoding="utf-8")
-PALETTE_TEMPLATE = (CPTS / "palette" / "templates" / "palette.html").read_text(encoding="utf-8")
-TABS_TEMPLATE = (CPTS / "tabs" / "templates" / "tabs.html").read_text(encoding="utf-8")
-INFINITE_LIST_TEMPLATE = (CPTS / "infinite-list" / "templates" / "infinite-list.html").read_text(
-    encoding="utf-8"
-)
-DROPDOWN_TEMPLATE = (CPTS / "dropdown" / "templates" / "dropdown.html").read_text(encoding="utf-8")
-STEPPER_TEMPLATE = (CPTS / "stepper" / "templates" / "stepper.html").read_text(encoding="utf-8")
-FORM_TEMPLATE = (CPTS / "form-validated" / "templates" / "form.html").read_text(encoding="utf-8")
-FORM_INVALID_PARTIAL = (CPTS / "form-validated" / "templates" / "form.partial.html").read_text(
-    encoding="utf-8"
-)
 
-COMPONENT_STYLE_PATHS = [
-    CPTS / "button" / "static" / "button.css",
-    CPTS / "input" / "static" / "input.css",
-    CPTS / "modal" / "static" / "modal.css",
-    CPTS / "toast" / "static" / "toast.css",
-    CPTS / "table" / "static" / "table.css",
-    CPTS / "drawer" / "static" / "drawer.css",
-    CPTS / "dropdown" / "static" / "dropdown.css",
-    CPTS / "palette" / "static" / "palette.css",
-    CPTS / "stepper" / "static" / "stepper.css",
-    CPTS / "infinite-list" / "static" / "infinite-list.css",
-    CPTS / "form-validated" / "static" / "form.css",
-    CPTS / "tabs" / "static" / "tabs.css",
-]
-COMPONENT_CSS = "\n".join(path.read_text(encoding="utf-8") for path in COMPONENT_STYLE_PATHS)
+# Re-export selected helpers so tests can import them from this module
+def account_slug(account: Account) -> str:  # noqa: D401 - delegate
+    return demo.account_slug(account)
+
+
+def account_status_display(account: Account) -> tuple[str, str]:  # noqa: D401 - delegate
+    return demo.account_status_display(account)
+
+
+def sort_accounts(accounts: Iterable[Any], field: str, direction: str) -> list[Any]:  # noqa: D401 - delegate
+    return cast(list[Any], demo.sort_accounts(accounts, field, direction))
+
+
+def render_account_rows(accounts: Iterable[Any]) -> str:  # noqa: D401 - delegate
+    return demo.render_account_rows(accounts)
+
+
+def toast_fragment(level: str, title: str, message: str, *, icon: str | None = None) -> str:  # noqa: D401 - delegate
+    return demo.toast_fragment(level, title, message, icon=icon)
+
+
+def render_signin_group(email: str, error: str | None, *, swap_oob: bool) -> str:  # noqa: D401 - delegate
+    return demo.render_signin_group(email, error, swap_oob=swap_oob)
+
+
+def render_valid_email_group(email: str, *, swap_oob: bool) -> str:  # noqa: D401 - delegate
+    return demo.render_valid_email_group(email, swap_oob=swap_oob)
+
+
+def validate_signin_email(email: str) -> str | None:  # noqa: D401 - delegate
+    return demo.validate_signin_email(email)
+
+
+def render_feed_items(
+    messages: Iterable[str], counter: Iterator[int], *, batch_size: int = 3
+) -> str:  # noqa: D401 - delegate
+    return demo.render_feed_items(messages, cast(Iterator[int], counter), batch_size=batch_size)
+
+
+MODAL_PARTIAL = load_component_template(CPTS, "modal", "modal.partial.html")
+DRAWER_TRIGGER = load_component_template(CPTS, "drawer", "drawer.html")
+DRAWER_PARTIAL = load_component_template(CPTS, "drawer", "drawer.partial.html")
+PALETTE_TEMPLATE = load_component_template(CPTS, "palette", "palette.html")
+TABS_TEMPLATE = load_component_template(CPTS, "tabs", "tabs.html")
+INFINITE_LIST_TEMPLATE = load_component_template(CPTS, "infinite-list", "infinite-list.html")
+DROPDOWN_TEMPLATE = load_component_template(CPTS, "dropdown", "dropdown.html")
+STEPPER_TEMPLATE = load_component_template(CPTS, "stepper", "stepper.html")
+FORM_TEMPLATE = load_component_template(CPTS, "form-validated", "form.html")
+FORM_INVALID_PARTIAL = load_component_template(CPTS, "form-validated", "form.partial.html")
+
+COMPONENT_CSS = load_component_stylesheets(
+    CPTS,
+    (
+        ("button", "button.css"),
+        ("input", "input.css"),
+        ("modal", "modal.css"),
+        ("toast", "toast.css"),
+        ("table", "table.css"),
+        ("drawer", "drawer.css"),
+        ("dropdown", "dropdown.css"),
+        ("palette", "palette.css"),
+        ("stepper", "stepper.css"),
+        ("infinite-list", "infinite-list.css"),
+        ("form-validated", "form.css"),
+        ("tabs", "tabs.css"),
+    ),
+)
 
 app = FastAPI(title="Greeble Landing Demo")
 app.mount(
@@ -61,7 +105,7 @@ app.mount(
 )
 
 
-@dataclass(frozen=True)
+@dataclass
 class Product:
     sku: str
     name: str
@@ -72,7 +116,7 @@ class Product:
     description: str
 
 
-@dataclass(frozen=True)
+@dataclass
 class Account:
     org: str
     owner: str
@@ -475,7 +519,7 @@ $component_css
 
 
 def build_sign_in_section() -> str:
-    initial_group = _render_signin_group("", None, swap_oob=False)
+    initial_group = render_signin_group("", None, swap_oob=False)
     return f"""
 <section class=\"demo\" id=\"sign-in\">
   <header>
@@ -635,7 +679,7 @@ async def modal_close() -> HTMLResponse:
 async def modal_submit(email: str = Form("")) -> HTMLResponse:
     email = email.strip()
     if not email or "@" not in email:
-        toast_html = _toast_fragment(
+        toast_html = toast_fragment(
             "danger",
             "Check email",
             "Enter a valid email to continue.",
@@ -643,7 +687,7 @@ async def modal_submit(email: str = Form("")) -> HTMLResponse:
         toast = f'<div id="greeble-toasts" hx-swap-oob="true">{toast_html}</div>'
         return HTMLResponse(MODAL_PARTIAL + toast, status_code=400)
 
-    toast_html = _toast_fragment(
+    toast_html = toast_fragment(
         "success",
         "Invite sent",
         f"Welcome aboard, {email}!",
@@ -656,7 +700,7 @@ async def modal_submit(email: str = Form("")) -> HTMLResponse:
 @app.post("/newsletter/subscribe", response_class=HTMLResponse)
 @app.post("/notify", response_class=HTMLResponse)
 async def newsletter_subscribe() -> HTMLResponse:
-    toast_html = _toast_fragment("info", "Subscribed", "You're on the launch list.")
+    toast_html = toast_fragment("info", "Subscribed", "You're on the launch list.")
     html = f'<div id="greeble-toasts" hx-swap-oob="true">{toast_html}</div>'
     return HTMLResponse(html)
 
@@ -673,7 +717,7 @@ async def workspace_settings() -> HTMLResponse:
 
 @app.post("/workspace/invite", response_class=HTMLResponse)
 async def workspace_invite(email: str = Form("")) -> HTMLResponse:
-    toast = _toast_fragment("success", "Invite queued", "We'll email your teammate a magic link.")
+    toast = toast_fragment("success", "Invite queued", "We'll email your teammate a magic link.")
     body = (
         '<div id="invite-root">Invite request received.</div>'
         + f'<div id="greeble-toasts" hx-swap-oob="true">{toast}</div>'
@@ -682,93 +726,11 @@ async def workspace_invite(email: str = Form("")) -> HTMLResponse:
     return HTMLResponse(body, headers=headers)
 
 
-def _filter_products(query: str) -> Iterable[Product]:
-    q = query.lower()
-    for product in PRODUCTS:
-        haystack = " ".join(
-            [product.name, product.category, product.tagline, product.description]
-        ).lower()
-        if q in haystack:
-            yield product
-
-
-def _render_palette_results(products: Iterable[Product]) -> str:
-    items: list[str] = []
-    for idx, product in enumerate(products):
-        selected = "true" if idx == 0 else "false"
-        items.append(
-            Template(
-                """
-<li role="option" data-sku="$sku" aria-selected="$selected">
-  <button class="greeble-palette__result" type="button"
-          hx-post="/palette/select"
-          hx-target="#palette-detail"
-          hx-swap="innerHTML"
-          hx-vals='{"sku": "$sku"}'>
-    <div class="greeble-palette__result-label">
-      <strong>$name</strong>
-      <span>$tagline</span>
-    </div>
-    <span class="greeble-palette__result-kbd">$category</span>
-  </button>
-</li>
-                """
-            ).substitute(
-                sku=escape(product.sku),
-                name=escape(product.name),
-                tagline=escape(product.tagline),
-                category=escape(product.category),
-                selected=selected,
-            )
-        )
-
-    if not items:
-        return (
-            '<p class="greeble-palette__empty" role="status">'
-            "No results. Try a different keyword."
-            "</p>"
-        )
-
-    return (
-        '<ul class="greeble-palette__list" role="listbox" aria-label="Command results">'
-        + "".join(items)
-        + "</ul>"
-    )
-
-
-def _render_palette_detail(product: Product) -> str:
-    return Template(
-        """
-<article class="greeble-palette__detail-card" data-sku="$sku">
-  <header>
-    <h3 class="greeble-heading-3">$name</h3>
-    <p>$tagline</p>
-  </header>
-  <dl class="greeble-palette__meta">
-    <div><dt>SKU</dt><dd>$sku</dd></div>
-    <div><dt>Category</dt><dd>$category</dd></div>
-    <div><dt>Price</dt><dd>$price_fmt</dd></div>
-    <div><dt>Inventory</dt><dd>$inventory</dd></div>
-  </dl>
-  <p>$description</p>
-</article>
-        """
-    ).substitute(
-        name=escape(product.name),
-        tagline=escape(product.tagline),
-        sku=escape(product.sku),
-        category=escape(product.category),
-        price_fmt=f"${product.price:.2f}/seat",
-        inventory=product.inventory,
-        description=escape(product.description),
-    )
-
-
 @app.post("/palette/search", response_class=HTMLResponse)
 async def palette_search(q: str = Form("")) -> HTMLResponse:
     query = q.strip()
-    matches = list(_filter_products(query)) if query else list(PRODUCTS[:4])
-    html = _render_palette_results(matches)
+    matches = demo.filter_products(PRODUCTS, query) if query else list(PRODUCTS[:4])
+    html = demo.render_palette_results(matches)
     headers = {"HX-Trigger": json.dumps({"greeble:palette:results": {"count": len(matches)}})}
     return HTMLResponse(html, headers=headers)
 
@@ -778,133 +740,23 @@ async def palette_select(sku: str = Form(...)) -> HTMLResponse:
     product = _PRODUCTS_BY_SKU.get(sku)
     if not product:
         raise HTTPException(status_code=404, detail="Unknown product")
-    detail_html = _render_palette_detail(product)
+    detail_html = demo.render_palette_detail(product)
     headers = {"HX-Trigger": json.dumps({"greeble:palette:select": {"sku": sku}})}
     return HTMLResponse(detail_html, headers=headers)
 
 
-def _sort_accounts(accounts: Iterable[Account], field: str, direction: str) -> list[Account]:
-    reverse = direction == "desc"
-    key_map = {
-        "org": lambda a: a.org.lower(),
-        "plan": lambda a: a.plan.lower(),
-        "seats": lambda a: a.seats_used / max(1, a.seats_total),
-        "status": lambda a: {"active": 0, "pending": 1, "delinquent": 2}.get(a.status, 3),
-    }
-    key = key_map.get(field, key_map["org"])
-    return sorted(accounts, key=key, reverse=reverse)
-
-
 def _query_accounts(page: int, field: str, direction: str, page_size: int = 3) -> list[Account]:
-    sorted_accounts = _sort_accounts(ACCOUNTS, field, direction)
+    sorted_accounts = sort_accounts(ACCOUNTS, field, direction)
     start = (page - 1) * page_size
     end = start + page_size
     return sorted_accounts[start:end]
 
 
-def _status_display(account: Account) -> tuple[str, str]:
-    labels = {
-        "active": ("greeble-table__status--active", "Active"),
-        "pending": ("greeble-table__status--pending", "Pending"),
-        "delinquent": ("greeble-table__status--delinquent", "Delinquent"),
-    }
-    return labels.get(account.status, ("", account.status.title()))
-
-
-def _account_slug(account: Account) -> str:
-    return account.org.lower().replace(" & ", "-").replace(" ", "-")
-
-
-def _render_account_rows(accounts: Iterable[Account]) -> str:
-    rows: list[str] = []
-    for account in accounts:
-        status_class, status_label = _status_display(account)
-        slug = _account_slug(account)
-        seats = f"{account.seats_used} / {account.seats_total}"
-
-        if account.status == "pending":
-            secondary_action = (
-                '<button class="greeble-button greeble-button--ghost" type="button"\n'
-                f'        hx-post="/table/accounts/{slug}/remind"\n'
-                '        hx-target="#table-body"\n'
-                '        hx-swap="none">Send reminder</button>'
-            )
-        elif account.status == "delinquent":
-            secondary_action = (
-                '<button class="greeble-button greeble-button--destructive" type="button"\n'
-                f'        hx-post="/table/accounts/{slug}/escalate"\n'
-                '        hx-target="#table-body"\n'
-                '        hx-swap="none">Escalate</button>'
-            )
-        else:
-            secondary_action = (
-                '<button class="greeble-button greeble-button--ghost" type="button"\n'
-                f'        hx-delete="/table/accounts/{slug}"\n'
-                '        hx-target="closest tr"\n'
-                '        hx-swap="outerHTML">Archive</button>'
-            )
-
-        rows.append(
-            Template(
-                """
-<tr>
-  <th scope="row">
-    <div class="greeble-table__primary">$org</div>
-    <p class="greeble-table__meta">Owner: $owner</p>
-  </th>
-  <td>$plan</td>
-  <td>$seats</td>
-  <td>
-    <span class="greeble-table__status $status_class">
-      <span aria-hidden="true">●</span>
-      $status_label
-    </span>
-  </td>
-  <td class="greeble-table__actions">
-    <button class="greeble-button greeble-button--ghost" type="button"
-            hx-get="/table/accounts/$slug"
-            hx-target="#table-body"
-            hx-swap="none">
-      View
-    </button>
-    $secondary_action
-  </td>
-</tr>
-                """
-            ).substitute(
-                org=escape(account.org),
-                owner=escape(account.owner),
-                plan=escape(account.plan),
-                seats=seats,
-                status_class=status_class,
-                status_label=status_label,
-                slug=escape(slug),
-                secondary_action=secondary_action,
-            )
-        )
-
-    return "".join(rows)
-
-
-_ACCOUNTS_BY_SLUG = {_account_slug(account): account for account in ACCOUNTS}
-
-
-def _render_feed_items(batch_size: int = 3) -> str:
-    items: list[str] = []
-    messages = itertools.islice(itertools.cycle(FEED_MESSAGES), batch_size)
-    for message in messages:
-        idx = next(_FEED_COUNTER)
-        items.append(
-            Template(
-                """
-<li class="greeble-feed__item">
-  <strong>Update #$idx</strong>
-  <span>$message</span>
-</li>
-                """
-            ).substitute(idx=idx, message=escape(message))
-        )
-    return "".join(items)
+def _get_account_by_slug(slug: str) -> Account:
+    try:
+        return cast(Account, demo.find_account_by_slug(ACCOUNTS, slug))
+    except LookupError as exc:
+        raise HTTPException(status_code=404, detail="Unknown account") from exc
 
 
 _STEPPER_STEPS: dict[str, StepContent] = {
@@ -944,59 +796,25 @@ _STEPPER_STEPS: dict[str, StepContent] = {
 }
 
 
-def _render_stepper_content(step_key: str) -> str:
+def render_stepper_content(step_key: str) -> str:
     data = _STEPPER_STEPS.get(step_key)
     if not data:
         raise HTTPException(status_code=404, detail="Unknown step")
-
     tasks_html = "\n".join(f"    <li>{escape(task)}</li>" for task in data["tasks"])
-
     actions: list[str] = []
-    prev_key = data["prev"]
-    next_key = data["next"]
-    if prev_key:
-        actions.append(
-            Template(
-                """
-<button class="greeble-button" type="button"
-        hx-get="/stepper/$prev"
-        hx-target="#stepper-panel"
-        hx-swap="innerHTML">
-  Back
-</button>
-                """
-            ).substitute(prev=prev_key)
-        )
-    if next_key:
-        actions.append(
-            Template(
-                """
-<button class="greeble-button greeble-button--primary" type="button"
-        hx-get="/stepper/$next"
-        hx-target="#stepper-panel"
-        hx-swap="innerHTML">
-  Continue
-</button>
-                """
-            ).substitute(next=next_key)
-        )
-
+    if prev_key := data["prev"]:
+        actions.append(_stepper_button(prev_key, "Back", primary=False))
+    if next_key := data["next"]:
+        actions.append(_stepper_button(next_key, "Continue", primary=True))
     actions_html = "\n".join(actions)
-
-    return Template(
-        """
-<section class="greeble-stepper__content" data-step="$key">
-  <h3 class="greeble-heading-3">$title</h3>
-  <p>$description</p>
-  <ul class="greeble-stepper__tasks">
-$tasks
-  </ul>
-  <div class="greeble-stepper__actions">
-$actions
-  </div>
-</section>
-        """
-    ).substitute(
+    return (
+        '<section class="greeble-stepper__content" data-step="{key}">\n'
+        '  <h3 class="greeble-heading-3">{title}</h3>\n'
+        "  <p>{description}</p>\n"
+        '  <ul class="greeble-stepper__tasks">\n{tasks}\n  </ul>\n'
+        '  <div class="greeble-stepper__actions">\n{actions}\n  </div>\n'
+        "</section>\n"
+    ).format(
         key=escape(step_key),
         title=escape(data["title"]),
         description=escape(data["description"]),
@@ -1005,57 +823,14 @@ $actions
     )
 
 
-def _get_account_by_slug(slug: str) -> Account:
-    try:
-        return _ACCOUNTS_BY_SLUG[slug]
-    except KeyError as exc:
-        raise HTTPException(status_code=404, detail="Unknown account") from exc
-
-
-def _filter_accounts(query: str) -> list[Account]:
-    term = query.lower()
-    return [
-        account
-        for account in ACCOUNTS
-        if term in account.org.lower()
-        or term in account.owner.lower()
-        or term in account.plan.lower()
-    ]
-
-
-def _toast_fragment(level: str, title: str, message: str, *, icon: str | None = None) -> str:
-    icons = {
-        "success": "✔",
-        "info": "ℹ",
-        "warn": "!",
-        "danger": "✖",
-    }
-    symbol = icon if icon is not None else icons.get(level, "ℹ")
-    return Template(
-        """
-  <div class="greeble-toast greeble-toast--$level" role="status" data-level="$level">
-    <div class="greeble-toast__icon" aria-hidden="true">$icon</div>
-    <div class="greeble-toast__body">
-      <p class="greeble-toast__title">$title</p>
-      <p class="greeble-toast__message">$message</p>
-    </div>
-    <button
-      class="greeble-icon-button greeble-toast__dismiss"
-      type="button"
-      aria-label="Dismiss notification"
-      hx-get="/toast/dismiss"
-      hx-target="closest .greeble-toast"
-      hx-swap="outerHTML"
-    >
-      ×
-    </button>
-  </div>
-        """
-    ).substitute(
-        level=escape(level),
-        title=escape(title),
-        message=escape(message),
-        icon=escape(symbol),
+def _stepper_button(target: str, label: str, *, primary: bool) -> str:
+    variant = " greeble-button--primary" if primary else ""
+    escaped_target = escape(target)
+    return (
+        f'<button class="greeble-button{variant}" type="button"\n'
+        f'        hx-get="/stepper/{escaped_target}"\n'
+        f'        hx-target="#stepper-panel"\n'
+        f'        hx-swap="innerHTML">\n  {label}\n</button>'
     )
 
 
@@ -1066,27 +841,30 @@ async def table_rows(request: Request) -> HTMLResponse:
     sort_param = params.get("sort", "org:asc")
     field, _, direction = sort_param.partition(":")
     direction = direction or "asc"
+    rows_html = demo.table_rows(
+        ACCOUNTS,
+        page=page,
+        field=field or "org",
+        direction=direction,
+    )
 
-    rows = _query_accounts(page, field, direction)
-
-    if not rows:
+    if not rows_html:
         return HTMLResponse('<tr><td colspan="5">No matching accounts.</td></tr>')
 
     payload = json.dumps({"greeble:table:update": {"page": page, "sort": f"{field}:{direction}"}})
     headers = {"HX-Trigger": payload}
-    return HTMLResponse(_render_account_rows(rows), headers=headers)
+    return HTMLResponse(rows_html, headers=headers)
 
 
 @app.post("/table/search", response_class=HTMLResponse)
 async def table_search(q: str = Form("")) -> HTMLResponse:
     query = q.strip()
     if not query:
-        rows = _query_accounts(1, "org", "asc")
-        html = _render_account_rows(rows)
+        html = demo.table_rows(ACCOUNTS, page=1, field="org", direction="asc")
         headers = {"HX-Trigger": json.dumps({"greeble:table:update": {"query": ""}})}
         return HTMLResponse(html, headers=headers)
 
-    matches = _filter_accounts(query)
+    matches = demo.filter_accounts(ACCOUNTS, query)
     if not matches:
         return HTMLResponse('<tr><td colspan="5">No accounts match this search.</td></tr>')
 
@@ -1095,12 +873,12 @@ async def table_search(q: str = Form("")) -> HTMLResponse:
             {"greeble:table:update": {"query": query, "results": len(matches)}}
         )
     }
-    return HTMLResponse(_render_account_rows(matches), headers=headers)
+    return HTMLResponse(demo.render_account_rows(matches), headers=headers)
 
 
 @app.post("/table/export", response_class=HTMLResponse)
 async def table_export() -> HTMLResponse:
-    toast_html = _toast_fragment(
+    toast_html = toast_fragment(
         "info",
         "Export queued",
         "We emailed a CSV of active accounts to ops@orbitlabs.dev.",
@@ -1113,7 +891,7 @@ async def table_export() -> HTMLResponse:
 @app.get("/table/accounts/{slug}", response_class=HTMLResponse)
 async def table_account_view(slug: str) -> HTMLResponse:
     account = _get_account_by_slug(slug)
-    toast_html = _toast_fragment(
+    toast_html = toast_fragment(
         "info",
         "Account opened",
         f"Viewing metrics for {account.org}.",
@@ -1128,7 +906,7 @@ async def table_account_view(slug: str) -> HTMLResponse:
 @app.post("/table/accounts/{slug}/remind", response_class=HTMLResponse)
 async def table_account_remind(slug: str) -> HTMLResponse:
     account = _get_account_by_slug(slug)
-    toast_html = _toast_fragment(
+    toast_html = toast_fragment(
         "warn",
         "Reminder sent",
         f"Queued a payment reminder to {account.owner}.",
@@ -1143,7 +921,7 @@ async def table_account_remind(slug: str) -> HTMLResponse:
 @app.post("/table/accounts/{slug}/escalate", response_class=HTMLResponse)
 async def table_account_escalate(slug: str) -> HTMLResponse:
     account = _get_account_by_slug(slug)
-    toast_html = _toast_fragment(
+    toast_html = toast_fragment(
         "danger",
         "Escalation logged",
         f"Finance will follow up with {account.org} within the hour.",
@@ -1158,7 +936,7 @@ async def table_account_escalate(slug: str) -> HTMLResponse:
 @app.delete("/table/accounts/{slug}", response_class=HTMLResponse)
 async def table_account_archive(slug: str) -> HTMLResponse:
     account = _get_account_by_slug(slug)
-    toast_html = _toast_fragment(
+    toast_html = toast_fragment(
         "info",
         "Archived",
         f"{account.org} moved to the archived list.",
@@ -1219,7 +997,7 @@ async def drawer_close() -> HTMLResponse:
 async def drawer_subscribe(email: str = Form("")) -> HTMLResponse:
     value = email.strip()
     if not value or "@" not in value:
-        toast = _toast_fragment(
+        toast = toast_fragment(
             "danger",
             "Try again",
             "Enter a valid work email to receive updates.",
@@ -1227,7 +1005,7 @@ async def drawer_subscribe(email: str = Form("")) -> HTMLResponse:
         body = f'<div id="greeble-toasts" hx-swap-oob="true">{toast}</div>'
         return HTMLResponse(body, status_code=400)
 
-    toast = _toast_fragment(
+    toast = toast_fragment(
         "success",
         "Walkthrough requested",
         f"We'll contact {escape(value)} shortly.",
@@ -1244,131 +1022,30 @@ async def drawer_subscribe(email: str = Form("")) -> HTMLResponse:
 
 @app.get("/stepper/{step_key}", response_class=HTMLResponse)
 async def stepper_step(step_key: str) -> HTMLResponse:
-    html = _render_stepper_content(step_key)
+    html = render_stepper_content(step_key)
     headers = {
         "HX-Trigger": json.dumps({"greeble:stepper:change": {"step": step_key}}),
     }
     return HTMLResponse(html, headers=headers)
 
 
-def _render_signin_group(email: str, error: str | None, *, swap_oob: bool) -> str:
-    classes = ["greeble-field"]
-    if error:
-        classes.append("greeble-field--invalid")
-
-    attrs = [
-        'id="signin-email-group"',
-        f'class="{" ".join(classes)}"',
-        'hx-post="/auth/validate"',
-        (
-            'hx-trigger="change from:#signin-email, keyup delay:500ms '
-            'from:#signin-email, blur from:#signin-email"'
-        ),
-        'hx-target="#signin-email-group"',
-        'hx-swap="outerHTML"',
-        'hx-include="#signin-email"',
-    ]
-    if swap_oob:
-        attrs.append('hx-swap-oob="true"')
-
-    described_by = ["signin-hint"]
-    input_attrs = [
-        'id="signin-email"',
-        'name="email"',
-        'type="email"',
-        'class="greeble-input"',
-        'autocomplete="email"',
-        "required",
-    ]
-    if email:
-        input_attrs.append(f'value="{escape(email, quote=True)}"')
-    if error:
-        input_attrs.append('aria-invalid="true"')
-        described_by.append("signin-error")
-    described = " ".join(described_by)
-    input_attrs.append(f'aria-describedby="{escape(described, quote=True)}"')
-
-    error_html = (
-        f'<p id="signin-error" class="greeble-field__error" role="alert">{escape(error)}</p>'
-        if error
-        else ""
-    )
-
-    return Template(
-        """
-<div $attrs>
-  <label class="greeble-field__label" for="signin-email">Work email</label>
-  <input $input_attrs />
-  <p id="signin-hint" class="greeble-field__hint">We'll email you a magic link.</p>
-  $error_html
-</div>
-        """
-    ).substitute(
-        attrs=" ".join(attrs),
-        input_attrs=" ".join(input_attrs),
-        error_html=error_html,
-    )
-
-
-def _render_valid_email_group(email: str, *, swap_oob: bool) -> str:
-    attrs = [
-        'id="form-email-group"',
-        'class="greeble-field"',
-        'hx-post="/form/validate"',
-        (
-            'hx-trigger="change from:#form-email, keyup delay:400ms from:#form-email, '
-            'blur from:#form-email"'
-        ),
-        'hx-target="#form-email-group"',
-        'hx-swap="outerHTML"',
-        'hx-include="#form-email"',
-    ]
-    if swap_oob:
-        attrs.append('hx-swap-oob="true"')
-
-    value_attr = f'value="{escape(email, quote=True)}"' if email else ""
-
-    return Template(
-        """
-<div $attrs>
-  <label class="greeble-field__label" for="form-email">Work email</label>
-  <input class="greeble-input" id="form-email" name="email" type="email"
-         autocomplete="email" aria-describedby="form-email-hint" required $value />
-  <p class="greeble-field__hint" id="form-email-hint">
-    Use your company domain for faster approval.
-  </p>
-</div>
-        """
-    ).substitute(attrs=" ".join(attrs), value=value_attr)
-
-
-def _validate_signin_email(email: str) -> str | None:
-    value = email.strip()
-    if not value:
-        return "Email is required to sign in."
-    if "@" not in value or value.startswith("@") or value.endswith("@"):
-        return "Enter a valid work email address."
-    return None
-
-
 @app.post("/auth/validate", response_class=HTMLResponse)
 async def auth_validate(email: str = Form("")) -> HTMLResponse:
-    error = _validate_signin_email(email)
-    html = _render_signin_group(email, error, swap_oob=False)
+    error = validate_signin_email(email)
+    html = render_signin_group(email, error, swap_oob=False)
     status = 400 if error else 200
     return HTMLResponse(html, status_code=status)
 
 
 @app.post("/auth/sign-in", response_class=HTMLResponse)
 async def auth_sign_in(email: str = Form("")) -> HTMLResponse:
-    error = _validate_signin_email(email)
-    if error:
-        group_html = _render_signin_group(email, error, swap_oob=True)
+    if error := validate_signin_email(email):
+        group_html = render_signin_group(email, error, swap_oob=True)
         status_area = '<div id="sign-in-status">Fix the highlighted field to continue.</div>'
         return HTMLResponse(group_html + status_area, status_code=400)
 
-    reset_group = _render_signin_group("", None, swap_oob=True)
-    toast_html = _toast_fragment(
+    reset_group = render_signin_group("", None, swap_oob=True)
+    toast_html = toast_fragment(
         "success",
         "Signed in",
         f"Signed in as {email.strip()}.",
@@ -1380,38 +1057,34 @@ async def auth_sign_in(email: str = Form("")) -> HTMLResponse:
 
 @app.post("/form/validate", response_class=HTMLResponse)
 async def validated_form_check(email: str = Form("")) -> HTMLResponse:
-    error = _validate_signin_email(email)
-    if error:
+    if validate_signin_email(email):
         return HTMLResponse(FORM_INVALID_PARTIAL, status_code=400)
-    return HTMLResponse(_render_valid_email_group(email, swap_oob=False))
+    return HTMLResponse(render_valid_email_group(email, swap_oob=False))
 
 
 @app.post("/form/submit", response_class=HTMLResponse)
 async def validated_form_submit(email: str = Form("")) -> HTMLResponse:
-    error = _validate_signin_email(email)
-    if error:
+    if validate_signin_email(email):
         return HTMLResponse(FORM_INVALID_PARTIAL, status_code=400)
 
-    reset_group = _render_valid_email_group("", swap_oob=True)
-    toast = _toast_fragment(
+    reset_group = render_valid_email_group("", swap_oob=True)
+    toast = toast_fragment(
         "success",
         "Request received",
         "We will reach out with onboarding steps shortly.",
     )
     body = (
-        reset_group
-        + f'<div id="greeble-toasts" hx-swap-oob="true">{toast}</div>'
-        + '<div id="form-status">Thanks! We\'ll reach out with next steps.</div>'
+        f"{reset_group}"
+        f'<div id="greeble-toasts" hx-swap-oob="true">{toast}</div>'
+        '<div id="form-status">Thanks! We\'ll reach out with next steps.</div>'
     )
-    headers = {
-        "HX-Trigger": json.dumps({"greeble:form:submitted": True}),
-    }
+    headers = {"HX-Trigger": json.dumps({"greeble:form:submitted": True})}
     return HTMLResponse(body, headers=headers)
 
 
 @app.get("/list", response_class=HTMLResponse)
 async def infinite_list() -> HTMLResponse:
-    return HTMLResponse(_render_feed_items())
+    return HTMLResponse(render_feed_items(FEED_MESSAGES, _FEED_COUNTER, batch_size=3))
 
 
 async def _clock_stream(test_mode: bool) -> AsyncIterator[str]:

@@ -35,3 +35,11 @@
   form, drawer, infinite list) with matching HTMX endpoints and out-of-band toasts.
 - Implemented greeble CLI (`list`, `add`, `sync`, `remove`, `doctor`) with manifest-driven copy
   logic, documentation, and tests; README and docs now include a detailed CLI + adapter walkthrough.
+
+## TODO (2025-09-23)
+- [x] Add `greeble new` CLI starter scaffold with FastAPI endpoints.
+- [x] Document `greeble new` usage and tests once implementation lands.
+
+## Notes (2025-09-23)
+- Added `greeble new` command to scaffold FastAPI starter projects with endpoint skeletons, docs opt-in, and dry-run/force modes.
+- CLI and docs refreshed to cover starter workflows; regression tests confirm docs copy and HTMX endpoint coverage.

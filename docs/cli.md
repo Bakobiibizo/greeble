@@ -1,8 +1,8 @@
 # Greeble CLI
 
-The `greeble` command copies component templates, static assets, and optional documentation into your
-project. The CLI reads `greeble.manifest.yaml`, so new components added to the manifest are
-immediately available.
+The `greeble` command scaffolds starter projects and copies component templates, static assets, and
+optional documentation into your project. The CLI reads `greeble.manifest.yaml`, so new components
+added to the manifest are immediately available.
 
 ## Installation
 
@@ -18,6 +18,17 @@ uv run greeble list
 ### `greeble list`
 
 Lists all component keys, titles, and summaries.
+
+### `greeble new <project>`
+
+Scaffolds a FastAPI starter project seeded with Greeble components, endpoint skeletons, static
+assets, and a README/pyproject configured for `uv`.
+
+Options:
+
+- `--include-docs` – copy component documentation pages into `<project>/docs`
+- `--force` – overwrite any existing files in the destination
+- `--dry-run` – preview the files that would be generated without writing
 
 ### `greeble add <component>`
 
@@ -50,6 +61,7 @@ expected template/static directories and reports missing files.
 ## Example workflow
 
 ```bash
+uv run greeble new ./apps/starter --include-docs
 uv run greeble add modal --project ./apps/site --include-docs
 uv run greeble add table --project ./apps/site
 uv run greeble sync table --project ./apps/site          # overwrite local edits with upstream copy

@@ -53,9 +53,12 @@ def build_modal_app() -> FastAPI:
     return app
 
 
+def _modal_client() -> TestClient:
+    return TestClient(build_modal_app())
+
+
 def test_home_and_open_modal_flow() -> None:
-    app = build_modal_app()
-    client = TestClient(app)
+    client = _modal_client()
 
     # Home page contains trigger markup and modal root
     r = client.get("/")
@@ -76,11 +79,17 @@ def test_home_and_open_modal_flow() -> None:
 
 
 def test_modal_submit_returns_oob_toast() -> None:
-    app = build_modal_app()
-    client = TestClient(app)
+    client = _modal_client()
 
     r = client.post("/modal/submit", data={"email": "user@example.com"})
     assert r.status_code == 200
     # Verify an out-of-band toast is present in the response body
     assert 'id="greeble-toasts"' in r.text
     assert "Saved user@example.com" in r.text
+
+
+def test_modal_submit_missing_email() -> None:
+    client = _modal_client()
+
+    r = client.post("/modal/submit", data={})
+    assert r.status_code == 422

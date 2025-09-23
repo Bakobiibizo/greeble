@@ -63,9 +63,12 @@ def build_form_app() -> FastAPI:
     return app
 
 
+def _form_client() -> TestClient:
+    return TestClient(build_form_app())
+
+
 def test_form_renders() -> None:
-    app = build_form_app()
-    client = TestClient(app)
+    client = _form_client()
 
     r = client.get("/")
     assert r.status_code == 200
@@ -74,12 +77,15 @@ def test_form_renders() -> None:
 
 
 def test_form_validate_endpoint() -> None:
-    app = build_form_app()
-    client = TestClient(app)
+    client = _form_client()
 
     r_bad = client.post("/form/validate", data={"email": "nope"})
     assert r_bad.status_code == 400
     assert "greeble-field--invalid" in r_bad.text
+
+    r_missing = client.post("/form/validate", data={})
+    assert r_missing.status_code == 400
+    assert "greeble-field--invalid" in r_missing.text
 
     r_ok = client.post("/form/validate", data={"email": "user@example.com"})
     assert r_ok.status_code == 200
@@ -87,12 +93,15 @@ def test_form_validate_endpoint() -> None:
 
 
 def test_form_submit_flow() -> None:
-    app = build_form_app()
-    client = TestClient(app)
+    client = _form_client()
 
     r_bad = client.post("/form/submit", data={"email": "bad"})
     assert r_bad.status_code == 400
     assert "greeble-field--invalid" in r_bad.text
+
+    r_missing = client.post("/form/submit", data={})
+    assert r_missing.status_code == 400
+    assert "greeble-field--invalid" in r_missing.text
 
     r_ok = client.post("/form/submit", data={"email": "user@example.com"})
     assert r_ok.status_code == 200

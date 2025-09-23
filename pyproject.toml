@@ -61,7 +61,9 @@ select = [
     "UP",  # pyupgrade
     "SIM", # flake8-simplify
 ]
-ignore = []
+ignore = [
+    "E501"
+]
 
 [tool.ruff.format]
 line-ending = "lf"

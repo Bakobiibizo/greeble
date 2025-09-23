@@ -24,7 +24,7 @@ Option B:
 uv run uvicorn examples.fastapi-demo.main:app --reload
 ```
 
-Then open http://127.0.0.1:8000/ in your browser.
+Then open http://127.0.0.1:8050/ in your browser.
 
 ## Routes
 

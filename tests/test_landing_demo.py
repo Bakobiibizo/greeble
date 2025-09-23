@@ -4,11 +4,17 @@ import html
 import json
 import re
 from collections.abc import Iterator
+from typing import Any
 
 import pytest
 from fastapi.testclient import TestClient
 
 from examples.site import landing
+
+
+def _assert_hx_trigger(response: Any, expected: dict[str, object]) -> None:
+    assert "HX-Trigger" in response.headers
+    assert json.loads(response.headers["HX-Trigger"]) == expected
 
 
 @pytest.fixture(scope="module")
@@ -88,38 +94,30 @@ def test_table_search_and_actions(client: TestClient) -> None:
     export = client.post("/table/export")
     assert export.status_code == 200
     assert "greeble-toast" in export.text
-    assert json.loads(export.headers["HX-Trigger"]) == {"greeble:toast": {"level": "info"}}
+    _assert_hx_trigger(export, {"greeble:toast": {"level": "info"}})
 
     active_account = next(acc for acc in landing.ACCOUNTS if acc.status == "active")
-    view = client.get(f"/table/accounts/{landing._account_slug(active_account)}")
+    view = client.get(f"/table/accounts/{landing.account_slug(active_account)}")
     assert view.status_code == 200
     assert "Account opened" in html.unescape(view.text)
-    assert json.loads(view.headers["HX-Trigger"]) == {
-        "greeble:table:view": {"org": active_account.org}
-    }
+    _assert_hx_trigger(view, {"greeble:table:view": {"org": active_account.org}})
 
     pending_account = next(acc for acc in landing.ACCOUNTS if acc.status == "pending")
-    remind = client.post(f"/table/accounts/{landing._account_slug(pending_account)}/remind")
+    remind = client.post(f"/table/accounts/{landing.account_slug(pending_account)}/remind")
     assert remind.status_code == 200
     assert "Reminder sent" in html.unescape(remind.text)
-    assert json.loads(remind.headers["HX-Trigger"]) == {
-        "greeble:table:remind": {"org": pending_account.org}
-    }
+    _assert_hx_trigger(remind, {"greeble:table:remind": {"org": pending_account.org}})
 
     delinquent_account = next(acc for acc in landing.ACCOUNTS if acc.status == "delinquent")
-    escalate = client.post(f"/table/accounts/{landing._account_slug(delinquent_account)}/escalate")
+    escalate = client.post(f"/table/accounts/{landing.account_slug(delinquent_account)}/escalate")
     assert escalate.status_code == 200
     assert "Escalation logged" in html.unescape(escalate.text)
-    assert json.loads(escalate.headers["HX-Trigger"]) == {
-        "greeble:table:escalate": {"org": delinquent_account.org}
-    }
+    _assert_hx_trigger(escalate, {"greeble:table:escalate": {"org": delinquent_account.org}})
 
-    archive = client.delete(f"/table/accounts/{landing._account_slug(active_account)}")
+    archive = client.delete(f"/table/accounts/{landing.account_slug(active_account)}")
     assert archive.status_code == 200
     assert "Archived" in html.unescape(archive.text)
-    assert json.loads(archive.headers["HX-Trigger"]) == {
-        "greeble:table:archive": {"org": active_account.org}
-    }
+    _assert_hx_trigger(archive, {"greeble:table:archive": {"org": active_account.org}})
 
     dismiss = client.get("/toast/dismiss")
     assert dismiss.status_code == 200

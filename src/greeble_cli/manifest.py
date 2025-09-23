@@ -37,9 +37,7 @@ class Manifest:
     @property
     def tokens_file(self) -> Path | None:
         value = self.library.get("tokens_file")
-        if isinstance(value, str):
-            return (self.root / value).resolve()
-        return None
+        return (self.root / value).resolve() if isinstance(value, str) else None
 
 
 class ManifestError(RuntimeError):

@@ -66,9 +66,10 @@ notes for each snippet.
 
 ## CLI
 
-Use the bundled CLI to copy component files into your project:
+Use the bundled CLI to scaffold projects and copy component files:
 
 ```bash
+uv run greeble new ./apps/starter --include-docs   # scaffold FastAPI starter project
 uv run greeble list                      # view available components
 uv run greeble add modal                 # copy modal templates/CSS into ./templates and ./static
 uv run greeble add table --project ./apps/main --include-docs
@@ -77,13 +78,15 @@ uv run greeble remove table              # remove previously copied files
 uv run greeble doctor --project ./apps/main  # sanity check manifest + project dirs
 ```
 
-Common options:
+Component commands (`add`, `sync`, `remove`) accept:
 
 - `--project` – destination root (default: current directory)
 - `--templates` / `--static` – customise template/static roots (defaults: `templates`, `static`)
 - `--include-docs` – copy or remove the component documentation page alongside markup/CSS
 - `--force` – overwrite existing files during `add`
 - `--dry-run` – preview copy/removal plans without writing
+
+`greeble new` accepts `--include-docs`, `--force`, and `--dry-run` to control documentation copying, overwriting existing files, and previewing the starter scaffold.
 
 See [docs/cli.md](docs/cli.md) for a full walkthrough.
 

@@ -100,9 +100,9 @@ def partial_html(
     """
     hdrs: dict[str, str] = {}
     if headers:
-        hdrs.update(headers)
+        hdrs |= headers
     if triggers is not None:
-        hdrs.update(hx_trigger_headers(triggers))
+        hdrs |= hx_trigger_headers(triggers)
     return HTMLResponse(content=html, status_code=status_code, headers=hdrs)
 
 

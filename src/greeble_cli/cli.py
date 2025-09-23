@@ -60,6 +60,7 @@ def _copy_component(
     project_root: Path,
     templates: Path,
     static: Path,
+    docs: Path | None,
     include_docs: bool,
     force: bool,
     dry_run: bool,
@@ -71,6 +72,7 @@ def _copy_component(
         templates_dir=templates,
         static_dir=static,
         include_docs=include_docs,
+        docs_dir=docs,
     )
     ensure_within_project(project_root, plans)
     if dry_run:
@@ -89,6 +91,7 @@ def cmd_add(args: argparse.Namespace, manifest: Manifest) -> int:
     project_root = Path(args.project).resolve()
     templates_dir = Path(args.templates)
     static_dir = Path(args.static)
+    docs_dir: Path | None = args.docs
 
     try:
         written = _copy_component(
@@ -97,6 +100,7 @@ def cmd_add(args: argparse.Namespace, manifest: Manifest) -> int:
             project_root=project_root,
             templates=templates_dir,
             static=static_dir,
+            docs=docs_dir,
             include_docs=args.include_docs,
             force=args.force,
             dry_run=args.dry_run,
@@ -125,6 +129,7 @@ def _is_directory_non_empty(path: Path) -> bool:
 
 def cmd_new(args: argparse.Namespace, manifest: Manifest) -> int:
     project_root = Path(args.project).resolve()
+    docs_dir: Path = args.docs
 
     try:
         non_empty = _is_directory_non_empty(project_root)
@@ -147,6 +152,7 @@ def cmd_new(args: argparse.Namespace, manifest: Manifest) -> int:
             manifest=manifest,
             project_root=project_root,
             include_docs=args.include_docs,
+            docs_dir=docs_dir,
             force=args.force,
             dry_run=args.dry_run,
         )
@@ -186,6 +192,7 @@ def cmd_sync(args: argparse.Namespace, manifest: Manifest) -> int:
     project_root = Path(args.project).resolve()
     templates_dir = Path(args.templates)
     static_dir = Path(args.static)
+    docs_dir: Path | None = args.docs
 
     try:
         written = _copy_component(
@@ -194,6 +201,7 @@ def cmd_sync(args: argparse.Namespace, manifest: Manifest) -> int:
             project_root=project_root,
             templates=templates_dir,
             static=static_dir,
+            docs=docs_dir,
             include_docs=args.include_docs,
             force=True,
             dry_run=args.dry_run,
@@ -219,6 +227,7 @@ def cmd_remove(args: argparse.Namespace, manifest: Manifest) -> int:
     project_root = Path(args.project).resolve()
     templates_dir = Path(args.templates)
     static_dir = Path(args.static)
+    docs_dir: Path | None = args.docs
 
     try:
         plans = build_copy_plan(
@@ -227,6 +236,7 @@ def cmd_remove(args: argparse.Namespace, manifest: Manifest) -> int:
             project_root=project_root,
             templates_dir=templates_dir,
             static_dir=static_dir,
+            docs_dir=docs_dir,
             include_docs=args.include_docs,
         )
         ensure_within_project(project_root, plans)
@@ -273,7 +283,7 @@ def cmd_doctor(args: argparse.Namespace, manifest: Manifest) -> int:
     if project_root:
         templates_dir = project_root / Path(args.templates)
         static_dir = project_root / Path(args.static)
-        docs_dir = project_root / "docs" if args.include_docs else None
+        docs_dir = project_root / Path(args.docs) if args.include_docs else None
         _print_project_status(project_root, templates_dir, static_dir, docs_dir)
 
     return 0 if ok else 1
@@ -300,6 +310,12 @@ def build_parser() -> argparse.ArgumentParser:
         "--include-docs",
         action="store_true",
         help="Copy component documentation alongside templates/static",
+    )
+    sub_new.add_argument(
+        "--docs",
+        default=Path("docs"),
+        type=Path,
+        help="Docs root relative to project (defaults to 'docs')",
     )
     sub_new.add_argument(
         "--force",
@@ -332,6 +348,12 @@ def build_parser() -> argparse.ArgumentParser:
         default=Path("static"),
         type=Path,
         help="Static assets root relative to project (defaults to 'static')",
+    )
+    sub_add.add_argument(
+        "--docs",
+        default=Path("docs"),
+        type=Path,
+        help="Docs root relative to project (defaults to 'docs')",
     )
     sub_add.add_argument(
         "--include-docs",
@@ -371,6 +393,12 @@ def build_parser() -> argparse.ArgumentParser:
         help="Static root relative to project",
     )
     sub_sync.add_argument(
+        "--docs",
+        default=Path("docs"),
+        type=Path,
+        help="Docs root relative to project",
+    )
+    sub_sync.add_argument(
         "--include-docs",
         action="store_true",
         help="Sync documentation files alongside templates/static",
@@ -401,6 +429,12 @@ def build_parser() -> argparse.ArgumentParser:
         default=Path("static"),
         type=Path,
         help="Static root relative to project",
+    )
+    sub_remove.add_argument(
+        "--docs",
+        default=Path("docs"),
+        type=Path,
+        help="Docs root relative to project",
     )
     sub_remove.add_argument(
         "--include-docs",
@@ -436,6 +470,12 @@ def build_parser() -> argparse.ArgumentParser:
         "--include-docs",
         action="store_true",
         help="Report on docs directory when project root supplied",
+    )
+    sub_doctor.add_argument(
+        "--docs",
+        default=Path("docs"),
+        type=Path,
+        help="Docs root relative to project",
     )
     sub_doctor.set_defaults(func=cmd_doctor)
 

@@ -48,6 +48,25 @@ def test_cli_add_component(tmp_path: Path, component: str) -> None:
     )
     assert exit_code == 0
     assert (project_root / "templates" / "greeble" / f"{component}.html").exists()
+    assert (project_root / "docs" / "components" / f"{component}.md").exists()
+
+
+def test_cli_add_component_custom_docs(tmp_path: Path) -> None:
+    project_root = tmp_path / "app_modal_docs"
+    exit_code = main(
+        [
+            "add",
+            "modal",
+            "--project",
+            str(project_root),
+            "--include-docs",
+            "--docs",
+            "documentation",
+        ]
+    )
+    assert exit_code == 0
+    assert (project_root / "templates" / "greeble" / "modal.html").exists()
+    assert (project_root / "documentation" / "components" / "modal.md").exists()
 
 
 def test_cli_add_nonexistent_component(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:

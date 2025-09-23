@@ -1,10 +1,11 @@
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "insecure-demo-key"
-DEBUG = True
+DEBUG = str(os.getenv("DJANGO_DEBUG", "0")).lower() in {"1", "true", "yes"}
 ALLOWED_HOSTS: list[str] = ["*"]
 
 INSTALLED_APPS = [

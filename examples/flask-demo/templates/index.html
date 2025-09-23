@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Greeble Flask Demo</h1>
+  <p>HTMX partial rendering with Greeble adapters.</p>
+  <button class="greeble-button" hx-get="/panel" hx-target="#panel-root" hx-swap="innerHTML">Load panel</button>
+  <section id="panel-root" aria-live="polite"></section>
+{% endblock %}

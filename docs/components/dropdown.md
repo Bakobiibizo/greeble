@@ -39,3 +39,23 @@
 
 Ensure server responses either navigate (for anchor items) or return fragments/toasts when using HTMX
 menu items.
+
+## Keyboard map
+
+- Enter / Space – Toggle `<details>` open/closed from the summary button; activate focused menu item.
+- Esc – Close the menu when open.
+- Arrow Up/Down – Move focus between menu items (client JS optional; native tab order is acceptable).
+- Tab / Shift+Tab – Move between focusable elements; keep focus within the panel while open.
+
+## Response matrix
+
+- GET /workspace/settings (example)
+  - 200 OK — returns fragment for the target region (`hx-target`)
+  - Headers: optional `HX-Trigger: {"greeble:menu:select": {"action": "settings"}}`
+
+- POST /workspace/invite (example)
+  - 200 OK — returns out-of-band toast and/or inline confirmation
+  - 422/400 — return inline error fragment in panel or toast with guidance
+
+- Link navigation items (`<a href="…" data-navigation="true">`)
+  - Standard navigation; no fragment expected. Server may still emit `HX-Trigger` via redirects.

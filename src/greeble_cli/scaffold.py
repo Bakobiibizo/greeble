@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import itertools
 import shutil
 from collections.abc import Iterable
 from dataclasses import dataclass
@@ -119,3 +120,27 @@ def component_sources(manifest: Manifest, component: Component) -> list[Path]:
         rel_path = Path(relative)
         sources.append(_resolve_source(manifest, component, rel_path))
     return sources
+
+
+def _next_backup_path(path: Path, suffix: str = ".bak") -> Path:
+    candidate = path.with_name(path.name + suffix)
+    if not candidate.exists():
+        return candidate
+    for index in itertools.count(1):
+        numbered = path.with_name(f"{path.name}{suffix}{index}")
+        if not numbered.exists():
+            return numbered
+    raise ScaffoldError(f"Unable to determine backup path for {path}")
+
+
+def backup_existing_files(plans: Iterable[CopyPlan], *, suffix: str = ".bak") -> list[Path]:
+    backups: list[Path] = []
+    for plan in plans:
+        destination = plan.destination
+        if not destination.exists():
+            continue
+        backup_path = _next_backup_path(destination, suffix=suffix)
+        backup_path.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(destination, backup_path)
+        backups.append(backup_path)
+    return backups

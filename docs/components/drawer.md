@@ -72,3 +72,23 @@
 
 When the user submits the form, respond with an out-of-band toast to confirm the request and
 optionally close the drawer.
+
+## Keyboard map
+
+- Esc – Close the drawer (wire close button and backdrop to this action).
+- Tab / Shift+Tab – Cycle focus within the drawer panel (focus trap).
+- Enter / Space – Activate focused action, including the submit and close buttons.
+
+## Response matrix
+
+- GET /drawer/open
+  - 200 OK — returns drawer partial
+  - Headers: optional `HX-Trigger: {"greeble:drawer:open": true}`
+
+- GET /drawer/close
+  - 200 OK — returns empty string to clear `#drawer-root`
+  - Headers: optional `HX-Trigger: {"greeble:drawer:close": true}`
+
+- POST /drawer/subscribe
+  - 200 OK (success) — returns out-of-band toast (and optionally clears drawer root)
+  - 400 Bad Request (validation) — returns the same partial with inline errors; keep drawer mounted

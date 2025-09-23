@@ -68,3 +68,21 @@ Results endpoint returns the listbox structure:
 ```
 
 Adjust the copy and command payloads to match your product taxonomy.
+
+## Keyboard map
+
+- ⌘/Ctrl + K – Open command palette (binding provided by your app shell).
+- Arrow Up/Down – Move focus between results.
+- Enter – Select the focused result.
+- Esc – Close the palette and return focus to the trigger.
+- Tab / Shift+Tab – Move between the search input and results; keep focus within the palette while open.
+
+## Response matrix
+
+- POST /palette/search
+  - 200 OK — returns results listbox (role=listbox with role=option items)
+  - Headers: `HX-Trigger: {"greeble:palette:results": {"count": <int>}}` (optional)
+
+- POST /palette/select
+  - 200 OK — returns detail panel content for the selected item
+  - Headers: `HX-Trigger: {"greeble:palette:select": {"command": "<key>"}}`

@@ -19,6 +19,10 @@ uv run greeble list
 
 Lists all component keys, titles, and summaries.
 
+Options:
+
+- `--json` – print a machine-readable JSON payload of available components
+
 ### `greeble new <project>`
 
 Scaffolds a FastAPI starter project seeded with Greeble components, endpoint skeletons, static
@@ -49,6 +53,10 @@ Options:
 Re-copies the component files, overwriting existing ones. Supports the same options as `add`
 (excluding `--force`, which is implied).
 
+Additional options:
+
+- `--backup` – create timestamped backups of existing files before overwriting
+
 ### `greeble remove <component>`
 
 Deletes files previously copied for a component. Accepts the same project/template/static/doc paths
@@ -59,15 +67,72 @@ as `add`. Use `--dry-run` to preview which files would be removed.
 Validates the manifest and (optionally) a project directory. With `--project`, the command checks for
 expected template/static directories and reports missing files.
 
+Options:
+
+- `--project PATH` – include project path checks (templates/static[/docs])
+- `--include-docs` – include docs directory checks when `--project` is provided
+- `--json` – print a structured JSON report
+
+JSON payload schema (stable):
+
+```jsonc
+{
+  "status": "ok" | "error",
+  "summary": {
+    "components_checked": number,
+    "sources_checked": number,
+    "errors": number,
+    "warnings": number,
+    "infos": number
+  },
+  "manifest": {
+    "path": "<string>",         // absolute path to manifest
+    "version": "<string>"       // manifest schema version
+  },
+  "tokens": {
+    "declared": boolean,
+    "path": "<string|null>",
+    "status": "ok" | "warning" | "info",
+    "exists": boolean | null
+  },
+  "components": {
+    "total": number,
+    "missing_sources": [
+      { "component": "<string>", "sources": ["<string>", "<string>"] }
+    ]
+  },
+  "project": {
+    "root": "<string>",
+    "exists": boolean,
+    "paths": [
+      { "kind": "templates" | "static" | "docs",
+        "path": "<string>",
+        "relative": "<string|null>",
+        "exists": boolean,
+        "status": "ok" | "warning" }
+    ]
+  } | null,
+  "warnings": [
+    { "kind": "<string>", "level": "warning" | "info", "message": "<string>", "path": "<string|null>" }
+  ]
+}
+```
+
+Notes:
+
+- All filesystem paths are emitted as strings.
+- `status` is `error` when any component source is missing.
+
 ## Example workflow
 
 ```bash
 uv run greeble new ./apps/starter --include-docs
 uv run greeble add modal --project ./apps/site --include-docs
 uv run greeble add table --project ./apps/site
-uv run greeble sync table --project ./apps/site          # overwrite local edits with upstream copy
+uv run greeble sync table --project ./apps/site --backup  # overwrite local edits with upstream copy (with backups)
 uv run greeble remove modal --project ./apps/site        # remove modal files
-uv run greeble doctor --project ./apps/site --include-docs
+uv run greeble list --json
+uv run greeble doctor --project ./apps/site --include-docs --json
 ```
 
 ## Where files land

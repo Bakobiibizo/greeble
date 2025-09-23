@@ -1,0 +1,43 @@
+body {
+  margin: 0;
+  background: #101018;
+  color: var(--greeble-color-foreground, #e8e8ea);
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(12, 12, 20, 0.85);
+}
+
+.site-title {
+  margin: 0;
+}
+
+.site-tagline {
+  margin: 0;
+  color: rgba(232, 232, 234, 0.75);
+}
+
+.site-main {
+  padding: 2rem;
+  gap: 2rem;
+}
+
+.demo {
+  border-radius: 1rem;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: grid;
+  gap: 1.25rem;
+}
+
+.stack {
+  display: grid;
+  gap: 0.75rem;
+}

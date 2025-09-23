@@ -1,0 +1,98 @@
+.greeble-button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--greeble-spacing-2, 0.5rem);
+}
+
+.greeble-button {
+  --_btn-bg: #1a1a20;
+  --_btn-fg: var(--greeble-color-foreground, #e8e8ea);
+  --_btn-border: #2a2a32;
+  --_btn-shadow: var(--greeble-shadow-1, 0 1px 2px rgba(0, 0, 0, 0.2));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--greeble-spacing-2, 0.5rem);
+  min-height: 2.5rem;
+  padding: var(--greeble-spacing-2, 0.5rem) var(--greeble-spacing-4, 1rem);
+  border-radius: var(--greeble-radius-medium, 12px);
+  border: 1px solid var(--_btn-border);
+  background: var(--_btn-bg);
+  color: var(--_btn-fg);
+  font: inherit;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.1;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: var(--_btn-shadow);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease;
+}
+
+.greeble-button:focus-visible {
+  outline: none;
+  box-shadow: var(--greeble-focus-ring, 0 0 0 3px rgba(106, 161, 255, 0.5));
+}
+
+.greeble-button:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow: none;
+}
+
+.greeble-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.greeble-button--primary {
+  --_btn-bg: var(--greeble-color-accent, #6aa1ff);
+  --_btn-fg: #0b0b0c;
+  --_btn-border: transparent;
+}
+
+.greeble-button--secondary {
+  --_btn-bg: rgba(255, 255, 255, 0.06);
+  --_btn-border: rgba(255, 255, 255, 0.12);
+}
+
+.greeble-button--ghost {
+  --_btn-bg: transparent;
+  --_btn-border: rgba(255, 255, 255, 0.14);
+  --_btn-shadow: none;
+}
+
+.greeble-button--destructive {
+  --_btn-bg: #dc3545;
+  --_btn-border: transparent;
+  --_btn-fg: #fff;
+}
+
+.greeble-button--icon {
+  padding-inline: var(--greeble-spacing-2, 0.5rem);
+  inline-size: 2.5rem;
+  block-size: 2.5rem;
+  border-radius: 50%;
+}
+
+.greeble-button__icon {
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  fill: currentColor;
+}
+
+.greeble-button--loading {
+  pointer-events: none;
+}
+
+.greeble-button__spinner {
+  inline-size: 1em;
+  block-size: 1em;
+  border: 2px solid currentColor;
+  border-radius: 999px;
+  border-right-color: transparent;
+  animation: greeble-button-spin 0.75s linear infinite;
+}
+
+@keyframes greeble-button-spin {
+  to { transform: rotate(360deg); }
+}

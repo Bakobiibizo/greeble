@@ -1,0 +1,15 @@
+<!-- Modal Trigger (Copy & Paste Ready)
+Place the trigger in your page and include an empty #modal-root container.
+-->
+<button
+  class="greeble-button greeble-button--primary"
+  type="button"
+  hx-get="/modal/example"
+  hx-target="#modal-root"
+  hx-swap="innerHTML"
+  hx-trigger="click"
+  hx-vals='{"source": "primary"}'
+>
+  Invite teammates
+</button>
+<div id="modal-root" aria-live="polite" aria-busy="false"></div>

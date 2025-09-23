@@ -1,0 +1,32 @@
+<!-- Buttons (Copy & Paste Ready)
+Variants cover primary, secondary, ghost, destructive, icon, and loading states.
+Each button is pure HTML/CSS; add hx-* attributes to integrate with HTMX endpoints.
+-->
+<div class="greeble-button-group" role="group" aria-label="Button examples">
+  <button class="greeble-button greeble-button--primary" type="button">
+    Launch workspace
+  </button>
+
+  <button class="greeble-button greeble-button--secondary" type="button">
+    Add teammate
+  </button>
+
+  <button class="greeble-button greeble-button--ghost" type="button">
+    Manage plan
+  </button>
+
+  <button class="greeble-button greeble-button--destructive" type="button">
+    Delete project
+  </button>
+
+  <button class="greeble-button greeble-button--icon" type="button" aria-label="Open settings">
+    <svg class="greeble-button__icon" viewBox="0 0 20 20" focusable="false" aria-hidden="true">
+      <path d="M11.61 1.55a1 1 0 0 0-1.22 0L8.6 2.88a6.6 6.6 0 0 0-1.73.35L5.08 2.4a1 1 0 0 0-1.36.36L2.4 4.72a1 1 0 0 0 .36 1.36l.83.49a6.59 6.59 0 0 0-.08 1.01 6.6 6.6 0 0 0 .08 1.01l-.83.49a1 1 0 0 0-.36 1.36l1.32 1.96a1 1 0 0 0 1.36.36l1.79-1.04c.55.15 1.13.26 1.73.35l1.79 1.33a1 1 0 0 0 1.22 0l1.79-1.33c.6-.09 1.18-.2 1.73-.35l1.79 1.04a1 1 0 0 0 1.36-.36l1.32-1.96a1 1 0 0 0-.36-1.36l-.83-.49c.05-.33.08-.67.08-1.01 0-.34-.03-.68-.08-1.01l.83-.49a1 1 0 0 0 .36-1.36L17.6 2.76a1 1 0 0 0-1.36-.36l-1.79 1.04a6.6 6.6 0 0 0-1.73-.35L11.61 1.55zM10 12.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z" />
+    </svg>
+  </button>
+
+  <button class="greeble-button greeble-button--primary greeble-button--loading" type="button" disabled aria-live="polite">
+    <span class="greeble-button__spinner" aria-hidden="true"></span>
+    Saving…
+  </button>
+</div>

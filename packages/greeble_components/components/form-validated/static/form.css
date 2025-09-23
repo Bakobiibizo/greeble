@@ -1,0 +1,42 @@
+.greeble-validated-form {
+  display: grid;
+  gap: var(--greeble-spacing-4, 1rem);
+  max-width: 480px;
+}
+
+.greeble-validated-form__header {
+  display: grid;
+  gap: var(--greeble-spacing-2, 0.5rem);
+}
+
+.greeble-validated-form__header > p {
+  margin: 0;
+  color: rgba(232, 232, 234, 0.75);
+}
+
+.greeble-validated-form__body {
+  display: grid;
+  gap: var(--greeble-spacing-3, 0.75rem);
+  padding: clamp(1.5rem, 3vw, 2rem);
+  border-radius: var(--greeble-radius-medium, 12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(17, 17, 26, 0.45);
+}
+
+.greeble-validated-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--greeble-spacing-2, 0.5rem);
+}
+
+.greeble-validated-form__support {
+  font-size: 0.9rem;
+  color: rgba(232, 232, 234, 0.65);
+}
+
+.greeble-validated-form__status {
+  min-height: 1.2rem;
+  font-size: 0.95rem;
+  color: rgba(232, 232, 234, 0.75);
+}

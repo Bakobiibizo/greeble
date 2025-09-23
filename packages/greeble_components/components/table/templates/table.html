@@ -1,0 +1,63 @@
+<!-- Table (Copy & Paste Ready)
+Demonstrates sortable headers, HTMX-powered body, and pagination controls.
+--> 
+<section class="greeble-table-shell">
+  <header class="greeble-table-shell__header">
+    <h2 class="greeble-heading-2">Account usage</h2>
+    <p>Monitor seats, plan, and billing status across your workspaces.</p>
+  </header>
+
+  <div class="greeble-table-shell__actions">
+    <form class="greeble-table-shell__search" role="search" hx-post="/table/search" hx-target="#table-body" hx-swap="innerHTML">
+      <label class="visually-hidden" for="table-search">Search accounts</label>
+      <input class="greeble-input" id="table-search" name="q" type="search" placeholder="Search by org or owner" />
+    </form>
+    <button class="greeble-button greeble-button--primary" type="button" hx-post="/table/export" hx-target="body" hx-swap="none">
+      Export CSV
+    </button>
+  </div>
+
+  <div class="greeble-table__container">
+    <table class="greeble-table" role="grid">
+      <caption class="visually-hidden">Account usage overview with status and seat counts.</caption>
+      <thead>
+        <tr>
+          <th scope="col">
+            <button type="button" class="greeble-table__sort" hx-get="/table?page=1&sort=org:asc" hx-target="#table-body" hx-swap="innerHTML">
+              Organization
+              <span aria-hidden="true">↕</span>
+            </button>
+          </th>
+          <th scope="col">
+            <button type="button" class="greeble-table__sort" hx-get="/table?page=1&sort=plan:asc" hx-target="#table-body" hx-swap="innerHTML">
+              Plan
+              <span aria-hidden="true">↕</span>
+            </button>
+          </th>
+          <th scope="col">
+            <button type="button" class="greeble-table__sort" hx-get="/table?page=1&sort=seats:desc" hx-target="#table-body" hx-swap="innerHTML">
+              Seats
+              <span aria-hidden="true">↕</span>
+            </button>
+          </th>
+          <th scope="col">Status</th>
+          <th scope="col" class="visually-hidden">Actions</th>
+        </tr>
+      </thead>
+      <tbody
+        id="table-body"
+        hx-get="/table?page=1&sort=org:asc"
+        hx-trigger="load"
+        hx-target="this"
+        hx-swap="innerHTML"
+        aria-live="polite"
+      ></tbody>
+    </table>
+  </div>
+
+  <nav class="greeble-pagination" aria-label="Table pagination">
+    <button class="greeble-button" type="button" hx-get="/table?page=1" hx-target="#table-body" hx-swap="innerHTML">1</button>
+    <button class="greeble-button" type="button" hx-get="/table?page=2" hx-target="#table-body" hx-swap="innerHTML">2</button>
+    <button class="greeble-button" type="button" hx-get="/table?page=3" hx-target="#table-body" hx-swap="innerHTML">3</button>
+  </nav>
+</section>

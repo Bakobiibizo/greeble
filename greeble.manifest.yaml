@@ -1,0 +1,230 @@
+# greeble.manifest.yaml (Placeholder)
+version: 1
+library:
+  name: "Greeble"
+  description: "HTML-first, HTMX-powered copy and paste components for Python-first apps"
+  packages:
+    - greeble-core
+    - greeble-components
+    - greeble-hyperscript
+    - greeble-tailwind-preset
+    - greeble-django
+    - greeble-fastapi
+    - greeble-flask
+  tokens_file: "static/greeble/greeble-core.css"
+  docs_site: "docs/site"
+
+components:
+  - key: button
+    title: "Buttons"
+    summary: "Primary, secondary, icon, and split buttons"
+    files:
+      - templates/greeble/button.html
+      - static/greeble/button.css
+      - docs/components/button.md
+    endpoints: []
+    events:
+      emits: ["greeble:click"]
+      listens: []
+    accessibility:
+      notes: ["Visible focus", "aria-pressed for toggle variants"]
+
+  - key: input
+    title: "Inputs"
+    summary: "Text input, textarea, select, and combobox"
+    files:
+      - templates/greeble/input.html
+      - static/greeble/input.css
+      - docs/components/input.md
+    endpoints:
+      - method: POST
+        path: "/input/validate"
+        description: "Optional server validation for demo purposes"
+    events:
+      emits: ["greeble:validate"]
+      listens: []
+    accessibility:
+      notes: ["Labels required", "aria-describedby for help and errors"]
+
+  - key: modal
+    title: "Modal"
+    summary: "Dialog with focus trap and backdrop"
+    files:
+      - templates/greeble/modal.html
+      - templates/greeble/modal.partial.html
+      - templates/greeble/modal.hyperscript.html
+      - static/greeble/modal.css
+      - docs/components/modal.md
+    endpoints:
+      - method: GET
+        path: "/modal/example"
+        description: "Return the modal partial"
+      - method: GET
+        path: "/modal/close"
+        description: "Close the modal by clearing the root"
+      - method: POST
+        path: "/modal/submit"
+        description: "Handle form submit and return success or errors"
+    events:
+      emits: ["greeble:modal:open", "greeble:modal:close"]
+      listens: []
+    accessibility:
+      notes: ["role=dialog with aria-modal", "focus sent to panel on open"]
+
+  - key: drawer
+    title: "Drawer"
+    summary: "Edge panel for settings and filters"
+    files:
+      - templates/greeble/drawer.html
+      - templates/greeble/drawer.partial.html
+      - static/greeble/drawer.css
+      - docs/components/drawer.md
+    endpoints:
+      - method: GET
+        path: "/drawer/open"
+      - method: GET
+        path: "/drawer/close"
+    events:
+      emits: ["greeble:drawer:open", "greeble:drawer:close"]
+      listens: []
+    accessibility:
+      notes: ["role=dialog", "label with heading"]
+
+  - key: dropdown
+    title: "Dropdown Menu"
+    summary: "Button-triggered menu with keyboard navigation"
+    files:
+      - templates/greeble/dropdown.html
+      - static/greeble/dropdown.css
+      - docs/components/dropdown.md
+    endpoints: []
+    events:
+      emits: ["greeble:menu:select"]
+      listens: []
+    accessibility:
+      notes: ["role=menu with roving tabindex", "arrow key navigation"]
+
+  - key: tabs
+    title: "Tabs"
+    summary: "Tablist with per-tab content"
+    files:
+      - templates/greeble/tabs.html
+      - templates/greeble/tabs.partial.html
+      - static/greeble/tabs.css
+      - docs/components/tabs.md
+    endpoints:
+      - method: GET
+        path: "/tabs/{tabKey}"
+        description: "Return content for a given tab key"
+    events:
+      emits: ["greeble:tab:change"]
+      listens: []
+    accessibility:
+      notes: ["role=tablist and role=tab", "aria-selected and aria-controls"]
+
+  - key: table
+    title: "Table"
+    summary: "Sortable, pageable table with row actions"
+    files:
+      - templates/greeble/table.html
+      - templates/greeble/table.partial.html
+      - static/greeble/table.css
+      - docs/components/table.md
+    endpoints:
+      - method: GET
+        path: "/table"
+        description: "Accepts page and sort query parameters"
+    events:
+      emits: ["greeble:table:sorted", "greeble:table:paged"]
+      listens: []
+    accessibility:
+      notes: ["caption recommended", "scope attributes on headers"]
+
+  - key: toast
+    title: "Toasts"
+    summary: "Global toast queue using out of band swaps"
+    files:
+      - templates/greeble/toast.root.html
+      - templates/greeble/toast.item.html
+      - static/greeble/toast.css
+      - docs/components/toast.md
+    endpoints: []
+    events:
+      emits: ["greeble:toast"]
+      listens: []
+    accessibility:
+      notes: ["aria-live=assertive on root", "dismiss buttons with labels"]
+
+  - key: palette
+    title: "Command Palette"
+    summary: "Search input with server-backed results"
+    files:
+      - templates/greeble/palette.html
+      - templates/greeble/palette.partial.html
+      - static/greeble/palette.css
+      - docs/components/palette.md
+    endpoints:
+      - method: POST
+        path: "/palette/search"
+        description: "Return result list items"
+    events:
+      emits: ["greeble:palette:select"]
+      listens: []
+    accessibility:
+      notes: ["role=dialog with listbox semantics", "announce result counts"]
+
+  - key: stepper
+    title: "Stepper"
+    summary: "Multi-step wizard"
+    files:
+      - templates/greeble/stepper.html
+      - templates/greeble/stepper.partial.html
+      - static/greeble/stepper.css
+      - docs/components/stepper.md
+    endpoints:
+      - method: GET
+        path: "/stepper/{stepKey}"
+      - method: POST
+        path: "/stepper/{stepKey}"
+    events:
+      emits: ["greeble:stepper:change"]
+      listens: []
+    accessibility:
+      notes: ["announce step changes", "disable next when invalid"]
+
+  - key: infinite-list
+    title: "Infinite List"
+    summary: "Lazy loading list triggered on reveal"
+    files:
+      - templates/greeble/infinite-list.html
+      - templates/greeble/infinite-list.partial.html
+      - static/greeble/infinite-list.css
+      - docs/components/infinite-list.md
+    endpoints:
+      - method: GET
+        path: "/list"
+        description: "Accepts cursor query parameter"
+    events:
+      emits: ["greeble:list:append"]
+      listens: []
+    accessibility:
+      notes: ["maintain scroll position", "announce new content"]
+
+  - key: form-validated
+    title: "Form with Validation"
+    summary: "Server-validated form that replaces invalid groups"
+    files:
+      - templates/greeble/form.html
+      - templates/greeble/form.partial.html
+      - static/greeble/form.css
+      - docs/components/form.md
+    endpoints:
+      - method: POST
+        path: "/form/validate"
+      - method: POST
+        path: "/form/submit"
+    events:
+      emits: ["greeble:form:invalid", "greeble:form:submitted"]
+      listens: []
+    accessibility:
+      notes: ["associate errors with fields via aria-describedby"]

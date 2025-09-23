@@ -1,0 +1,101 @@
+.greeble-toast-region {
+  position: fixed;
+  inset-inline-end: clamp(1rem, 4vw, 2.75rem);
+  inset-block-start: clamp(1rem, 4vw, 2.75rem);
+  display: grid;
+  gap: var(--greeble-spacing-2, 0.5rem);
+  z-index: 1200;
+  pointer-events: none;
+}
+
+.greeble-toast {
+  --_toast-bg: rgba(18, 18, 27, 0.95);
+  --_toast-fg: var(--greeble-color-foreground, #e8e8ea);
+  --_toast-border: rgba(255, 255, 255, 0.08);
+  pointer-events: auto;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: var(--greeble-spacing-3, 0.75rem);
+  align-items: center;
+  padding: var(--greeble-spacing-3, 0.75rem) var(--greeble-spacing-4, 1rem);
+  border-radius: var(--greeble-radius-medium, 12px);
+  border: 1px solid var(--_toast-border);
+  background: var(--_toast-bg);
+  color: var(--_toast-fg);
+  box-shadow: var(--greeble-shadow-2, 0 8px 30px rgba(0, 0, 0, 0.35));
+}
+
+.greeble-toast__icon {
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.12);
+  color: inherit;
+}
+
+.greeble-toast__body {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.greeble-toast__title {
+  margin: 0;
+  font-weight: 600;
+}
+
+.greeble-toast__message {
+  margin: 0;
+  font-size: 0.9rem;
+  color: rgba(232, 232, 234, 0.78);
+}
+
+.greeble-toast__dismiss {
+  inline-size: 2rem;
+  block-size: 2rem;
+  border-radius: 50%;
+  border: 0;
+  background: transparent;
+  color: inherit;
+}
+
+.greeble-toast--info {
+  --_toast-bg: rgba(59, 130, 246, 0.16);
+  --_toast-border: rgba(59, 130, 246, 0.35);
+}
+
+.greeble-toast--success {
+  --_toast-bg: rgba(34, 197, 94, 0.18);
+  --_toast-border: rgba(34, 197, 94, 0.35);
+}
+
+.greeble-toast--warn {
+  --_toast-bg: rgba(245, 158, 11, 0.18);
+  --_toast-border: rgba(245, 158, 11, 0.35);
+}
+
+.greeble-toast--danger,
+.greeble-toast--error {
+  --_toast-bg: rgba(239, 68, 68, 0.2);
+  --_toast-border: rgba(239, 68, 68, 0.45);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .greeble-toast {
+    animation: greeble-toast-enter 160ms ease-out both;
+  }
+}
+
+@keyframes greeble-toast-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

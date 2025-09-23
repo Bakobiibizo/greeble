@@ -1,0 +1,61 @@
+<!-- Tabs (Copy & Paste Ready)
+Each tab button fetches fresh content for #tab-panel. aria-selected toggles via HX hooks.
+-->
+<section class="greeble-tabs-shell" aria-labelledby="product-tabs-heading">
+  <header class="greeble-tabs-shell__header">
+    <h2 id="product-tabs-heading" class="greeble-heading-2">Product overview</h2>
+    <p>Explore overview, pricing, and integrations without leaving the page.</p>
+  </header>
+
+  <div class="greeble-tabs" role="tablist" aria-label="Product content">
+    <button
+      role="tab"
+      data-tab="overview"
+      aria-selected="true"
+      aria-controls="tab-panel"
+      class="greeble-tabs__tab"
+      hx-get="/tabs/overview"
+      hx-target="#tab-panel"
+      hx-swap="innerHTML"
+    >
+      <span class="greeble-tabs__label">Overview</span>
+    </button>
+    <button
+      role="tab"
+      data-tab="pricing"
+      aria-selected="false"
+      aria-controls="tab-panel"
+      class="greeble-tabs__tab"
+      hx-get="/tabs/pricing"
+      hx-target="#tab-panel"
+      hx-swap="innerHTML"
+    >
+      <span class="greeble-tabs__label">Pricing</span>
+    </button>
+    <button
+      role="tab"
+      data-tab="integrations"
+      aria-selected="false"
+      aria-controls="tab-panel"
+      class="greeble-tabs__tab"
+      hx-get="/tabs/integrations"
+      hx-target="#tab-panel"
+      hx-swap="innerHTML"
+    >
+      <span class="greeble-tabs__label">Integrations</span>
+    </button>
+  </div>
+
+  <div
+    id="tab-panel"
+    class="greeble-tabs__panel"
+    role="tabpanel"
+    aria-live="polite"
+    hx-get="/tabs/overview"
+    hx-trigger="load"
+    hx-target="this"
+    hx-swap="innerHTML"
+  >
+    <p>Loading tab…</p>
+  </div>
+</section>

@@ -1,0 +1,83 @@
+<!-- Modal Partial (Copy & Paste Ready)
+Returned by GET /modal/example. Close by hx-get /modal/close into #modal-root.
+-->
+<div
+  id="greeble-modal"
+  class="greeble-modal"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="greeble-modal-title"
+  aria-describedby="greeble-modal-desc"
+>
+  <div
+    class="greeble-modal__backdrop"
+    aria-hidden="true"
+    hx-get="/modal/close"
+    hx-target="#modal-root"
+    hx-swap="innerHTML"
+  ></div>
+
+  <div class="greeble-modal__panel" tabindex="-1" data-modal-focus>
+    <header class="greeble-modal__header">
+      <div class="greeble-modal__heading">
+        <span class="greeble-badge">Early access</span>
+        <h2 id="greeble-modal-title" class="greeble-heading-2">Invite your team</h2>
+        <p id="greeble-modal-desc" class="greeble-modal__support">
+          Add teammates to share dashboards, automate approvals, and sync launch updates.
+        </p>
+      </div>
+      <button
+        class="greeble-icon-button greeble-modal__close"
+        type="button"
+        aria-label="Close dialog"
+        hx-get="/modal/close"
+        hx-target="#modal-root"
+        hx-swap="innerHTML"
+      >
+        ×
+      </button>
+    </header>
+
+    <form
+      class="greeble-modal__form stack"
+      hx-post="/modal/submit"
+      hx-target="#modal-root"
+      hx-swap="innerHTML"
+      hx-trigger="submit"
+    >
+      <div class="greeble-field">
+        <label class="greeble-field__label" for="modal-email">Teammate email</label>
+        <input
+          class="greeble-input"
+          id="modal-email"
+          name="email"
+          type="email"
+          autocomplete="email"
+          required
+          aria-describedby="modal-email-hint"
+        />
+        <p class="greeble-field__hint" id="modal-email-hint">We send a magic link that expires in 30 minutes.</p>
+      </div>
+
+      <label class="greeble-checkbox">
+        <input class="greeble-checkbox__input" type="checkbox" name="notify" value="1" checked />
+        <span class="greeble-checkbox__label">Send me a summary when they accept.</span>
+      </label>
+
+      <div class="greeble-modal__actions">
+        <button class="greeble-button greeble-button--primary" type="submit">
+          Send invite
+        </button>
+        <button
+          class="greeble-button greeble-button--ghost"
+          type="button"
+          hx-get="/modal/close"
+          hx-target="#modal-root"
+          hx-swap="innerHTML"
+        >
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

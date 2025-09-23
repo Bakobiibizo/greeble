@@ -1,0 +1,51 @@
+<!-- Command Palette Results (Returned by POST /palette/search) -->
+<ul class="greeble-palette__list" role="listbox" aria-label="Command results">
+  <li role="option" data-command="open-project" aria-selected="true">
+    <button
+      class="greeble-palette__result"
+      type="button"
+      hx-post="/palette/select"
+      hx-target="#palette-detail"
+      hx-swap="innerHTML"
+      hx-vals='{"command": "open-project"}'
+    >
+      <div class="greeble-palette__result-label">
+        <strong>Open project overview</strong>
+        <span>Jump to the latest dashboards and launch metrics.</span>
+      </div>
+      <span class="greeble-palette__result-kbd">⌘ + K → P</span>
+    </button>
+  </li>
+  <li role="option" data-command="invite-teammate" aria-selected="false">
+    <button
+      class="greeble-palette__result"
+      type="button"
+      hx-post="/palette/select"
+      hx-target="#palette-detail"
+      hx-swap="innerHTML"
+      hx-vals='{"command": "invite-teammate"}'
+    >
+      <div class="greeble-palette__result-label">
+        <strong>Invite teammate</strong>
+        <span>Send a magic link to a collaborator.</span>
+      </div>
+      <span class="greeble-palette__result-kbd">I</span>
+    </button>
+  </li>
+  <li role="option" data-command="open-settings" aria-selected="false">
+    <button
+      class="greeble-palette__result"
+      type="button"
+      hx-post="/palette/select"
+      hx-target="#palette-detail"
+      hx-swap="innerHTML"
+      hx-vals='{"command": "open-settings"}'
+    >
+      <div class="greeble-palette__result-label">
+        <strong>Workspace settings</strong>
+        <span>Manage billing, integrations, and preferences.</span>
+      </div>
+      <span class="greeble-palette__result-kbd">⌘ ,</span>
+    </button>
+  </li>
+</ul>

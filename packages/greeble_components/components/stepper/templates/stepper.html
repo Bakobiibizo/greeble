@@ -1,0 +1,78 @@
+<!-- Stepper (Copy & Paste Ready)
+Each step button loads content into #stepper-panel. Use aria-current to flag the active step.
+-->
+<section class="greeble-stepper" aria-labelledby="stepper-heading">
+  <header class="greeble-stepper__header">
+    <h2 id="stepper-heading" class="greeble-heading-2">Launch readiness checklist</h2>
+    <p class="greeble-stepper__description">
+      Move through each milestone and capture sign-off from product, marketing, and support teams.
+    </p>
+  </header>
+
+  <ol class="greeble-stepper__list" role="list">
+    <li class="greeble-stepper__item">
+      <button
+        class="greeble-stepper__step"
+        type="button"
+        data-step="plan"
+        aria-current="step"
+        hx-get="/stepper/plan"
+        hx-target="#stepper-panel"
+        hx-swap="innerHTML"
+      >
+        <span class="greeble-stepper__badge">1</span>
+        <span class="greeble-stepper__meta">
+          <strong>Plan launch</strong>
+          <small>Outline timeline, owners, and messaging.</small>
+        </span>
+      </button>
+    </li>
+    <li class="greeble-stepper__item">
+      <button
+        class="greeble-stepper__step"
+        type="button"
+        data-step="enable"
+        aria-current="false"
+        hx-get="/stepper/enable"
+        hx-target="#stepper-panel"
+        hx-swap="innerHTML"
+      >
+        <span class="greeble-stepper__badge">2</span>
+        <span class="greeble-stepper__meta">
+          <strong>Enable teams</strong>
+          <small>Share launch notes and escalation paths.</small>
+        </span>
+      </button>
+    </li>
+    <li class="greeble-stepper__item">
+      <button
+        class="greeble-stepper__step"
+        type="button"
+        data-step="launch"
+        aria-current="false"
+        hx-get="/stepper/launch"
+        hx-target="#stepper-panel"
+        hx-swap="innerHTML"
+      >
+        <span class="greeble-stepper__badge">3</span>
+        <span class="greeble-stepper__meta">
+          <strong>Go live</strong>
+          <small>Monitor metrics and send status updates.</small>
+        </span>
+      </button>
+    </li>
+  </ol>
+
+  <div
+    id="stepper-panel"
+    class="greeble-stepper__panel"
+    role="region"
+    aria-live="polite"
+    hx-get="/stepper/plan"
+    hx-trigger="load"
+    hx-target="this"
+    hx-swap="innerHTML"
+  >
+    <p>Loading step…</p>
+  </div>
+</section>

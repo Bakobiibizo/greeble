@@ -1,0 +1,55 @@
+# Tabs
+
+- Purpose: Present multiple views (overview, pricing, integrations) within a single layout.
+- Structure: Buttons in the tablist fetch content for `#tab-panel` using HTMX. Update
+  `aria-selected` and optional `data-tab` attributes as swaps occur.
+- Endpoint: `GET /tabs/{tabKey}` returns a fragment for the requested tab.
+- Events: `HX-Trigger: {"greeble:tab:change": {"tab": "integrations"}}` after rendering each
+  panel.
+- Accessibility: Uses `role="tablist"`, `role="tab"`, and `role="tabpanel"`. The panel is
+  `aria-live="polite"` so screen readers hear the new content.
+- Theming hooks: `.greeble-tabs__tab`, `.greeble-tabs__tab[aria-selected="true"]`, and
+  `.greeble-tabs__panel`.
+
+## Copy & Paste
+
+```html
+<section class="greeble-tabs-shell" aria-labelledby="product-tabs-heading">
+  <header class="greeble-tabs-shell__header">
+    <h2 id="product-tabs-heading" class="greeble-heading-2">Product overview</h2>
+    <p>Explore overview, pricing, and integrations without leaving the page.</p>
+  </header>
+  <div class="greeble-tabs" role="tablist" aria-label="Product content">
+    <button role="tab" data-tab="overview" aria-selected="true" aria-controls="tab-panel"
+            class="greeble-tabs__tab" hx-get="/tabs/overview" hx-target="#tab-panel" hx-swap="innerHTML">
+      <span class="greeble-tabs__label">Overview</span>
+    </button>
+    <button role="tab" data-tab="pricing" aria-selected="false" aria-controls="tab-panel"
+            class="greeble-tabs__tab" hx-get="/tabs/pricing" hx-target="#tab-panel" hx-swap="innerHTML">
+      <span class="greeble-tabs__label">Pricing</span>
+    </button>
+    <button role="tab" data-tab="integrations" aria-selected="false" aria-controls="tab-panel"
+            class="greeble-tabs__tab" hx-get="/tabs/integrations" hx-target="#tab-panel" hx-swap="innerHTML">
+      <span class="greeble-tabs__label">Integrations</span>
+    </button>
+  </div>
+  <div id="tab-panel" class="greeble-tabs__panel" role="tabpanel" aria-live="polite"
+       hx-get="/tabs/overview" hx-trigger="load" hx-target="this" hx-swap="innerHTML">
+    <p>Loading tab…</p>
+  </div>
+</section>
+```
+
+Panel response example:
+
+```html
+<section class="greeble-tabs__content" data-tab="overview">
+  <h3 class="greeble-heading-3">Mission control</h3>
+  <p>Consolidate launches, async updates, and approvals in a single workspace.</p>
+  <ul class="greeble-tabs__list">
+    <li>Track blockers and owners in real time.</li>
+    <li>Broadcast launch status to every stakeholder.</li>
+    <li>Pipe alerts to Slack, Teams, and email.</li>
+  </ul>
+</section>
+```

@@ -1,0 +1,55 @@
+<!-- Table rows partial returned by GET /table -->
+<tr>
+  <th scope="row">
+    <div class="greeble-table__primary">Orbit Labs</div>
+    <p class="greeble-table__meta">Owner: ava@orbitlabs.dev</p>
+  </th>
+  <td>Scale</td>
+  <td>42 / 50</td>
+  <td>
+    <span class="greeble-table__status greeble-table__status--active">
+      <span aria-hidden="true">●</span>
+      Active
+    </span>
+  </td>
+  <td class="greeble-table__actions">
+    <button class="greeble-button greeble-button--ghost" type="button" hx-get="/table/orbit" hx-target="#table-body" hx-swap="none">View</button>
+    <button class="greeble-button greeble-button--ghost" type="button" hx-delete="/table/orbit" hx-target="closest tr" hx-swap="outerHTML">Archive</button>
+  </td>
+</tr>
+<tr>
+  <th scope="row">
+    <div class="greeble-table__primary">Nova Civic</div>
+    <p class="greeble-table__meta">Owner: sam@nova.city</p>
+  </th>
+  <td>Starter</td>
+  <td>8 / 10</td>
+  <td>
+    <span class="greeble-table__status greeble-table__status--pending">
+      <span aria-hidden="true">●</span>
+      Pending
+    </span>
+  </td>
+  <td class="greeble-table__actions">
+    <button class="greeble-button greeble-button--ghost" type="button" hx-get="/table/nova" hx-target="#table-body" hx-swap="none">View</button>
+    <button class="greeble-button greeble-button--ghost" type="button" hx-post="/table/nova/remind" hx-target="#table-body" hx-swap="none">Send reminder</button>
+  </td>
+</tr>
+<tr>
+  <th scope="row">
+    <div class="greeble-table__primary">Comet Ops</div>
+    <p class="greeble-table__meta">Owner: lin@cometops.io</p>
+  </th>
+  <td>Enterprise</td>
+  <td>110 / 120</td>
+  <td>
+    <span class="greeble-table__status greeble-table__status--delinquent">
+      <span aria-hidden="true">●</span>
+      Delinquent
+    </span>
+  </td>
+  <td class="greeble-table__actions">
+    <button class="greeble-button greeble-button--ghost" type="button" hx-get="/table/comet" hx-target="#table-body" hx-swap="none">View</button>
+    <button class="greeble-button greeble-button--destructive" type="button" hx-post="/table/comet/escalate" hx-target="#table-body" hx-swap="none">Escalate</button>
+  </td>
+</tr>

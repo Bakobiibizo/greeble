@@ -1,0 +1,18 @@
+<!-- Stepper Partial (Returned by GET /stepper/{stepKey}) -->
+<section class="greeble-stepper__content" data-step="plan">
+  <h3 class="greeble-heading-3">Plan launch</h3>
+  <p>Confirm the launch checklist, assign owners, and draft the announcement timeline.</p>
+  <ul class="greeble-stepper__tasks">
+    <li>Align on launch date and success metrics.</li>
+    <li>Draft customer messaging and internal enablement docs.</li>
+    <li>Schedule dry run with support and marketing.</li>
+  </ul>
+  <div class="greeble-stepper__actions">
+    <button class="greeble-button greeble-button--primary" type="button"
+            hx-get="/stepper/enable"
+            hx-target="#stepper-panel"
+            hx-swap="innerHTML">
+      Continue to enablement
+    </button>
+  </div>
+</section>

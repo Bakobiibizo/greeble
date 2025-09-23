@@ -177,7 +177,7 @@ Each component must document:
         hx-target="#modal-root"
         hx-swap="innerHTML">
         <input name="email" type="email" required class="greeble-input" />
-        <button class="greeble-button greeble-button--accent" type="submit">Submit</button>
+        <button class="greeble-button greeble-button--primary" type="submit">Submit</button>
       </form>
     </div>
   </div>
@@ -652,11 +652,11 @@ templates = Jinja2Templates("templates")
 
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
-    return templates.TemplateResponse("home.html", {"request": request})
+    return templates.TemplateResponse(request, "home.html")
 
 @app.get("/modal/example", response_class=HTMLResponse)
 def modal_example(request: Request):
-    return templates.TemplateResponse("greeble/modal.partial.html", {"request": request})
+    return templates.TemplateResponse(request, "greeble/modal.partial.html")
 
 @app.get("/modal/close", response_class=HTMLResponse)
 def modal_close():
@@ -693,7 +693,7 @@ def modal_submit(request: Request, email: str = Form(...)):
 }
 
 .greeble-button { padding: var(--greeble-spacing-2) var(--greeble-spacing-4); border-radius: var(--greeble-radius-medium); box-shadow: var(--greeble-shadow-1); }
-.greeble-button--accent { background: var(--greeble-color-accent); color: #0b0b0c; }
+.greeble-button--primary { background: var(--greeble-color-accent); color: #0b0b0c; }
 .greeble-input { background: #151518; color: var(--greeble-color-foreground); border: 1px solid #2a2a32; padding: var(--greeble-spacing-2) var(--greeble-spacing-3); border-radius: 10px; }
 .greeble-modal { position: fixed; inset: 0; display: grid; place-items: center; }
 .greeble-modal__backdrop { position: absolute; inset: 0; background: rgba(0,0,0,.5); }

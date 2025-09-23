@@ -1,0 +1,144 @@
+/* Drawer Component Styles */
+
+.greeble-drawer-trigger {
+  display: grid;
+  gap: var(--greeble-spacing-2, 0.5rem);
+  max-width: 28rem;
+}
+
+.greeble-drawer-trigger__hint {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--greeble-color-muted, #a0a0a7);
+}
+
+.greeble-drawer-root {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.greeble-drawer-root > * {
+  pointer-events: auto;
+}
+
+.greeble-drawer {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: stretch end;
+  z-index: 1001;
+}
+
+.greeble-drawer__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(9, 9, 15, 0.65);
+  border: 0;
+  cursor: pointer;
+}
+
+.greeble-drawer__panel {
+  position: relative;
+  inline-size: min(420px, 92vw);
+  max-height: 100vh;
+  background: #11111a;
+  color: var(--greeble-color-foreground, #e8e8ea);
+  border-inline-start: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: -24px 0 60px rgba(0, 0, 0, 0.45);
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+.greeble-drawer__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--greeble-spacing-3, 0.75rem);
+  padding: clamp(1.5rem, 2.5vw, 2rem);
+  border-block-end: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.greeble-drawer__heading {
+  display: grid;
+  gap: var(--greeble-spacing-2, 0.5rem);
+}
+
+.greeble-drawer__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: rgba(106, 161, 255, 0.15);
+  color: var(--greeble-color-accent, #6aa1ff);
+}
+
+.greeble-drawer__description {
+  margin: 0;
+  font-size: 0.95rem;
+  color: rgba(232, 232, 234, 0.75);
+}
+
+.greeble-drawer__close {
+  inline-size: 2.5rem;
+  block-size: 2.5rem;
+  border-radius: 50%;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.greeble-drawer__body {
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  display: grid;
+  gap: var(--greeble-spacing-4, 1rem);
+  overflow-y: auto;
+}
+
+.greeble-drawer__section {
+  display: grid;
+  gap: var(--greeble-spacing-3, 0.75rem);
+}
+
+.greeble-drawer__list {
+  margin: 0;
+  padding-left: 1.25rem;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.greeble-drawer__form {
+  display: grid;
+  gap: var(--greeble-spacing-3, 0.75rem);
+}
+
+.greeble-drawer__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--greeble-spacing-2, 0.5rem);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .greeble-drawer__panel {
+    transform: translateX(24px);
+    animation: greeble-drawer-in 160ms ease-out forwards;
+  }
+}
+
+@keyframes greeble-drawer-in {
+  from {
+    opacity: 0;
+    transform: translateX(48px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

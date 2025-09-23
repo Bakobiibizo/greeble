@@ -1,0 +1,17 @@
+<!-- Drawer Trigger (Copy & Paste Ready)
+Attach the trigger to <body>. Responses from /drawer/open swap into #drawer-root.
+-->
+<div class="greeble-drawer-trigger">
+  <button
+    class="greeble-button greeble-button--primary"
+    type="button"
+    hx-get="/drawer/open"
+    hx-target="#drawer-root"
+    hx-swap="innerHTML"
+  >
+    View launch add-ons
+  </button>
+  <p class="greeble-drawer-trigger__hint">Opens a right-aligned drawer describing upgrade perks.</p>
+</div>
+
+<div id="drawer-root" class="greeble-drawer-root" aria-live="polite" hx-target="this"></div>

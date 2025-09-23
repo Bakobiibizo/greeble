@@ -1,0 +1,96 @@
+<!-- Drawer Partial (Copy & Paste Ready)
+Returned by GET /drawer/open. Close with GET /drawer/close (empty response clears the root).
+-->
+<div
+  class="greeble-drawer"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="drawer-title"
+  aria-describedby="drawer-description"
+>
+  <button
+    class="greeble-drawer__backdrop"
+    type="button"
+    aria-label="Close promotions drawer"
+    hx-get="/drawer/close"
+    hx-target="#drawer-root"
+    hx-swap="innerHTML"
+  ></button>
+  <aside class="greeble-drawer__panel" tabindex="-1">
+    <header class="greeble-drawer__header">
+      <div class="greeble-drawer__heading">
+        <span class="greeble-drawer__eyebrow">Upgrade preview</span>
+        <h2 id="drawer-title" class="greeble-heading-2">Launch add-ons</h2>
+        <p id="drawer-description" class="greeble-drawer__description">
+          Unlock priority support, workflow automation, and data insights built for launch teams.
+        </p>
+      </div>
+      <button
+        class="greeble-icon-button greeble-drawer__close"
+        type="button"
+        aria-label="Close drawer"
+        hx-get="/drawer/close"
+        hx-target="#drawer-root"
+        hx-swap="innerHTML"
+      >
+        ×
+      </button>
+    </header>
+
+    <div class="greeble-drawer__body">
+      <section class="greeble-drawer__section">
+        <h3 class="greeble-heading-3">Included perks</h3>
+        <ul class="greeble-drawer__list">
+          <li>
+            <strong>Priority support:</strong>
+            24/7 escalation channel with shared Slack workspace.
+          </li>
+          <li>
+            <strong>Workflow builders:</strong>
+            Automate approvals, launch checklists, and cross-team notifications.
+          </li>
+          <li>
+            <strong>Insights pack:</strong>
+            Streaming dashboards with anomaly alerts for product, growth, and support.
+          </li>
+        </ul>
+      </section>
+
+      <section class="greeble-drawer__section">
+        <h3 class="greeble-heading-3">Notify me</h3>
+        <form
+          class="greeble-drawer__form"
+          hx-post="/drawer/subscribe"
+          hx-target="#drawer-root"
+          hx-swap="none"
+        >
+          <label class="greeble-field__label" for="drawer-email">Work email</label>
+          <input
+            id="drawer-email"
+            name="email"
+            type="email"
+            class="greeble-input"
+            autocomplete="email"
+            placeholder="founder@workspace.com"
+            required
+          />
+          <p class="greeble-field__hint">We’ll send case studies and go-live checklists.</p>
+          <div class="greeble-drawer__actions">
+            <button class="greeble-button greeble-button--primary" type="submit">
+              Request walkthrough
+            </button>
+            <button
+              class="greeble-button greeble-button--ghost"
+              type="button"
+              hx-get="/drawer/close"
+              hx-target="#drawer-root"
+              hx-swap="innerHTML"
+            >
+              Close
+            </button>
+          </div>
+        </form>
+      </section>
+    </div>
+  </aside>
+</div>

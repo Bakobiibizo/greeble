@@ -1,0 +1,45 @@
+<!-- Infinite List (Copy & Paste Ready)
+Initial items render on load. The sentinel div triggers additional GET /list requests when revealed.
+-->
+<section class="greeble-feed" aria-labelledby="feed-heading">
+  <header class="greeble-feed__header">
+    <h2 id="feed-heading" class="greeble-heading-2">Activity feed</h2>
+    <p class="greeble-feed__description">Recent automation updates and background tasks.</p>
+  </header>
+
+  <ul class="greeble-feed__list" id="infinite-list" aria-live="polite">
+    <li class="greeble-feed__item">
+      <strong>Workflow deployed</strong>
+      <span>Content calendar automation enabled for Marketing.</span>
+    </li>
+    <li class="greeble-feed__item">
+      <strong>Error budget report sent</strong>
+      <span>Weekly health metrics emailed to engineering@workspace.com.</span>
+    </li>
+    <li class="greeble-feed__item">
+      <strong>Incident log archived</strong>
+      <span>April support incidents archived to shared drive.</span>
+    </li>
+  </ul>
+
+  <div
+    id="infinite-list-sentinel"
+    class="greeble-feed__sentinel"
+    hx-get="/list"
+    hx-trigger="revealed"
+    hx-target="#infinite-list"
+    hx-swap="beforeend"
+  >
+    <span aria-hidden="true">Loading more…</span>
+  </div>
+
+  <button
+    class="greeble-button greeble-button--ghost"
+    type="button"
+    hx-get="/list"
+    hx-target="#infinite-list"
+    hx-swap="beforeend"
+  >
+    Load more updates
+  </button>
+</section>

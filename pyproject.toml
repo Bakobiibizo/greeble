@@ -4,7 +4,11 @@ version = "0.0.3"
 description = "HTML-first component library that delivers copy and paste snippets powered by HTMX for rapid UI construction"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "dotenv>=0.9.9",
+    "pytest>=8.4.2",
+    "PyYAML>=6.0",
+]
 
 [dependency-groups]
 dev = [
@@ -14,10 +18,17 @@ dev = [
     "pytest-asyncio>=1.2.0",
     "pytest-cov>=7.0.0",
     "ruff>=0.13.1",
+    "fastapi>=0.110.0",
+    "jinja2>=3.1.2",
+    "httpx>=0.27.0",
+    "python-multipart>=0.0.6",
+    "uvicorn>=0.23.0",
+    "types-PyYAML>=6.0.12",
 ]
 
 [project.scripts]
 dev = "greeble.scripts.dev:main"
+greeble = "greeble_cli.cli:main"
 
 
 [build-system]
@@ -50,7 +61,9 @@ select = [
     "UP",  # pyupgrade
     "SIM", # flake8-simplify
 ]
-ignore = []
+ignore = [
+    "E501"
+]
 
 [tool.ruff.format]
 line-ending = "lf"
@@ -66,6 +79,7 @@ check_untyped_defs = true
 no_implicit_optional = true
 disallow_incomplete_defs = true
 disallow_untyped_defs = true
+exclude = "examples/(fastapi-demo|django-demo|flask-demo)|tools/"
 
 [tool.pytest.ini_options]
 addopts = "-q"
@@ -79,4 +93,3 @@ version_provider = "pep621"
 tag_format = "v$version"
 update_changelog_on_bump = true
 changelog_file = "CHANGELOG.md"
-

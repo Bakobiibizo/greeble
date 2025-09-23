@@ -1,0 +1,18 @@
+<!-- Toast item (return out-of-band with hx-swap-oob="true" on the root) -->
+<div class="greeble-toast greeble-toast--success" role="status" data-level="success">
+  <div class="greeble-toast__icon" aria-hidden="true">✔</div>
+  <div class="greeble-toast__body">
+    <p class="greeble-toast__title">Workspace saved</p>
+    <p class="greeble-toast__message">Your changes are live for launch teams.</p>
+  </div>
+  <button
+    class="greeble-icon-button greeble-toast__dismiss"
+    type="button"
+    aria-label="Dismiss notification"
+    hx-get="/toast/dismiss"
+    hx-target="closest .greeble-toast"
+    hx-swap="outerHTML"
+  >
+    ×
+  </button>
+</div>

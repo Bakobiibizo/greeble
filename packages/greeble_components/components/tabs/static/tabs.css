@@ -1,0 +1,64 @@
+.greeble-tabs-shell {
+  display: grid;
+  gap: var(--greeble-spacing-4, 1rem);
+}
+
+.greeble-tabs-shell__header {
+  display: grid;
+  gap: var(--greeble-spacing-2, 0.5rem);
+}
+
+.greeble-tabs-shell__header > p {
+  margin: 0;
+  color: rgba(232, 232, 234, 0.75);
+}
+
+.greeble-tabs {
+  display: inline-flex;
+  gap: var(--greeble-spacing-2, 0.5rem);
+  padding: 0.25rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--greeble-radius-medium, 12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.greeble-tabs__tab {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  padding: 0.6rem 1rem;
+  border-radius: calc(var(--greeble-radius-medium, 12px) - 2px);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.greeble-tabs__tab:hover,
+.greeble-tabs__tab:focus-visible {
+  background: rgba(255, 255, 255, 0.08);
+  outline: none;
+}
+
+.greeble-tabs__tab[aria-selected="true"] {
+  background: rgba(106, 161, 255, 0.18);
+  color: var(--greeble-color-accent, #6aa1ff);
+}
+
+.greeble-tabs__panel {
+  border-radius: var(--greeble-radius-medium, 12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(17, 17, 26, 0.45);
+  padding: clamp(1.5rem, 3vw, 2rem);
+}
+
+.greeble-tabs__content {
+  display: grid;
+  gap: var(--greeble-spacing-3, 0.75rem);
+}
+
+.greeble-tabs__list {
+  margin: 0;
+  padding-left: 1.25rem;
+  display: grid;
+  gap: 0.5rem;
+}

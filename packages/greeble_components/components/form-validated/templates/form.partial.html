@@ -1,0 +1,26 @@
+<!-- Form Group Partial (Returned by POST /form/validate) -->
+<div
+  id="form-email-group"
+  class="greeble-field greeble-field--invalid"
+  role="group"
+  hx-post="/form/validate"
+  hx-trigger="change from:#form-email, keyup delay:400ms from:#form-email, blur from:#form-email"
+  hx-target="#form-email-group"
+  hx-swap="outerHTML"
+  hx-include="#form-email"
+  hx-swap-oob="true"
+>
+  <label class="greeble-field__label" for="form-email">Work email</label>
+  <input
+    class="greeble-input"
+    id="form-email"
+    name="email"
+    type="email"
+    autocomplete="email"
+    aria-describedby="form-email-hint form-email-error"
+    aria-invalid="true"
+    required
+  />
+  <p class="greeble-field__hint" id="form-email-hint">Use your company domain for faster approval.</p>
+  <p class="greeble-field__error" id="form-email-error" role="alert">Enter a valid work email.</p>
+</div>

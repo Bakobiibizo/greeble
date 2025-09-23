@@ -1,0 +1,103 @@
+.greeble-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.greeble-dropdown__button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: var(--greeble-spacing-2, 0.5rem) var(--greeble-spacing-3, 0.75rem);
+  background: #151518;
+  color: var(--greeble-color-foreground, #e8e8ea);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--greeble-radius-medium, 12px);
+  cursor: pointer;
+  user-select: none;
+  font-weight: 600;
+}
+
+.greeble-dropdown__button::-webkit-details-marker {
+  display: none;
+}
+
+.greeble-dropdown__button:focus-visible {
+  outline: none;
+  box-shadow: var(--greeble-focus-ring, 0 0 0 3px rgba(106, 161, 255, 0.5));
+}
+
+.greeble-dropdown__chevron {
+  font-size: 0.8em;
+  opacity: 0.7;
+}
+
+.greeble-dropdown__panel {
+  position: absolute;
+  inset-inline-start: 0;
+  margin-top: var(--greeble-spacing-2, 0.5rem);
+  min-inline-size: 220px;
+  background: #0f0f15;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--greeble-radius-medium, 12px);
+  box-shadow: var(--greeble-shadow-2, 0 8px 30px rgba(0, 0, 0, 0.35));
+  padding: var(--greeble-spacing-2, 0.5rem);
+  display: grid;
+  gap: var(--greeble-spacing-1, 0.25rem);
+  z-index: 20;
+}
+
+.greeble-dropdown__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--greeble-spacing-2, 0.5rem);
+  padding: 0.65rem 0.75rem;
+  border-radius: 0.65rem;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.greeble-dropdown__item:hover,
+.greeble-dropdown__item:focus-visible {
+  background: rgba(255, 255, 255, 0.08);
+  outline: none;
+}
+
+.greeble-dropdown__item-label {
+  text-align: left;
+}
+
+.greeble-dropdown__item-hint {
+  font-size: 0.85rem;
+  color: rgba(232, 232, 234, 0.6);
+}
+
+.greeble-dropdown__item-kbd {
+  font-size: 0.75rem;
+  color: rgba(232, 232, 234, 0.55);
+}
+
+.greeble-dropdown[open] .greeble-dropdown__chevron {
+  transform: rotate(180deg);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .greeble-dropdown__panel {
+    animation: greeble-dropdown-enter 140ms ease-out;
+  }
+}
+
+@keyframes greeble-dropdown-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

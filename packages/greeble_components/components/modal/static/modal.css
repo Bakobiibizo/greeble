@@ -1,0 +1,133 @@
+.greeble-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: var(--greeble-spacing-4, 1rem);
+}
+
+.greeble-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(9, 9, 15, 0.72);
+  backdrop-filter: blur(4px);
+}
+
+.greeble-modal__panel {
+  position: relative;
+  inline-size: min(560px, 92vw);
+  max-height: calc(100vh - 4rem);
+  overflow-y: auto;
+  border-radius: var(--greeble-radius-medium, 12px);
+  background: #101014;
+  color: var(--greeble-color-foreground, #e8e8ea);
+  padding: clamp(1.5rem, 3vw, 2rem);
+  box-shadow: var(--greeble-shadow-2, 0 8px 30px rgba(0, 0, 0, 0.35));
+  display: grid;
+  gap: var(--greeble-spacing-3, 0.75rem);
+}
+
+.greeble-modal__header {
+  display: flex;
+  gap: var(--greeble-spacing-3, 0.75rem);
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.greeble-modal__heading {
+  display: grid;
+  gap: var(--greeble-spacing-2, 0.5rem);
+}
+
+.greeble-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: rgba(106, 161, 255, 0.12);
+  color: var(--greeble-color-accent, #6aa1ff);
+}
+
+.greeble-modal__support {
+  margin: 0;
+  color: rgba(232, 232, 234, 0.72);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.greeble-modal__close {
+  inline-size: 2.5rem;
+  block-size: 2.5rem;
+  border-radius: 50%;
+  background: transparent;
+  font-size: 1.5rem;
+  color: inherit;
+  border: 0;
+}
+
+.greeble-modal__form {
+  display: grid;
+  gap: var(--greeble-spacing-3, 0.75rem);
+}
+
+.greeble-modal .greeble-field {
+  display: grid;
+  gap: var(--greeble-spacing-2, 0.5rem);
+}
+
+.greeble-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--greeble-spacing-2, 0.5rem);
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: rgba(232, 232, 234, 0.9);
+}
+
+.greeble-checkbox__input {
+  inline-size: 1rem;
+  block-size: 1rem;
+  border-radius: 0.35rem;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: #151518;
+}
+
+.greeble-checkbox__input:checked {
+  background: var(--greeble-color-accent, #6aa1ff);
+  border-color: transparent;
+}
+
+.greeble-checkbox__input:focus-visible {
+  outline: none;
+  box-shadow: var(--greeble-focus-ring, 0 0 0 3px rgba(106, 161, 255, 0.5));
+}
+
+.greeble-modal__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--greeble-spacing-2, 0.5rem);
+  justify-content: flex-end;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .greeble-modal__panel {
+    transform: translateY(4px);
+    animation: greeble-modal-enter 0.18s ease-out forwards;
+  }
+}
+
+@keyframes greeble-modal-enter {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -1,0 +1,46 @@
+.greeble-feed {
+  display: grid;
+  gap: var(--greeble-spacing-3, 0.75rem);
+}
+
+.greeble-feed__header {
+  display: grid;
+  gap: var(--greeble-spacing-2, 0.5rem);
+}
+
+.greeble-feed__description {
+  margin: 0;
+  color: rgba(232, 232, 234, 0.72);
+}
+
+.greeble-feed__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--greeble-spacing-2, 0.5rem);
+}
+
+.greeble-feed__item {
+  padding: var(--greeble-spacing-3, 0.75rem);
+  border-radius: var(--greeble-radius-medium, 12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(17, 17, 26, 0.45);
+  display: grid;
+  gap: 0.35rem;
+}
+
+.greeble-feed__item > strong {
+  font-weight: 600;
+}
+
+.greeble-feed__item > span {
+  color: rgba(232, 232, 234, 0.75);
+}
+
+.greeble-feed__sentinel {
+  text-align: center;
+  color: rgba(232, 232, 234, 0.6);
+  font-size: 0.9rem;
+  padding: var(--greeble-spacing-2, 0.5rem);
+}

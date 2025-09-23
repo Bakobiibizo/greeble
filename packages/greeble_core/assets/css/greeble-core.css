@@ -1,0 +1,131 @@
+/*
+Greeble Core Tokens and Utilities
+
+Purpose:
+  Define CSS variables and minimal utilities used by all components.
+
+Inputs:
+  - None; optionally overridden by application via :root or a theme scope.
+
+Outputs:
+  - Design tokens usable by CSS and Tailwind preset.
+
+Dependencies:
+  - None required.
+
+Notes:
+  Token starter derived from docs/architecture.md §21.
+*/
+
+/* Design Tokens */
+:root {
+  /* Colors */
+  --greeble-color-background: #0b0b0c;
+  --greeble-color-foreground: #e8e8ea;
+  --greeble-color-muted: #a0a0a7;
+  --greeble-color-accent: #6aa1ff;
+
+  /* Radii & Shadows */
+  --greeble-radius-medium: 12px;
+  --greeble-shadow-1: 0 1px 2px rgba(0, 0, 0, .2);
+  --greeble-shadow-2: 0 8px 30px rgba(0, 0, 0, .35);
+
+  /* Spacing */
+  --greeble-spacing-1: .25rem;
+  --greeble-spacing-2: .5rem;
+  --greeble-spacing-3: .75rem;
+  --greeble-spacing-4: 1rem;
+
+  /* Focus */
+  --greeble-focus-ring: 0 0 0 3px rgba(106, 161, 255, .5);
+}
+
+/* Base Resets (scoped, minimal) */
+html, body {
+  background: var(--greeble-color-background);
+  color: var(--greeble-color-foreground);
+}
+
+/* Utilities */
+.stack { display: grid; gap: var(--greeble-spacing-3); }
+.cluster { display: flex; gap: var(--greeble-spacing-2); align-items: center; flex-wrap: wrap; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Focus styles */
+*:focus-visible { outline: none; box-shadow: var(--greeble-focus-ring); }
+
+/* Primitive Components */
+.greeble-button {
+  padding: var(--greeble-spacing-2) var(--greeble-spacing-4);
+  border-radius: var(--greeble-radius-medium);
+  box-shadow: var(--greeble-shadow-1);
+  background: #1a1a20;
+  color: var(--greeble-color-foreground);
+  border: 1px solid #2a2a32;
+  cursor: pointer;
+}
+.greeble-button--primary {
+  background: var(--greeble-color-accent);
+  color: #0b0b0c;
+}
+
+.greeble-input {
+  background: #151518;
+  color: var(--greeble-color-foreground);
+  border: 1px solid #2a2a32;
+  padding: var(--greeble-spacing-2) var(--greeble-spacing-3);
+  border-radius: 10px;
+}
+
+/* Headings */
+.greeble-heading-1 {
+  font-size: clamp(2rem, 3vw, 2.75rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.greeble-heading-2 {
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.greeble-heading-3 {
+  font-size: clamp(1.25rem, 1.6vw, 1.5rem);
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Checkbox primitive */
+.greeble-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--greeble-spacing-2);
+}
+
+.greeble-checkbox__input {
+  inline-size: 1rem;
+  block-size: 1rem;
+}
+
+.greeble-checkbox__label {
+  line-height: 1.4;
+}
+
+/* Modal primitives (used by modal component markup) */
+.greeble-modal { position: fixed; inset: 0; display: grid; place-items: center; }
+.greeble-modal__backdrop { position: absolute; inset: 0; background: rgba(0, 0, 0, .5); }
+.greeble-modal__panel {
+  position: relative;
+  background: #101014;
+  color: var(--greeble-color-foreground);
+  border-radius: var(--greeble-radius-medium);
+  padding: var(--greeble-spacing-4);
+  box-shadow: var(--greeble-shadow-2);
+  min-inline-size: 320px;
+}
+.greeble-icon-button { background: transparent; border: none; color: inherit; cursor: pointer; }
+
+/* Generic drawer primitives may also reuse tokens; component-specific rules live with the component */

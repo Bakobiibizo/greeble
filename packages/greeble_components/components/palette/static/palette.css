@@ -1,0 +1,118 @@
+.greeble-palette {
+  display: grid;
+  gap: var(--greeble-spacing-4, 1rem);
+}
+
+.greeble-palette__header {
+  display: grid;
+  gap: var(--greeble-spacing-2, 0.5rem);
+}
+
+.greeble-palette__description {
+  margin: 0;
+  font-size: 0.95rem;
+  color: rgba(232, 232, 234, 0.72);
+}
+
+.greeble-palette__form {
+  display: grid;
+  gap: var(--greeble-spacing-2, 0.5rem);
+}
+
+.greeble-palette__layout {
+  display: grid;
+  gap: var(--greeble-spacing-4, 1rem);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.greeble-palette__results,
+.greeble-palette__detail {
+  display: grid;
+  gap: var(--greeble-spacing-3, 0.75rem);
+  padding: var(--greeble-spacing-3, 0.75rem);
+  border-radius: var(--greeble-radius-medium, 12px);
+  background: rgba(17, 17, 26, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  min-height: 220px;
+}
+
+.greeble-palette__empty {
+  margin: 0;
+  color: rgba(232, 232, 234, 0.6);
+}
+
+.greeble-palette__detail-card {
+  display: grid;
+  gap: var(--greeble-spacing-3, 0.75rem);
+}
+
+.greeble-palette__meta {
+  margin: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.greeble-palette__meta > div {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: rgba(232, 232, 234, 0.75);
+}
+
+.greeble-palette__meta dt {
+  font-weight: 600;
+}
+
+.greeble-palette__meta dd {
+  margin: 0;
+}
+
+.greeble-palette__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--greeble-spacing-2, 0.5rem);
+}
+
+.greeble-palette__result {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--greeble-spacing-3, 0.75rem);
+  padding: 0.75rem 0.9rem;
+  border-radius: 0.75rem;
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.05);
+  text-align: left;
+  color: inherit;
+  cursor: pointer;
+}
+
+.greeble-palette__result:hover,
+.greeble-palette__result:focus-visible {
+  border-color: rgba(99, 179, 237, 0.4);
+  background: rgba(99, 179, 237, 0.12);
+  outline: none;
+}
+
+.greeble-palette__result-label {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.greeble-palette__result-label > span {
+  font-size: 0.9rem;
+  color: rgba(232, 232, 234, 0.75);
+}
+
+.greeble-palette__result-kbd {
+  font-size: 0.8rem;
+  color: rgba(232, 232, 234, 0.6);
+}
+
+.greeble-palette__detail > p {
+  margin: 0;
+  color: rgba(232, 232, 234, 0.72);
+}

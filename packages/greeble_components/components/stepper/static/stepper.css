@@ -1,0 +1,96 @@
+.greeble-stepper {
+  display: grid;
+  gap: var(--greeble-spacing-4, 1rem);
+}
+
+.greeble-stepper__header {
+  display: grid;
+  gap: var(--greeble-spacing-2, 0.5rem);
+}
+
+.greeble-stepper__description {
+  margin: 0;
+  color: rgba(232, 232, 234, 0.75);
+}
+
+.greeble-stepper__list {
+  display: grid;
+  gap: var(--greeble-spacing-2, 0.5rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.greeble-stepper__item {
+  position: relative;
+}
+
+.greeble-stepper__step {
+  width: 100%;
+  display: flex;
+  gap: var(--greeble-spacing-3, 0.75rem);
+  align-items: flex-start;
+  padding: 0.85rem 1rem;
+  border-radius: var(--greeble-radius-medium, 12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.greeble-stepper__step:hover,
+.greeble-stepper__step:focus-visible {
+  border-color: rgba(106, 161, 255, 0.4);
+  background: rgba(106, 161, 255, 0.12);
+  outline: none;
+}
+
+.greeble-stepper__step[aria-current="step"] {
+  border-color: var(--greeble-color-accent, #6aa1ff);
+  background: rgba(106, 161, 255, 0.18);
+}
+
+.greeble-stepper__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 2rem;
+  block-size: 2rem;
+  border-radius: 999px;
+  background: rgba(99, 179, 237, 0.2);
+  color: var(--greeble-color-accent, #6aa1ff);
+  font-weight: 600;
+}
+
+.greeble-stepper__meta {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.greeble-stepper__meta > small {
+  font-size: 0.85rem;
+  color: rgba(232, 232, 234, 0.65);
+}
+
+.greeble-stepper__panel {
+  border-radius: var(--greeble-radius-medium, 12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(17, 17, 26, 0.45);
+  padding: clamp(1.5rem, 3vw, 2rem);
+  display: grid;
+  gap: var(--greeble-spacing-3, 0.75rem);
+}
+
+.greeble-stepper__tasks {
+  margin: 0;
+  padding-left: 1.25rem;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.greeble-stepper__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--greeble-spacing-2, 0.5rem);
+}

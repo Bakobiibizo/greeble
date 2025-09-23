@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Greeble Starter</title>
+    <link rel="stylesheet" href="/static/greeble/greeble-core.css" />
+    <link rel="stylesheet" href="/static/site.css" />
+    <script src="https://unpkg.com/htmx.org@1.9.12" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="stack">
+        <h1 class="site-title">Greeble Starter</h1>
+        <p class="site-tagline">Server-rendered components wired with HTMX.</p>
+      </div>
+      <a class="greeble-button greeble-button--primary" href="https://github.com/bakobiibizo/greeble" target="_blank" rel="noreferrer">
+        View Greeble Repo
+      </a>
+    </header>
+
+    <main class="site-main stack">
+      <section class="demo" id="modal-demo">
+        <header>
+          <h2 class="greeble-heading-2">Modal</h2>
+          <p>Open the modal to invite a teammate.</p>
+        </header>
+        {% include "greeble/modal.html" %}
+      </section>
+
+      <section class="demo" id="dropdown-demo">
+        <header>
+          <h2 class="greeble-heading-2">Workspace menu</h2>
+          <p>Trigger HTMX actions from the dropdown.</p>
+        </header>
+        {% include "greeble/dropdown.html" %}
+        <div id="workspace-panel" aria-live="polite"></div>
+        <div id="invite-root" aria-live="polite"></div>
+      </section>
+
+      <section class="demo" id="command-palette-demo">
+        {% include "greeble/palette.html" %}
+      </section>
+
+      <section class="demo" id="form-demo">
+        {% include "greeble/form.html" %}
+      </section>
+
+      <section class="demo" id="tabs-demo">
+        {% include "greeble/tabs.html" %}
+      </section>
+
+      <section class="demo" id="drawer-demo">
+        {% include "greeble/drawer.html" %}
+      </section>
+
+      <section class="demo" id="table-demo">
+        {% include "greeble/table.html" %}
+      </section>
+
+      <section class="demo" id="stepper-demo">
+        {% include "greeble/stepper.html" %}
+      </section>
+
+      <section class="demo" id="infinite-demo">
+        {% include "greeble/infinite-list.html" %}
+      </section>
+
+      <section class="demo" id="toast-demo">
+        {% include "greeble/toast.root.html" %}
+        {% include "greeble/toast.item.html" %}
+      </section>
+    </main>
+  </body>
+</html>

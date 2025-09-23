@@ -82,11 +82,12 @@ Component commands (`add`, `sync`, `remove`) accept:
 
 - `--project` – destination root (default: current directory)
 - `--templates` / `--static` – customise template/static roots (defaults: `templates`, `static`)
+- `--docs` – customise documentation root (default: `docs`)
 - `--include-docs` – copy or remove the component documentation page alongside markup/CSS
 - `--force` – overwrite existing files during `add`
 - `--dry-run` – preview copy/removal plans without writing
 
-`greeble new` accepts `--include-docs`, `--force`, and `--dry-run` to control documentation copying, overwriting existing files, and previewing the starter scaffold.
+`greeble new` accepts `--include-docs`, `--docs`, `--force`, and `--dry-run` to control documentation copying, the docs root, overwriting existing files, and previewing the starter scaffold.
 
 See [docs/cli.md](docs/cli.md) for a full walkthrough.
 

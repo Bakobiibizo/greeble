@@ -39,6 +39,7 @@ Options:
 - `--project PATH` (default: current directory)
 - `--templates PATH` (default: `templates`) – destination root for HTML templates
 - `--static PATH` (default: `static`) – destination root for CSS/JS assets
+- `--docs PATH` (default: `docs`) – destination root for documentation files
 - `--include-docs` – also copy the component documentation page
 - `--force` – overwrite existing files
 - `--dry-run` – preview without writing

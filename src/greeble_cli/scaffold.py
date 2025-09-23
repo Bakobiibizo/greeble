@@ -30,7 +30,11 @@ def _resolve_source(manifest: Manifest, component: Component, relative: Path) ->
         return _component_root(manifest, component) / "static" / relative.name
     if first == "docs":
         return manifest.root / relative
-    raise ScaffoldError(f"Unsupported file path '{relative}' in component '{component.key}'")
+    allowed = ", ".join(sorted({"templates", "static", "docs"}))
+    raise ScaffoldError(
+        f"Unsupported file path '{relative}' in component '{component.key}'. "
+        f"Expected path to start with one of: {allowed}."
+    )
 
 
 def build_copy_plan(
@@ -40,6 +44,7 @@ def build_copy_plan(
     templates_dir: Path,
     static_dir: Path,
     include_docs: bool,
+    docs_dir: Path | None,
 ) -> list[CopyPlan]:
     plans: list[CopyPlan] = []
 
@@ -56,10 +61,14 @@ def build_copy_plan(
             if not include_docs:
                 continue
             source = _resolve_source(manifest, component, rel_path)
-            destination = project_root / rel_path
+            if docs_dir is not None:
+                destination = project_root / docs_dir / Path(*rel_path.parts[1:])
+            else:
+                destination = project_root / rel_path
         else:
             raise ScaffoldError(
-                f"Unsupported file path '{relative}' in component '{component.key}'"
+                f"Unsupported manifest path '{relative}' in component '{component.key}'. "
+                "Paths must begin with templates/, static/, or docs/."
             )
 
         if not source.exists():

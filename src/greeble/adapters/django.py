@@ -10,33 +10,11 @@ for dynamic content. `partial_html()` should only be used for trusted, server-
 generated fragments.
 """
 
-from __future__ import annotations
-
 import json
 from collections.abc import Mapping, MutableMapping
 from typing import Any
 
 from .utils import hx_trigger_headers, is_hx_request
-
-
-def partial_html(
-    html: str,
-    *,
-    status_code: int = 200,
-    headers: MutableMapping[str, str] | None = None,
-    triggers: str | list[str] | Mapping[str, Any] | None = None,
-) -> Any:
-    """Return a Django HttpResponse with HTML content and optional HX headers."""
-    from django.http import HttpResponse  # local import to avoid hard dependency at import time
-
-    resp = HttpResponse(html, status=status_code, content_type="text/html; charset=utf-8")
-    if headers:
-        for k, v in headers.items():
-            resp[k] = v
-    if triggers is not None:
-        for k, v in hx_trigger_headers(triggers).items():
-            resp[k] = v
-    return resp
 
 
 def csrf_header(request: Any) -> dict[str, str]:

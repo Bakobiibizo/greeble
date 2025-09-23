@@ -52,7 +52,7 @@ def test_hx_trigger_headers_variants() -> None:
     }
 
 
-def test_partial_html_and_template_response(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_template_response_and_headers(monkeypatch: pytest.MonkeyPatch) -> None:
     # Fake django.http.HttpResponse
     fake_http = types.ModuleType("django.http")
 
@@ -78,11 +78,6 @@ def test_partial_html_and_template_response(monkeypatch: pytest.MonkeyPatch) -> 
     monkeypatch.setitem(sys.modules, "django", fake_django)
     monkeypatch.setitem(sys.modules, "django.http", fake_http)
     monkeypatch.setitem(sys.modules, "django.shortcuts", fake_shortcuts)
-
-    # partial_html should attach trigger headers
-    resp1 = g_django.partial_html("<p>hi</p>", triggers={"evt": True})
-    assert isinstance(resp1, SimpleHttpResponse)
-    assert resp1.headers.get("HX-Trigger") == '{"evt": true}'
 
     # template_response should pick partial when HX request and attach headers
     req = DummyRequest(headers={"HX-Request": "true"})

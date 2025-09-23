@@ -18,28 +18,6 @@ from typing import Any
 from .utils import hx_trigger_headers, is_hx_request
 
 
-def partial_html(
-    html: str,
-    *,
-    status_code: int = 200,
-    headers: MutableMapping[str, str] | None = None,
-    triggers: str | list[str] | Mapping[str, Any] | None = None,
-) -> Any:
-    """Return a Flask Response with HTML content and optional HX headers."""
-    from flask import make_response  # local import to avoid hard dependency at import time
-
-    body = html
-    resp = make_response(body, status_code)
-    resp.headers["Content-Type"] = "text/html; charset=utf-8"
-    if headers:
-        for k, v in headers.items():
-            resp.headers[k] = v
-    if triggers is not None:
-        for k, v in hx_trigger_headers(triggers).items():
-            resp.headers[k] = v
-    return resp
-
-
 def template_response(
     template_name: str,
     context: dict[str, Any],

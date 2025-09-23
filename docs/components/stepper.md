@@ -64,3 +64,19 @@ Example step content:
 
 Handle validation by returning the same step content with inline error messaging and an HTTP 400
 status.
+
+## Keyboard map
+
+- Arrow Up/Down or Left/Right – Move focus between step buttons (depending on layout).
+- Enter/Space – Activate the focused step; fetch the panel content for that step.
+- Tab / Shift+Tab – Move between stepper controls and the panel region.
+
+## Response matrix
+
+- GET /stepper/{stepKey}
+  - 200 OK — returns panel content for requested step
+  - Headers: `HX-Trigger: {"greeble:stepper:change": {"step": "<stepKey>"}}`
+
+- POST /stepper/{stepKey}
+  - 200 OK — returns next step content; may emit `{ "greeble:stepper:complete": true }` when finished
+  - 400 Bad Request — returns same step content with inline errors; keep `aria-live` announcements

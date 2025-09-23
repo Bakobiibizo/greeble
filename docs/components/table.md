@@ -41,3 +41,39 @@
 - Row actions (`view`, `remind`, `escalate`, `archive`) return either an out-of-band toast or an
   empty fragment that HTMX uses to manipulate the matching row. Use descriptive `HX-Trigger`
   payloads so other UI (badge counts, notifications) can react.
+
+## Keyboard map
+
+- Arrow Up/Down – Navigate focus between interactive controls in the table (e.g. action buttons).
+- Tab / Shift+Tab – Move between focusable elements; header sort buttons should be reachable.
+- Enter / Space – Activate focused button, including header sort controls and row actions.
+
+## Response matrix
+
+- GET /table?page={n}&sort={field}:{dir}
+  - 200 OK — returns `<tr>` rows for requested page and sort
+  - Headers: `HX-Trigger: {"greeble:table:update": {"page": n, "sort": "field:dir"}}`
+
+- POST /table/search { q }
+  - 200 OK — returns filtered `<tr>` rows or a single `<tr><td colspan="…">No accounts match…</td></tr>` when empty
+  - Headers: `HX-Trigger: {"greeble:table:update": {"query": "<q>", "results": <int>}}`
+
+- POST /table/export
+  - 200 OK — returns out-of-band toast only
+  - Headers: `HX-Trigger: {"greeble:toast": {"level": "info"}}`
+
+- GET /table/accounts/{slug}
+  - 200 OK — returns out-of-band toast only
+  - Headers: `HX-Trigger: {"greeble:table:view": {"org": "<org>"}}`
+
+- POST /table/accounts/{slug}/remind
+  - 200 OK — returns out-of-band toast only
+  - Headers: `HX-Trigger: {"greeble:table:remind": {"org": "<org>"}}`
+
+- POST /table/accounts/{slug}/escalate
+  - 200 OK — returns out-of-band toast only
+  - Headers: `HX-Trigger: {"greeble:table:escalate": {"org": "<org>"}}`
+
+- DELETE /table/accounts/{slug}
+  - 200 OK — returns out-of-band toast only; client removes row on success
+  - Headers: `HX-Trigger: {"greeble:table:archive": {"org": "<org>"}}`

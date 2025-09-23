@@ -58,3 +58,19 @@ Invalid response example:
   <p class="greeble-field__error" id="form-email-error" role="alert">Enter a valid work email.</p>
 </div>
 ```
+
+## Keyboard map
+
+- Tab / Shift+Tab – Move between fields, inline errors, status region, and submit controls.
+- Enter – Submit the form from a focused submit button or when within a single-line input.
+- Esc – Optional: cancel or clear pending validation; app-specific behaviour.
+
+## Response matrix
+
+- POST /form/validate
+  - 200 OK (valid) — returns a valid field group or a dedicated "valid" group; may emit `HX-Trigger: {"greeble:form:valid": {"field": "email"}}`
+  - 400 Bad Request (invalid) — returns `.greeble-field.greeble-field--invalid` with error; HTMX swaps the group
+
+- POST /form/submit
+  - 200 OK — returns out-of-band toast and a cleared input group; may update `#form-status`
+  - 400 Bad Request — returns original partial with error states; preserves user input

@@ -2,8 +2,11 @@
 
 This directory contains Python framework adapters for using Greeble with common server frameworks.
 
-- greeble_django: Template tags, CSRF helpers, messages-to-toasts, pagination helpers.
-- greeble_fastapi: Response helpers for partials, Jinja utilities, HTMX-aware rendering.
-- greeble_flask: Blueprint and helpers matching FastAPI semantics.
+- `greeble_fastapi`: Helpers for HTMX-aware partial rendering and HX-Trigger headers.
+- `greeble_flask`: Helpers for HTMX detection, partial rendering via Jinja, and HX-Trigger headers.
+- `greeble_django`: Template tags (`{% greeble_toast_container %}`, `{% greeble_csrf_headers %}`), CSRF helpers, and a messages-to-toasts middleware.
 
-All modules are placeholders with documentation comments only.
+See the library docs for usage and examples: `docs/adapters.md`. Minimal demo apps live in:
+
+- `examples/django-demo/`
+- `examples/flask-demo/`

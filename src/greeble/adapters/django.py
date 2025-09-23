@@ -1,9 +1,9 @@
 """
-Flask adapter helpers for HTMX-aware server-rendered apps.
+Django adapter helpers for HTMX-aware server-rendered apps.
 
-These helpers mirror the FastAPI adapter semantics while using Flask's
+These helpers mirror the FastAPI adapter semantics while using Django's
 rendering and response facilities. Imports are performed inside functions
-to avoid requiring Flask at import time in environments that don't use it.
+to avoid requiring Django at import time in environments that don't use it.
 """
 
 from __future__ import annotations
@@ -18,20 +18,20 @@ HX_REQUEST_HEADER = "HX-Request"
 def is_hx_request(request: Any) -> bool:
     """Return True if the incoming request was initiated by HTMX.
 
-    Works with `flask.Request` objects. HTMX sends header `HX-Request: true`.
+    Works with `django.http.HttpRequest` objects. HTMX sends header `HX-Request: true`.
     """
-    headers = getattr(request, "headers", None)
+    # Django >= 2.2 exposes a case-insensitive mapping at request.headers; fallback to META
     value: Any = ""
+    headers = getattr(request, "headers", None)
     if headers is not None:
         try:
             value = headers.get(HX_REQUEST_HEADER, "")
         except Exception:
             value = ""
     if not value:
-        # Flask also exposes environ via request.environ
-        environ = getattr(request, "environ", None)
-        if isinstance(environ, dict):
-            value = environ.get(f"HTTP_{HX_REQUEST_HEADER.replace('-', '_').upper()}", "")
+        meta = getattr(request, "META", None)
+        if isinstance(meta, dict):
+            value = meta.get(f"HTTP_{HX_REQUEST_HEADER.replace('-', '_').upper()}", "")
     return str(value).lower() == "true"
 
 
@@ -65,19 +65,40 @@ def partial_html(
     headers: MutableMapping[str, str] | None = None,
     triggers: str | list[str] | Mapping[str, Any] | None = None,
 ) -> Any:
-    """Return a Flask Response with HTML content and optional HX headers."""
-    from flask import make_response  # local import to avoid hard dependency at import time
+    """Return a Django HttpResponse with HTML content and optional HX headers."""
+    from django.http import HttpResponse  # local import to avoid hard dependency at import time
 
-    body = html
-    resp = make_response(body, status_code)
-    resp.headers["Content-Type"] = "text/html; charset=utf-8"
+    resp = HttpResponse(html, status=status_code, content_type="text/html; charset=utf-8")
     if headers:
         for k, v in headers.items():
-            resp.headers[k] = v
+            resp[k] = v
     if triggers is not None:
         for k, v in hx_trigger_headers(triggers).items():
-            resp.headers[k] = v
+            resp[k] = v
     return resp
+
+
+def csrf_header(request: Any) -> dict[str, str]:
+    """Return a header mapping for CSRF suitable for HTMX requests.
+
+    Uses Django's CSRF token API. Intended for use with hx-headers, e.g.:
+
+        hx-headers='{"X-CSRFToken": "<token>"}'
+    """
+    try:
+        from django.middleware.csrf import get_token
+    except Exception:  # pragma: no cover - import guard for non-Django envs
+        return {}
+    token = get_token(request)
+    return {"X-CSRFToken": token}
+
+
+def hx_headers_attr(headers: Mapping[str, str]) -> str:
+    """Serialize headers for use in an hx-headers attribute."""
+    return json.dumps(dict(headers))
+
+
+essential_context_keys = {"request"}
 
 
 def template_response(
@@ -91,23 +112,22 @@ def template_response(
     headers: MutableMapping[str, str] | None = None,
     triggers: str | list[str] | Mapping[str, Any] | None = None,
 ) -> Any:
-    """Render a template or partial based on HTMX detection, returning a Flask Response.
+    """Render a template or partial based on HTMX detection, returning HttpResponse.
 
     - template_name: full layout template
     - partial_template: fragment template to use when HTMX or `partial=True`
-    - request: flask request object for HTMX detection
+    - request: django HttpRequest for HTMX detection and template rendering
     """
-    from flask import make_response, render_template
+    from django.shortcuts import render
 
     use_partial = partial is True or (partial is None and is_hx_request(request))
     name = partial_template if (use_partial and partial_template) else template_name
-    html = render_template(name, **context)
-    resp = make_response(html, status_code)
-    resp.headers["Content-Type"] = "text/html; charset=utf-8"
+    # Django's render ensures the response carries proper content type
+    resp = render(request, name, context=context, status=status_code)
     if headers:
         for k, v in headers.items():
-            resp.headers[k] = v
+            resp[k] = v
     if triggers is not None:
         for k, v in hx_trigger_headers(triggers).items():
-            resp.headers[k] = v
+            resp[k] = v
     return resp

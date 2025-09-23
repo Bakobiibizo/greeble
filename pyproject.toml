@@ -25,6 +25,12 @@ dev = [
     "uvicorn>=0.23.0",
     "types-PyYAML>=6.0.12",
 ]
+django = [
+    "Django>=4.2",
+]
+flask = [
+    "Flask>=3.0",
+]
 
 [project.scripts]
 dev = "greeble.scripts.dev:main"

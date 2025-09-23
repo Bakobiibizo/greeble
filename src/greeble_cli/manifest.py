@@ -23,6 +23,7 @@ class Manifest:
     components: dict[str, Component]
     root: Path
     library: dict[str, object]
+    path: Path
 
     def get(self, key: str) -> Component:
         try:
@@ -145,6 +146,7 @@ def load_manifest(path: Path) -> Manifest:
         components=components,
         root=path.parent,
         library=library_data,
+        path=path,
     )
 
 

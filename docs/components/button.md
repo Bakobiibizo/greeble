@@ -25,3 +25,14 @@
 ```
 
 Wrap a cluster of buttons in `.greeble-button-group` to space them evenly.
+
+## Keyboard map
+
+- Tab / Shift+Tab – Move focus between buttons.
+- Enter / Space – Activate the focused button.
+
+## Response matrix
+
+- Typical HTMX endpoints (e.g., GET/POST/DELETE)
+  - 200 OK — returns a fragment for the target region; may include out-of-band updates and `HX-Trigger` payloads
+  - 4xx — return inline error fragment or toast guidance; keep focus handling consistent

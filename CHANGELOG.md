@@ -1,3 +1,36 @@
+## [0.1.0] - 2025-09-23
+
+### feat
+- tighten manifest validation and docs handling (4730fde)
+- implement CSS tokens/utilities; feat(drawer): styles + accessible partial; chore: align with architecture docs (cf94e32)
+- implement HTMX helpers (is_hx_request, HX-Trigger headers, partial_html, template_response) with tests (eae4c29)
+- add initial project structure per architecture doc (1a40798)
+- added rebase and create branch commands to dev tools (7fbc6cc)
+
+### docs
+- add JSON flags docs, Django/Flask adapter parity, demos, uv groups for optional deps; add templatetags and middleware (a17001a)
+- add contributing guide (abe3e32)
+
+### test
+- add FastAPI e2e tests for table render and partial endpoint (paged/sorted) (ba47dda)
+- add FastAPI e2e tests for form validation and submit flows (8deb687)
+- add FastAPI e2e tests validating toast root and OOB toast item updates (a7614f3)
+- add FastAPI e2e tests for Modal component using adapter helpers\n\n- Add python-multipart to dev deps for Form() parsing\n- Validate modal open/close and submit OOB toast flow (db2fe1d)
+
+### chore
+- conditional logic refinement (3061eff)
+- remove uv.lock file (6f8e333)
+- remove .windsurf folder and adding it to gitignore (2727e44)
+- remove template tools from feature branch (kept in tools/template) (b504946)
+- add template export and setup scripts (96bd1d0)
+
+### other
+- Delete AGENTS.md (79799ff)
+- chore(release)addressing review comments in pr (897a1ba)
+- finished the components and added a cli (9033f36)
+- finished component implementation and landing demo (d4962d3)
+- style(modal): implement modal component styles using core tokens (2b8f474)
+
 # Changelog
 
 ## [0.0.3] - 2025-09-20

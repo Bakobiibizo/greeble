@@ -92,11 +92,19 @@ def execute_plan(plans: Iterable[CopyPlan], *, force: bool, dry_run: bool) -> li
     for plan in plans:
         if not dry_run:
             dest_parent = plan.destination.parent
-            dest_parent.mkdir(parents=True, exist_ok=True)
+            try:
+                dest_parent.mkdir(parents=True, exist_ok=True)
+            except OSError as e:
+                raise ScaffoldError(
+                    f"Failed to create destination directory '{dest_parent}': {e}"
+                ) from e
         if plan.destination.exists() and not force and not dry_run:
             raise ScaffoldError(f"File already exists: {plan.destination}")
         if not dry_run:
-            shutil.copy2(plan.source, plan.destination)
+            try:
+                shutil.copy2(plan.source, plan.destination)
+            except OSError as e:
+                raise ScaffoldError(f"Failed to copy to '{plan.destination}': {e}") from e
         written.append(plan.destination)
     return written
 

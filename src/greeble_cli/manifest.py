@@ -125,10 +125,16 @@ def load_manifest(path: Path) -> Manifest:
         components[key] = Component(key=key, title=title, summary=summary, files=list(files))
 
     library = data.get("library")
+    allowed_library_keys = {"packages", "tokens_file", "name", "description", "docs_site"}
     if library is None:
         library_data: dict[str, object] = {}
     elif isinstance(library, dict):
         library_data = dict(library)
+        unknown_keys = set(library_data) - allowed_library_keys
+        if unknown_keys:
+            raise ManifestError(
+                "Manifest 'library' contains unknown keys: " + ", ".join(sorted(unknown_keys))
+            )
     else:
         raise ManifestError("Manifest 'library' must be a mapping when provided")
 

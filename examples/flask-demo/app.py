@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from typing import Any
 
 from flask import Flask, render_template, request
@@ -27,4 +28,5 @@ def panel():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    debug = bool(os.getenv("FLASK_DEBUG"))
+    app.run(debug=debug)

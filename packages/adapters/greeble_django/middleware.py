@@ -77,7 +77,14 @@ class GreebleMessagesToToastsMiddleware:
             try:
                 merged = json.loads(existing)
                 if isinstance(merged, dict):
-                    merged.update({"greeble:toast": payload})
+                    if "greeble:toast" in merged:
+                        current = merged["greeble:toast"]
+                        if isinstance(current, list):
+                            merged["greeble:toast"] = current + payload
+                        else:
+                            merged["greeble:toast"] = [current, *payload]
+                    else:
+                        merged["greeble:toast"] = payload
                     body = json.dumps(merged)
             except Exception:
                 # Fall back to replacing the header if parsing fails

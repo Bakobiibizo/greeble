@@ -4,58 +4,18 @@ Flask adapter helpers for HTMX-aware server-rendered apps.
 These helpers mirror the FastAPI adapter semantics while using Flask's
 rendering and response facilities. Imports are performed inside functions
 to avoid requiring Flask at import time in environments that don't use it.
+
+Security note: Prefer `template_response()` (which uses `render_template`) for
+dynamic content so Jinja can safely escape values. `partial_html()` should only
+be used for trusted, server-generated fragments.
 """
 
 from __future__ import annotations
 
-import json
 from collections.abc import Mapping, MutableMapping
-from typing import Any, Literal
+from typing import Any
 
-HX_REQUEST_HEADER = "HX-Request"
-
-
-def is_hx_request(request: Any) -> bool:
-    """Return True if the incoming request was initiated by HTMX.
-
-    Works with `flask.Request` objects. HTMX sends header `HX-Request: true`.
-    """
-    headers = getattr(request, "headers", None)
-    value: Any = ""
-    if headers is not None:
-        try:
-            value = headers.get(HX_REQUEST_HEADER, "")
-        except Exception:
-            value = ""
-    if not value:
-        # Flask also exposes environ via request.environ
-        environ = getattr(request, "environ", None)
-        if isinstance(environ, dict):
-            value = environ.get(f"HTTP_{HX_REQUEST_HEADER.replace('-', '_').upper()}", "")
-    return str(value).lower() == "true"
-
-
-AfterPhase = Literal["receive", "settle", "swap"]
-_HEADER_BY_PHASE: dict[AfterPhase, str] = {
-    "receive": "HX-Trigger",
-    "settle": "HX-Trigger-After-Settle",
-    "swap": "HX-Trigger-After-Swap",
-}
-
-
-def _serialize_triggers(triggers: str | list[str] | Mapping[str, Any]) -> str:
-    if isinstance(triggers, str):
-        return json.dumps({triggers: True})
-    if isinstance(triggers, list):
-        return json.dumps({name: True for name in triggers})
-    return json.dumps(dict(triggers))
-
-
-def hx_trigger_headers(
-    triggers: str | list[str] | Mapping[str, Any], *, after: AfterPhase = "receive"
-) -> dict[str, str]:
-    header_name = _HEADER_BY_PHASE[after]
-    return {header_name: _serialize_triggers(triggers)}
+from .utils import hx_trigger_headers, is_hx_request
 
 
 def partial_html(

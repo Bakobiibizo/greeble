@@ -20,6 +20,22 @@ from .scaffold import (
 from .starter import StarterError, scaffold_starter
 
 
+def _resolve_project_dirs(
+    project_root: Path | None, args: argparse.Namespace
+) -> tuple[Path | None, Path | None, Path | None]:
+    """Return (templates_dir, static_dir, docs_dir) given optional project_root and args.
+
+    When project_root is None, returns (None, None, None). Docs dir is only returned
+    when include_docs is True; otherwise None.
+    """
+    if project_root is None:
+        return None, None, None
+    templates_dir = project_root / Path(args.templates)
+    static_dir = project_root / Path(args.static)
+    docs_dir = project_root / Path(args.docs) if getattr(args, "include_docs", False) else None
+    return templates_dir, static_dir, docs_dir
+
+
 def _load_manifest(path: str | None) -> Manifest:
     manifest_path = Path(path) if path else default_manifest_path()
     return load_manifest(manifest_path)
@@ -93,8 +109,7 @@ def _build_doctor_report(
         component = manifest.get(key)
         sources = component_sources(manifest, component)
         total_sources += len(sources)
-        missing = [source for source in sources if not source.exists()]
-        if missing:
+        if missing := [source for source in sources if not source.exists()]:
             missing_sources.append({"component": component.key, "sources": missing})
 
     project_info: dict[str, object] | None = None
@@ -155,8 +170,8 @@ def _build_doctor_report(
         "components_checked": len(manifest.components),
         "sources_checked": total_sources,
         "errors": len(missing_sources),
-        "warnings": sum(1 for warning in warnings if warning["level"] == "warning"),
-        "infos": sum(1 for warning in warnings if warning["level"] == "info"),
+        "warnings": sum(w.get("level") == "warning" for w in warnings),
+        "infos": sum(w.get("level") == "info" for w in warnings),
     }
 
     status = "ok" if summary["errors"] == 0 else "error"
@@ -443,9 +458,7 @@ def cmd_doctor(args: argparse.Namespace, manifest: Manifest) -> int:
     # JSON mode: generate a structured report and print it
     if getattr(args, "json", False):
         project_root = Path(args.project).resolve() if args.project else None
-        templates_dir = project_root / Path(args.templates) if project_root else None
-        static_dir = project_root / Path(args.static) if project_root else None
-        docs_dir = project_root / Path(args.docs) if (project_root and args.include_docs) else None
+        templates_dir, static_dir, docs_dir = _resolve_project_dirs(project_root, args)
         report = _build_doctor_report(
             manifest,
             project_root=project_root,
@@ -477,10 +490,10 @@ def cmd_doctor(args: argparse.Namespace, manifest: Manifest) -> int:
 
     project_root = Path(args.project).resolve() if args.project else None
     if project_root:
-        templates_dir = project_root / Path(args.templates)
-        static_dir = project_root / Path(args.static)
-        docs_dir = project_root / Path(args.docs) if args.include_docs else None
-        _print_project_status(project_root, templates_dir, static_dir, docs_dir)
+        templates_dir_opt, static_dir_opt, docs_dir = _resolve_project_dirs(project_root, args)
+        # Narrow optionals for mypy – when project_root is provided, these are Paths
+        assert templates_dir_opt is not None and static_dir_opt is not None
+        _print_project_status(project_root, templates_dir_opt, static_dir_opt, docs_dir)
 
     return 0 if ok else 1
 

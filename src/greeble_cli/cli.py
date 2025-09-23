@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from collections.abc import Sequence
 from pathlib import Path
@@ -9,6 +10,7 @@ from .manifest import Component, Manifest, ManifestError, default_manifest_path,
 from .scaffold import (
     CopyPlan,
     ScaffoldError,
+    backup_existing_files,
     build_copy_plan,
     component_sources,
     ensure_within_project,
@@ -16,6 +18,22 @@ from .scaffold import (
     remove_files,
 )
 from .starter import StarterError, scaffold_starter
+
+
+def _resolve_project_dirs(
+    project_root: Path | None, args: argparse.Namespace
+) -> tuple[Path | None, Path | None, Path | None]:
+    """Return (templates_dir, static_dir, docs_dir) given optional project_root and args.
+
+    When project_root is None, returns (None, None, None). Docs dir is only returned
+    when include_docs is True; otherwise None.
+    """
+    if project_root is None:
+        return None, None, None
+    templates_dir = project_root / Path(args.templates)
+    static_dir = project_root / Path(args.static)
+    docs_dir = project_root / Path(args.docs) if getattr(args, "include_docs", False) else None
+    return templates_dir, static_dir, docs_dir
 
 
 def _load_manifest(path: str | None) -> Manifest:
@@ -45,10 +63,159 @@ def _print_project_status(
         print(f"  Docs dir: {docs_dir} ({docs_status})")
 
 
-def cmd_list(args: argparse.Namespace, manifest: Manifest) -> int:  # noqa: ARG001
-    print("Available components:\n")
+def _build_doctor_report(
+    manifest: Manifest,
+    *,
+    project_root: Path | None,
+    templates_dir: Path | None,
+    static_dir: Path | None,
+    docs_dir: Path | None,
+    include_docs: bool,
+) -> dict[str, object]:
+    tokens_value = manifest.library.get("tokens_file")
+    tokens_declared = isinstance(tokens_value, str)
+    tokens_path = manifest.tokens_file if tokens_declared else None
+    tokens_exists = tokens_path.exists() if tokens_path else False
+    if tokens_declared and tokens_exists:
+        tokens_status = "ok"
+    elif tokens_declared:
+        tokens_status = "warning"
+    else:
+        tokens_status = "info"
+
+    warnings: list[dict[str, object]] = []
+    if tokens_status == "warning":
+        warnings.append(
+            {
+                "kind": "tokens",
+                "level": "warning",
+                "message": "Tokens file not found",
+                "path": tokens_path,
+            }
+        )
+    elif tokens_status == "info":
+        warnings.append(
+            {
+                "kind": "tokens",
+                "level": "info",
+                "message": "Manifest does not declare library.tokens_file",
+                "path": None,
+            }
+        )
+
+    missing_sources: list[dict[str, object]] = []
+    total_sources = 0
     for key in sorted(manifest.keys()):
         component = manifest.get(key)
+        sources = component_sources(manifest, component)
+        total_sources += len(sources)
+        if missing := [source for source in sources if not source.exists()]:
+            missing_sources.append({"component": component.key, "sources": missing})
+
+    project_info: dict[str, object] | None = None
+    if project_root is not None:
+        root_exists = project_root.exists()
+        paths_info: list[dict[str, object]] = []
+        entries: list[tuple[str, Path | None]] = [
+            ("templates", templates_dir),
+            ("static", static_dir),
+        ]
+        if include_docs and docs_dir is not None:
+            entries.append(("docs", docs_dir))
+        if not root_exists:
+            warnings.append(
+                {
+                    "kind": "project_root",
+                    "level": "warning",
+                    "message": "Project root does not exist",
+                    "path": project_root,
+                }
+            )
+        for kind, path in entries:
+            if path is None:
+                continue
+            exists = path.exists()
+            status = "ok" if exists else "warning"
+            if status == "warning":
+                warnings.append(
+                    {
+                        "kind": f"project_{kind}",
+                        "level": "warning",
+                        "message": f"{kind} directory missing",
+                        "path": path,
+                    }
+                )
+            relative = None
+            if root_exists:
+                try:
+                    relative = path.relative_to(project_root)
+                except ValueError:  # pragma: no cover - defensive
+                    relative = None
+            paths_info.append(
+                {
+                    "kind": kind,
+                    "path": path,
+                    "relative": relative,
+                    "exists": exists,
+                    "status": status,
+                }
+            )
+        project_info = {
+            "root": project_root,
+            "exists": root_exists,
+            "paths": paths_info,
+        }
+
+    summary = {
+        "components_checked": len(manifest.components),
+        "sources_checked": total_sources,
+        "errors": len(missing_sources),
+        "warnings": sum(w.get("level") == "warning" for w in warnings),
+        "infos": sum(w.get("level") == "info" for w in warnings),
+    }
+
+    status = "ok" if summary["errors"] == 0 else "error"
+
+    return {
+        "status": status,
+        "summary": summary,
+        "manifest": {"path": manifest.path, "version": manifest.version},
+        "tokens": {
+            "declared": tokens_declared,
+            "path": tokens_path,
+            "status": tokens_status,
+            "exists": tokens_exists if tokens_declared else None,
+        },
+        "components": {
+            "total": len(manifest.components),
+            "missing_sources": missing_sources,
+        },
+        "project": project_info,
+        "warnings": warnings,
+    }
+
+
+def cmd_list(args: argparse.Namespace, manifest: Manifest) -> int:
+    components = [manifest.get(key) for key in sorted(manifest.keys())]
+
+    if getattr(args, "json", False):
+        payload = {
+            "total": len(components),
+            "components": [
+                {
+                    "key": component.key,
+                    "title": component.title,
+                    "summary": component.summary,
+                    "files": list(component.files),
+                }
+                for component in components
+            ],
+        }
+        print(json.dumps(payload, indent=2))
+        return 0
+
+    print("Available components:\n")
+    for component in components:
         print(f"- {component.key}: {component.title} — {component.summary}")
     return 0
 
@@ -60,6 +227,7 @@ def _copy_component(
     project_root: Path,
     templates: Path,
     static: Path,
+    docs: Path | None,
     include_docs: bool,
     force: bool,
     dry_run: bool,
@@ -71,6 +239,7 @@ def _copy_component(
         templates_dir=templates,
         static_dir=static,
         include_docs=include_docs,
+        docs_dir=docs,
     )
     ensure_within_project(project_root, plans)
     if dry_run:
@@ -89,6 +258,7 @@ def cmd_add(args: argparse.Namespace, manifest: Manifest) -> int:
     project_root = Path(args.project).resolve()
     templates_dir = Path(args.templates)
     static_dir = Path(args.static)
+    docs_dir: Path | None = args.docs
 
     try:
         written = _copy_component(
@@ -97,6 +267,7 @@ def cmd_add(args: argparse.Namespace, manifest: Manifest) -> int:
             project_root=project_root,
             templates=templates_dir,
             static=static_dir,
+            docs=docs_dir,
             include_docs=args.include_docs,
             force=args.force,
             dry_run=args.dry_run,
@@ -125,6 +296,7 @@ def _is_directory_non_empty(path: Path) -> bool:
 
 def cmd_new(args: argparse.Namespace, manifest: Manifest) -> int:
     project_root = Path(args.project).resolve()
+    docs_dir: Path = args.docs
 
     try:
         non_empty = _is_directory_non_empty(project_root)
@@ -147,6 +319,7 @@ def cmd_new(args: argparse.Namespace, manifest: Manifest) -> int:
             manifest=manifest,
             project_root=project_root,
             include_docs=args.include_docs,
+            docs_dir=docs_dir,
             force=args.force,
             dry_run=args.dry_run,
         )
@@ -186,26 +359,54 @@ def cmd_sync(args: argparse.Namespace, manifest: Manifest) -> int:
     project_root = Path(args.project).resolve()
     templates_dir = Path(args.templates)
     static_dir = Path(args.static)
-
+    docs_dir: Path | None = args.docs
     try:
-        written = _copy_component(
+        plans = build_copy_plan(
             manifest=manifest,
             component=component,
             project_root=project_root,
-            templates=templates_dir,
-            static=static_dir,
+            templates_dir=templates_dir,
+            static_dir=static_dir,
+            docs_dir=docs_dir,
             include_docs=args.include_docs,
-            force=True,
-            dry_run=args.dry_run,
         )
+        ensure_within_project(project_root, plans)
     except ScaffoldError as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
 
     if args.dry_run:
+        print(_render_plan(plans))
+        if args.backup:
+            existing = [plan.destination for plan in plans if plan.destination.exists()]
+            if existing:
+                print("\nBackups that would be created:")
+                for dest in existing:
+                    try:
+                        rel = dest.relative_to(project_root)
+                    except ValueError:  # pragma: no cover - defensive
+                        rel = dest
+                    print(f"  - {rel}")
         return 0
 
+    try:
+        backups: list[Path] = []
+        if args.backup:
+            backups = backup_existing_files(plans)
+        written = execute_plan(plans, force=True, dry_run=False)
+    except ScaffoldError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
+
     print(f"Synced {len(written)} file(s).")
+    if args.backup and backups:
+        print(f"Created {len(backups)} backup file(s):")
+        for path in backups:
+            try:
+                rel = path.relative_to(project_root)
+            except ValueError:  # pragma: no cover - defensive
+                rel = path
+            print(f"  - {rel}")
     return 0
 
 
@@ -219,6 +420,7 @@ def cmd_remove(args: argparse.Namespace, manifest: Manifest) -> int:
     project_root = Path(args.project).resolve()
     templates_dir = Path(args.templates)
     static_dir = Path(args.static)
+    docs_dir: Path | None = args.docs
 
     try:
         plans = build_copy_plan(
@@ -227,6 +429,7 @@ def cmd_remove(args: argparse.Namespace, manifest: Manifest) -> int:
             project_root=project_root,
             templates_dir=templates_dir,
             static_dir=static_dir,
+            docs_dir=docs_dir,
             include_docs=args.include_docs,
         )
         ensure_within_project(project_root, plans)
@@ -252,6 +455,22 @@ def cmd_remove(args: argparse.Namespace, manifest: Manifest) -> int:
 
 
 def cmd_doctor(args: argparse.Namespace, manifest: Manifest) -> int:
+    # JSON mode: generate a structured report and print it
+    if getattr(args, "json", False):
+        project_root = Path(args.project).resolve() if args.project else None
+        templates_dir, static_dir, docs_dir = _resolve_project_dirs(project_root, args)
+        report = _build_doctor_report(
+            manifest,
+            project_root=project_root,
+            templates_dir=templates_dir,
+            static_dir=static_dir,
+            docs_dir=docs_dir,
+            include_docs=args.include_docs,
+        )
+        print(json.dumps(report, indent=2, default=str))
+        return 0 if report.get("status") == "ok" else 1
+
+    # Human-readable mode
     ok = True
     print(f"Manifest path: {default_manifest_path()}")
     tokens = manifest.tokens_file
@@ -271,10 +490,10 @@ def cmd_doctor(args: argparse.Namespace, manifest: Manifest) -> int:
 
     project_root = Path(args.project).resolve() if args.project else None
     if project_root:
-        templates_dir = project_root / Path(args.templates)
-        static_dir = project_root / Path(args.static)
-        docs_dir = project_root / "docs" if args.include_docs else None
-        _print_project_status(project_root, templates_dir, static_dir, docs_dir)
+        templates_dir_opt, static_dir_opt, docs_dir = _resolve_project_dirs(project_root, args)
+        # Narrow optionals for mypy – when project_root is provided, these are Paths
+        assert templates_dir_opt is not None and static_dir_opt is not None
+        _print_project_status(project_root, templates_dir_opt, static_dir_opt, docs_dir)
 
     return 0 if ok else 1
 
@@ -289,6 +508,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     sub_list = sub.add_parser("list", help="List available components")
     sub_list.set_defaults(func=cmd_list)
+    sub_list.add_argument("--json", action="store_true", help="Output JSON payload of components")
 
     sub_new = sub.add_parser("new", help="Scaffold a new Greeble starter project")
     sub_new.add_argument(
@@ -300,6 +520,12 @@ def build_parser() -> argparse.ArgumentParser:
         "--include-docs",
         action="store_true",
         help="Copy component documentation alongside templates/static",
+    )
+    sub_new.add_argument(
+        "--docs",
+        default=Path("docs"),
+        type=Path,
+        help="Docs root relative to project (defaults to 'docs')",
     )
     sub_new.add_argument(
         "--force",
@@ -332,6 +558,12 @@ def build_parser() -> argparse.ArgumentParser:
         default=Path("static"),
         type=Path,
         help="Static assets root relative to project (defaults to 'static')",
+    )
+    sub_add.add_argument(
+        "--docs",
+        default=Path("docs"),
+        type=Path,
+        help="Docs root relative to project (defaults to 'docs')",
     )
     sub_add.add_argument(
         "--include-docs",
@@ -371,9 +603,20 @@ def build_parser() -> argparse.ArgumentParser:
         help="Static root relative to project",
     )
     sub_sync.add_argument(
+        "--docs",
+        default=Path("docs"),
+        type=Path,
+        help="Docs root relative to project",
+    )
+    sub_sync.add_argument(
         "--include-docs",
         action="store_true",
         help="Sync documentation files alongside templates/static",
+    )
+    sub_sync.add_argument(
+        "--backup",
+        action="store_true",
+        help="Create backups of existing files before overwriting",
     )
     sub_sync.add_argument(
         "--dry-run",
@@ -401,6 +644,12 @@ def build_parser() -> argparse.ArgumentParser:
         default=Path("static"),
         type=Path,
         help="Static root relative to project",
+    )
+    sub_remove.add_argument(
+        "--docs",
+        default=Path("docs"),
+        type=Path,
+        help="Docs root relative to project",
     )
     sub_remove.add_argument(
         "--include-docs",
@@ -436,6 +685,17 @@ def build_parser() -> argparse.ArgumentParser:
         "--include-docs",
         action="store_true",
         help="Report on docs directory when project root supplied",
+    )
+    sub_doctor.add_argument(
+        "--docs",
+        default=Path("docs"),
+        type=Path,
+        help="Docs root relative to project",
+    )
+    sub_doctor.add_argument(
+        "--json",
+        action="store_true",
+        help="Emit a structured JSON report to stdout",
     )
     sub_doctor.set_defaults(func=cmd_doctor)
 

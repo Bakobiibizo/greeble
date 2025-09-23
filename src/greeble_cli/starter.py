@@ -67,6 +67,7 @@ def scaffold_starter(
     manifest: Manifest,
     project_root: Path,
     include_docs: bool,
+    docs_dir: Path,
     force: bool,
     dry_run: bool,
 ) -> StarterPlan:
@@ -81,6 +82,7 @@ def scaffold_starter(
             templates_dir=Path("templates"),
             static_dir=Path("static"),
             include_docs=include_docs,
+            docs_dir=docs_dir,
         )
         ensure_within_project(project_root, plans)
         component_plans.extend(plan.destination for plan in plans)

@@ -53,3 +53,16 @@ Panel response example:
   </ul>
 </section>
 ```
+
+## Keyboard map
+
+- Arrow Left/Right – Move focus between tabs in the tablist.
+- Home/End – Jump to the first/last tab.
+- Enter/Space – Activate the focused tab (fetch panel content).
+- Tab / Shift+Tab – Move between the tablist and the panel content.
+
+## Response matrix
+
+- GET /tabs/{tabKey}
+  - 200 OK — returns panel fragment for the requested tab
+  - Headers: `HX-Trigger: {"greeble:tab:change": {"tab": "<tabKey>"}}`

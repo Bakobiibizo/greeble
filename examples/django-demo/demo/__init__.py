@@ -1,0 +1,1 @@
+"""Django demo project package."""

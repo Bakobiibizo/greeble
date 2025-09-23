@@ -50,8 +50,90 @@ def inventory_view(request):
     return render(request, "greeble/table.html", {})
 ```
 
-Use Django template tags or views to serve HTMX partials defined in the component docs (e.g.,
-`greeble/table.partial.html`).
+Use helpers from `greeble.adapters.django` to detect HTMX and render partials conditionally:
+
+```python
+from django.http import HttpRequest, HttpResponse
+from greeble.adapters import django as g_django
+
+def table(request: HttpRequest) -> HttpResponse:
+    context = {"rows": [...]}
+    return g_django.template_response(
+        template_name="greeble/table.html",
+        partial_template="greeble/table.partial.html",
+        context=context,
+        request=request,
+        triggers={"greeble:table:update": {"page": 1}},
+    )
+```
+
+Load the template tags and add CSRF to HTMX requests via `hx-headers`:
+
+```django
+{% load greeble_tags %}
+
+<form
+  hx-post="/form/submit"
+  hx-headers='{% greeble_csrf_headers %}'
+  hx-target="#form-status" hx-swap="innerHTML">
+  ...
+</form>
+```
+
+Django settings configuration:
+
+```python
+# settings.py
+INSTALLED_APPS = [
+    # ...
+    "greeble.adapters",   # enables `{% load greeble_tags %}`
+]
+
+MIDDLEWARE = [
+    # ...
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "greeble.adapters.middleware.GreebleMessagesToToastsMiddleware",
+]
+```
+
+Client toast listener (minimal example):
+
+```html
+<script>
+  (function () {
+    function renderToast(t) {
+      var root = document.getElementById("greeble-toasts");
+      if (!root) return;
+      var el = document.createElement("div");
+      el.className = "greeble-toast greeble-toast--" + (t.level || "info");
+      el.setAttribute("role", "status");
+      var body = document.createElement("div");
+      body.className = "greeble-toast__body";
+      var title = document.createElement("p");
+      title.className = "greeble-toast__title";
+      title.textContent = t.title || "";
+      var msg = document.createElement("p");
+      msg.className = "greeble-toast__message";
+      msg.textContent = t.message || "";
+      body.appendChild(title);
+      body.appendChild(msg);
+      var btn = document.createElement("button");
+      btn.className = "greeble-toast__dismiss";
+      btn.setAttribute("aria-label", "Dismiss");
+      btn.textContent = "×";
+      btn.addEventListener("click", function () { el.remove(); });
+      el.appendChild(body);
+      el.appendChild(btn);
+      root.appendChild(el);
+      setTimeout(function () { el.remove(); }, 5000);
+    }
+    document.addEventListener("greeble:toast", function (e) {
+      var d = e.detail;
+      if (Array.isArray(d)) d.forEach(renderToast); else if (d) renderToast(d);
+    });
+  })();
+  </script>
+```
 
 ## Flask
 
@@ -69,5 +151,21 @@ def home():
     return render_template("greeble/drawer.html")
 ```
 
-Implement the HTMX endpoints (e.g., `/drawer/open`) to return partial templates. Combine with
-`greeble.adapters.flask` helpers once implemented.
+Use helpers from `greeble.adapters.flask` to detect HTMX and render fragments:
+
+```python
+from flask import Flask, request
+from greeble.adapters import flask as g_flask
+
+app = Flask(__name__)
+
+@app.get("/drawer/open")
+def drawer_open():
+    return g_flask.template_response(
+        template_name="greeble/drawer.html",
+        partial_template="greeble/drawer.partial.html",
+        context={},
+        request=request,
+        triggers={"greeble:drawer:open": True},
+    )
+```

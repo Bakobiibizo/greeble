@@ -1,6 +1,6 @@
 [project]
 name = "greeble"
-version = "0.0.3"
+version = "0.1.0"
 description = "HTML-first component library that delivers copy and paste snippets powered by HTMX for rapid UI construction"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -24,6 +24,12 @@ dev = [
     "python-multipart>=0.0.6",
     "uvicorn>=0.23.0",
     "types-PyYAML>=6.0.12",
+]
+django = [
+    "Django>=4.2",
+]
+flask = [
+    "Flask>=3.0",
 ]
 
 [project.scripts]

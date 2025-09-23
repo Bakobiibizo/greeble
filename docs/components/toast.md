@@ -23,6 +23,20 @@
 <div id="greeble-toasts" class="greeble-toast-region" aria-live="polite" aria-label="Notifications"></div>
 ```
 
+## Keyboard map
+
+- Tab / Shift+Tab – Move focus to the dismiss button.
+- Enter / Space – Activate the dismiss button to remove the toast.
+
+## Response matrix
+
+- Any endpoint returning a toast out-of-band
+  - 200 OK — returns toast markup wrapped in `<div id="greeble-toasts" hx-swap-oob="true">…</div>`
+  - Headers: optional `HX-Trigger: {"greeble:toast": {"level": "success" | "info" | "warn" | "danger"}}`
+
+- GET /toast/dismiss (example)
+  - 200 OK — returns empty response; client swaps out the toast via `hx-target="closest .greeble-toast"`
+
 ```html
 <div id="greeble-toasts" hx-swap-oob="true">
   <div class="greeble-toast greeble-toast--success" role="status">

@@ -25,3 +25,24 @@
 ```
 
 Return the modal partial example to hydrate the dialog. Close endpoints should respond with an empty string to remove the modal from the DOM.
+
+## Keyboard map
+
+- Esc – Close the dialog (client should wire this to the close action when appropriate).
+- Tab / Shift+Tab – Cycle focus within the dialog panel (focus trap).
+- Enter – Activate focused button or submit the form when focus is inside a form control.
+
+## Response matrix
+
+- GET /modal/example
+  - 200 OK — returns modal partial
+  - Headers: optional `HX-Trigger: {"greeble:modal:open": true}`
+
+- GET /modal/close
+  - 200 OK — returns empty string to clear `#modal-root`
+
+- POST /modal/submit
+  - 200 OK (success) — returns:
+    - Out-of-band updates: `#modal-root` cleared (empty element) and toast container with success toast
+    - Headers: optional `HX-Trigger-After-Swap` to signal follow-up actions
+  - 400 Bad Request (validation) — returns modal partial with inline errors; HTMX keeps dialog mounted

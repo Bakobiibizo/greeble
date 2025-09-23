@@ -31,6 +31,22 @@
 </div>
 ```
 
+## Keyboard map
+
+- Tab / Shift+Tab – Move between fields and associated buttons.
+- Enter – Submit the form when focused on a submit button; otherwise behaves per native input.
+- Esc – Clear or cancel interactions where your application provides that behaviour (optional).
+
+## Response matrix
+
+- POST /input/validate (example)
+  - 200 OK (valid) — returns updated `.greeble-field` group (often unchanged) and may emit `HX-Trigger: {"greeble:validate": {...}}`
+  - 400 Bad Request (invalid) — returns `.greeble-field.greeble-field--invalid` with error block; HTMX swaps the group (outerHTML)
+
+- POST /form/submit (typical pairing)
+  - 200 OK — returns out-of-band toast and refreshed group to clear input value
+  - 400 Bad Request — return the group with invalid state and error copy
+
 Add an error block when returning invalid input:
 
 ```html

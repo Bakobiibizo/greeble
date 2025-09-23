@@ -44,3 +44,15 @@
   <span>Background job #1285 completed successfully.</span>
 </li>
 ```
+
+## Keyboard map
+
+- Tab / Shift+Tab – Move between list items, sentinel, and the fallback "Load more" button.
+- Enter / Space – Activate the fallback "Load more" button.
+
+## Response matrix
+
+- GET /list
+  - 200 OK — returns one or more `<li>` items appended to the list
+  - 204 No Content — optional; indicates no more items (client may remove sentinel)
+  - Headers: optional `HX-Trigger: {"greeble:list:append": {"count": <int>}}`

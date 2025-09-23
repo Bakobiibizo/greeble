@@ -1,10 +1,12 @@
 """
-Messages-to-Toasts Middleware
+Django middleware helpers for Greeble adapters.
 
-Transforms Django messages into HX-Trigger headers (`greeble:toast`) that client code can use to
-render out-of-band toast fragments using the Greeble toast container.
+Includes:
+- GreebleMessagesToToastsMiddleware: emits HX-Trigger headers for Django messages.
 
-Add to your `MIDDLEWARE` after `django.contrib.messages.middleware.MessageMiddleware`.
+This module lives under `src/greeble/adapters/` so projects can reference it via
+`'greeble.adapters.middleware.GreebleMessagesToToastsMiddleware'` in MIDDLEWARE
+when `'greeble.adapters'` is added to INSTALLED_APPS.
 """
 
 from __future__ import annotations
@@ -29,13 +31,11 @@ class GreebleMessagesToToastsMiddleware:
     def __call__(self, request: Any) -> Any:  # pragma: no cover - glue
         response = self.get_response(request)
         try:
-            from django.contrib.messages import get_messages
+            from django.contrib.messages import get_messages  # defer import
         except Exception:
             return response
 
         try:
-            # Gather messages without consuming them permanently for other consumers
-            # (Django messages are typically consumed on iteration; acceptable here).
             stored = list(get_messages(request))
         except Exception:
             return response
@@ -87,7 +87,6 @@ class GreebleMessagesToToastsMiddleware:
                         merged["greeble:toast"] = payload
                     body = json.dumps(merged)
             except Exception:
-                # Fall back to replacing the header if parsing fails
                 pass
 
         hdrs = getattr(response, "headers", None)
@@ -100,7 +99,6 @@ class GreebleMessagesToToastsMiddleware:
         try:
             response[header_name] = body
         except Exception:
-            # As a last resort, set an attribute; many Django responses support item assignment though.
             setattr(response, header_name, body)
 
         return response

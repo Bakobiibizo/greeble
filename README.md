@@ -71,22 +71,47 @@ Use the bundled CLI to scaffold projects and copy component files:
 ```bash
 uv run greeble new ./apps/starter --include-docs   # scaffold FastAPI starter project
 uv run greeble list                      # view available components
+uv run greeble list --json               # machine-readable listing
 uv run greeble add modal                 # copy modal templates/CSS into ./templates and ./static
 uv run greeble add table --project ./apps/main --include-docs
-uv run greeble sync modal                # re-copy modal, overwriting local edits
+uv run greeble sync modal --backup       # re-copy modal, overwrite local edits with backups
 uv run greeble remove table              # remove previously copied files
-uv run greeble doctor --project ./apps/main  # sanity check manifest + project dirs
+uv run greeble doctor --project ./apps/main --json  # sanity check manifest + project dirs (JSON)
 ```
+
+### Optional framework extras (uv groups)
+
+FastAPI is the default development target and is included in the dev group by default. If you want to
+experiment with Django or Flask adapters without installing their dependencies globally, enable the
+corresponding uv group on a per-command basis:
+
+```bash
+# Enable Django deps for a single command
+uv run -G django dev check
+
+# Enable Flask deps for a single command
+uv run -G flask dev check
+
+# Combine multiple groups if needed (FastAPI is already in dev)
+uv run -G django -G flask dev test
+
+# To sync a full environment once:
+uv sync -G django            # or: uv sync -G flask
+```
+
+The adapters work even if you don’t install these extras; the helper modules import framework packages
+inside function bodies so that importing `greeble.adapters` does not require Django/Flask.
 
 Component commands (`add`, `sync`, `remove`) accept:
 
 - `--project` – destination root (default: current directory)
 - `--templates` / `--static` – customise template/static roots (defaults: `templates`, `static`)
+- `--docs` – customise documentation root (default: `docs`)
 - `--include-docs` – copy or remove the component documentation page alongside markup/CSS
 - `--force` – overwrite existing files during `add`
 - `--dry-run` – preview copy/removal plans without writing
 
-`greeble new` accepts `--include-docs`, `--force`, and `--dry-run` to control documentation copying, overwriting existing files, and previewing the starter scaffold.
+`greeble new` accepts `--include-docs`, `--docs`, `--force`, and `--dry-run` to control documentation copying, the docs root, overwriting existing files, and previewing the starter scaffold.
 
 See [docs/cli.md](docs/cli.md) for a full walkthrough.
 

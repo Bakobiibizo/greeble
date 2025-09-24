@@ -161,11 +161,17 @@ examples/                       # Demo apps (FastAPI, Django, Flask) and landing
 src/greeble/                    # Installable Python package surface
 ```
 
+## Roadmap
+
+- See the living roadmap in [docs/roadmap.md](docs/roadmap.md).
+- Track current progress in [docs/progress.md](docs/progress.md).
+
+
+
 ## Contributing
 
 1. Fork the repo and create a branch.
 2. Run the demo and tests locally: `uv run dev test`.
-3. Format and lint: `uv run dev check`.
 4. Submit a pull request that includes documentation updates for new components or behaviours.
 
 ## License

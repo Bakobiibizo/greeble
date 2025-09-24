@@ -1,3 +1,12 @@
+## [0.1.1] - 2025-09-23
+
+### refactor
+- extract HTMX utils; preserve HX-Trigger toasts; tighten manifest library keys; demo parity + docs todos (b33e15b)
+
+### chore
+- remove partial_html from Django/Flask; enforce template-based rendering; update tests (541f996)
+- changed demo to use env variables over hard coding debug=true (c465200)
+
 ## [0.1.0] - 2025-09-23
 
 ### feat

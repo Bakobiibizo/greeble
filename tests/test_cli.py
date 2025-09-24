@@ -182,3 +182,31 @@ def test_cli_new_dry_run(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> 
     captured = capsys.readouterr()
     assert "Starter files that would be created" in captured.out
     assert "templates/greeble/modal.html" in captured.out
+
+
+def test_cli_theme_init_scaffolds_tailwind_config(tmp_path: Path) -> None:
+    project_root = tmp_path / "tw_project"
+    exit_code = main(
+        [
+            "theme",
+            "init",
+            "--project",
+            str(project_root),
+            "--config",
+            "tailwind.config.cjs",
+            "--preset-dest",
+            "tools/greeble/tailwind/preset.cjs",
+            "--content",
+            "./templates/**/*.html",
+            "--content",
+            "./docs/**/*.md",
+        ]
+    )
+    assert exit_code == 0
+    preset_path = project_root / "tools" / "greeble" / "tailwind" / "preset.cjs"
+    config_path = project_root / "tailwind.config.cjs"
+    assert preset_path.exists(), "Expected Tailwind preset to be copied into project"
+    assert config_path.exists(), "Expected Tailwind config to be created"
+    cfg = config_path.read_text(encoding="utf-8")
+    assert "presets: [require('./tools/greeble/tailwind/preset.cjs')]" in cfg
+    assert "./templates/**/*.html" in cfg and "./docs/**/*.md" in cfg

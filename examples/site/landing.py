@@ -333,6 +333,20 @@ def render_page(body_html: str) -> HTMLResponse:
       }
       /* Center all sections into the middle column */
       main.landing > * { grid-column: 2; }
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        main.landing {
+          grid-template-columns: 1fr;
+          padding: clamp(1rem, 4vw, 2rem);
+        }
+        main.landing > * { grid-column: 1; }
+        header.site-header {
+          padding: 1rem clamp(1rem, 4vw, 2rem);
+          flex-direction: column;
+          align-items: flex-start;
+          gap: .75rem;
+        }
+      }
       section.demo {
         display: grid;
         gap: 1.25rem;

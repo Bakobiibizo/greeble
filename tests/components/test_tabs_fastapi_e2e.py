@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import pytest
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
@@ -23,28 +24,43 @@ def build_tabs_app() -> FastAPI:
 
     @app.get("/tabs/{tabKey}", response_class=HTMLResponse)
     def tab_partial(tabKey: str) -> HTMLResponse:
-        # Return a dynamic fragment for the given tab
+        # Only allow known tabs to simulate realistic behavior
+        allowed = {"overview", "pricing", "integrations"}
+        if tabKey not in allowed:
+            return HTMLResponse("Not found", status_code=404)
         return HTMLResponse(f"<section>Content for {tabKey}</section>")
 
     return app
 
 
-def test_tabs_home_renders() -> None:
-    app = build_tabs_app()
-    client = TestClient(app)
+@pytest.fixture
+def app() -> FastAPI:
+    return build_tabs_app()
 
+
+@pytest.fixture
+def client(app: FastAPI) -> TestClient:
+    return TestClient(app)
+
+
+def test_tabs_home_renders(client: TestClient) -> None:
     r = client.get("/")
     assert r.status_code == 200
     assert 'role="tablist"' in r.text
-    assert 'hx-get="/tabs/one"' in r.text
-    assert 'hx-get="/tabs/two"' in r.text
+    assert 'hx-get="/tabs/overview"' in r.text
+    assert 'hx-get="/tabs/pricing"' in r.text
     assert 'id="tab-panel"' in r.text
 
 
-def test_tabs_endpoint_returns_partial() -> None:
-    app = build_tabs_app()
-    client = TestClient(app)
-
+def test_tabs_endpoint_returns_partial(client: TestClient) -> None:
     r = client.get("/tabs/alpha")
-    assert r.status_code == 200
-    assert "Content for alpha" in r.text
+    assert r.status_code == 404
+
+    r_ok = client.get("/tabs/overview")
+    assert r_ok.status_code == 200
+    assert "Content for overview" in r_ok.text
+
+
+def test_invalid_tab_key_returns_404(client: TestClient) -> None:
+    r = client.get("/tabs/invalid")
+    assert r.status_code == 404

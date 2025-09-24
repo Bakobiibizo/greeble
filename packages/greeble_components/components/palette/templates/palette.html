@@ -4,10 +4,9 @@ back to /palette/select, updating #palette-detail.
 -->
 <section class="greeble-palette" aria-labelledby="palette-heading">
   <header class="greeble-palette__header">
-    <h2 id="palette-heading" class="greeble-heading-2">Command palette</h2>
+    <h2 id="palette-heading" class="greeble-heading-2">Customer search</h2>
     <p class="greeble-palette__description">
-      Search shortcuts, people, and workspaces. Use arrow keys to move through the results and
-      <kbd>Enter</kbd> to select.
+      Search your customer companies. Use arrow keys to move through results and <kbd>Enter</kbd> to select.
     </p>
   </header>
 
@@ -20,22 +19,22 @@ back to /palette/select, updating #palette-detail.
     hx-swap="innerHTML"
     autocomplete="off"
   >
-    <label class="greeble-field__label" for="palette-query">Search commands</label>
+    <label class="greeble-field__label" for="palette-query">Search customers</label>
     <input
       id="palette-query"
       name="q"
       class="greeble-input"
       type="search"
-      placeholder="Search by command, teammate, or workspace"
+      placeholder="Search by company name"
       aria-describedby="palette-hint"
     />
-    <p class="greeble-field__hint" id="palette-hint">Try typing "invite" or ":settings"</p>
+    <p class="greeble-field__hint" id="palette-hint">Try typing "Orbit Labs", "Nova Civic", or "Comet Ops"</p>
   </form>
 
   <div class="greeble-palette__layout">
     <div class="greeble-palette__results" role="region" aria-live="polite">
       <h3 class="greeble-heading-3">Results</h3>
-      <div id="palette-results" role="listbox" aria-label="Command results">
+      <div id="palette-results" role="listbox" aria-label="Customer results">
         <p class="greeble-palette__empty">Start typing to see matches.</p>
       </div>
     </div>

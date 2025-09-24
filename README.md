@@ -4,6 +4,11 @@ Greeble is an HTML-first component library for server-rendered Python apps. Each
 with copy-and-paste markup, HTMX attributes, and CSS tokens so teams can build rich flows without a
 JavaScript bundler.
 
+## Demo
+
+You can view the demo [here](https://greeble-synai.ngrok.dev/).
+It is not connected to anything so it will not send emails or sign you up for anything. It is just a demo of the components.
+
 ## Highlights
 
 - **HTML first:** Render everything on the server, enhance with HTMX or hyperscript when needed.

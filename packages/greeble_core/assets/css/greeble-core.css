@@ -34,7 +34,7 @@ Notes:
   --greeble-spacing-1: .25rem;
   --greeble-spacing-2: .5rem;
   --greeble-spacing-3: .75rem;
-  --greeble-spacing-4: 1rem;
+  --greeble-spacing-4: .1rem;
 
   /* Focus */
   --greeble-focus-ring: 0 0 0 3px rgba(106, 161, 255, .5);

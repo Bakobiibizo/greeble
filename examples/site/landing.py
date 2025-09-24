@@ -328,7 +328,11 @@ def render_page(body_html: str) -> HTMLResponse:
         padding: clamp(1.5rem, 3vw, 3rem);
         display: grid;
         gap: 2.5rem;
+        /* 1/6 | 2/3 | 1/6 column layout */
+        grid-template-columns: 1fr 4fr 1fr;
       }
+      /* Center all sections into the middle column */
+      main.landing > * { grid-column: 2; }
       section.demo {
         display: grid;
         gap: 1.25rem;
@@ -461,6 +465,10 @@ def render_page(body_html: str) -> HTMLResponse:
       .newsletter-callout {
         font-size: .95rem;
         color: rgba(255, 255, 255, 0.75);
+      }
+      /* Increase padding for early-access input */
+      #request-access-form .greeble-input {
+        padding: .9rem 1rem;
       }
       .feed-controls {
         display: flex;

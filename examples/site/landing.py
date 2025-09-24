@@ -328,6 +328,24 @@ def render_page(body_html: str) -> HTMLResponse:
         padding: clamp(1.5rem, 3vw, 3rem);
         display: grid;
         gap: 2.5rem;
+        /* 1/6 | 2/3 | 1/6 column layout */
+        grid-template-columns: 1fr 4fr 1fr;
+      }
+      /* Center all sections into the middle column */
+      main.landing > * { grid-column: 2; }
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        main.landing {
+          grid-template-columns: 1fr;
+          padding: clamp(1rem, 4vw, 2rem);
+        }
+        main.landing > * { grid-column: 1; }
+        header.site-header {
+          padding: 1rem clamp(1rem, 4vw, 2rem);
+          flex-direction: column;
+          align-items: flex-start;
+          gap: .75rem;
+        }
       }
       section.demo {
         display: grid;
@@ -461,6 +479,10 @@ def render_page(body_html: str) -> HTMLResponse:
       .newsletter-callout {
         font-size: .95rem;
         color: rgba(255, 255, 255, 0.75);
+      }
+      /* Increase padding for early-access input */
+      #request-access-form .greeble-input {
+        padding: .9rem 1rem;
       }
       .feed-controls {
         display: flex;

@@ -336,9 +336,9 @@ def handle_branch_finalize() -> int:
         )
         return 2
 
-    # Merge current branch
+    # Merge current branch (auto-approve commit message with --no-edit)
     try:
-        git(["merge", "--no-ff", current])
+        git(["merge", "--no-ff", "--no-edit", current])
     except subprocess.CalledProcessError:
         print(
             "Merge conflicts detected while merging into 'release-candidate'.\n"

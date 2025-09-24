@@ -1,3 +1,22 @@
+## [0.1.2] - 2025-09-24
+
+### feat
+- 2/3 centered layout with 1/6 gutters; increase early-access input padding; clarify palette to customer search with examples (dd91383)
+
+### fix
+- restore spacing scale 4 to 1rem (ac83c23)
+
+### docs
+- add roadmap doc and link from README (7fbf410)
+
+### test
+- add FastAPI e2e tests for tabs render and per-tab partial endpoint (a978fa4)
+- add FastAPI e2e tests for Input component (render + validation endpoint) (7b788a4)
+
+### chore
+- auto-approve merge commit message in branch-finalize with --no-edit (e0596b6)
+- add template export and setup scripts (b6edf87)
+
 ## [0.1.1] - 2025-09-23
 
 ### refactor

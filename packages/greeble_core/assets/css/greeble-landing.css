@@ -31,7 +31,7 @@ body {
 .card {
   width: 100%;
   max-width: 840px;
-  border-radius: 1rem;
+  border-radius: 0.7rem;
   padding: 2.25rem;
   background: rgba(12, 12, 20, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.06);
@@ -45,14 +45,14 @@ body {
 .code-block {
   background: rgba(0, 0, 0, 0.55);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 0.75rem;
+  border-radius: 0.5rem;
   padding: 0.75rem 1rem;
   overflow: auto;
 }
 
 .install-actions { display: flex; justify-content: center; }
 
-.greeble-button { border-radius: 9999px; transition: transform 120ms ease, box-shadow 120ms ease, background-color 120ms ease, border-color 120ms ease; }
+.greeble-button { border-radius: calc(var(--greeble-radius-medium) * 0.7); transition: transform 120ms ease, box-shadow 120ms ease, background-color 120ms ease, border-color 120ms ease; }
 .greeble-button:hover { transform: translateY(-1px); box-shadow: 0 6px 22px rgba(0, 0, 0, 0.28); }
 .greeble-button--ghost { background: rgba(20, 20, 28, 0.7); border-color: #2a2a32; }
 .greeble-button--ghost:hover { background: rgba(24, 24, 32, 0.85); }

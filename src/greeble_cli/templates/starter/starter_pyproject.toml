@@ -15,7 +15,7 @@ dependencies = [
 dev = ["pytest>=8.4.2", "ruff>=0.13.1"]
 
 [project.scripts]
-start = "uvicorn greeble_starter.app:app --reload"
+greeble-starter = "greeble_starter.__main__:main"
 
 [build-system]
 requires = ["hatchling>=1.25"]

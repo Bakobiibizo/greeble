@@ -6,7 +6,11 @@ v0.1 components so you can explore HTMX flows end-to-end.
 ## Getting started
 
 ```bash
-uv run uvicorn greeble_starter.app:app --reload
+# Option A: console script
+uv run greeble-starter
+
+# Option B: module invocation
+uv run python -m greeble_starter
 ```
 
 Open http://127.0.0.1:8050/ to interact with the demo endpoints.

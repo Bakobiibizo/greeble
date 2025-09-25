@@ -31,6 +31,10 @@
 </div>
 ```
 
+## View source
+
+- Template: [input.html](https://github.com/Bakobiibizo/greeble/blob/main/packages/greeble_components/components/input/templates/input.html)
+- Styles: [input.css](https://github.com/Bakobiibizo/greeble/blob/main/packages/greeble_components/components/input/static/input.css)
 ## Keyboard map
 
 - Tab / Shift+Tab – Move between fields and associated buttons.

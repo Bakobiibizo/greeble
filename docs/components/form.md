@@ -74,3 +74,9 @@ Invalid response example:
 - POST /form/submit
   - 200 OK — returns out-of-band toast and a cleared input group; may update `#form-status`
   - 400 Bad Request — returns original partial with error states; preserves user input
+
+## View source
+
+- Template: [form.html](https://github.com/Bakobiibizo/greeble/blob/main/packages/greeble_components/components/form-validated/templates/form.html)
+- Partial: [form.partial.html](https://github.com/Bakobiibizo/greeble/blob/main/packages/greeble_components/components/form-validated/templates/form.partial.html)
+- Styles: [form.css](https://github.com/Bakobiibizo/greeble/blob/main/packages/greeble_components/components/form-validated/static/form.css)

@@ -35,6 +35,6 @@ Each page follows a consistent structure:
 - **Theming** – CSS custom properties and classes you can override
 
 When you copy markup into your project, update the endpoint URLs to match your routes and ensure
-you return the documented fragments. The [landing demo](../site/README.md) contains practical
+you return the documented fragments. The [landing demo](../site/index.md) contains practical
 implementations that mirror the guidance here. To copy files directly, run
 `uv run greeble add <component>`.

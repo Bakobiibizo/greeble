@@ -23,6 +23,11 @@
 <div id="greeble-toasts" class="greeble-toast-region" aria-live="polite" aria-label="Notifications"></div>
 ```
 
+## View source
+
+- Root: [toast.root.html](https://github.com/Bakobiibizo/greeble/blob/main/packages/greeble_components/components/toast/templates/toast.root.html)
+- Item: [toast.item.html](https://github.com/Bakobiibizo/greeble/blob/main/packages/greeble_components/components/toast/templates/toast.item.html)
+- Styles: [toast.css](https://github.com/Bakobiibizo/greeble/blob/main/packages/greeble_components/components/toast/static/toast.css)
 ## Keyboard map
 
 - Tab / Shift+Tab – Move focus to the dismiss button.

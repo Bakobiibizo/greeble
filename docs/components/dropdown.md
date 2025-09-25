@@ -59,3 +59,8 @@ menu items.
 
 - Link navigation items (`<a href="…" data-navigation="true">`)
   - Standard navigation; no fragment expected. Server may still emit `HX-Trigger` via redirects.
+
+## View source
+
+- Template: [dropdown.html](https://github.com/Bakobiibizo/greeble/blob/main/packages/greeble_components/components/dropdown/templates/dropdown.html)
+- Styles: [dropdown.css](https://github.com/Bakobiibizo/greeble/blob/main/packages/greeble_components/components/dropdown/static/dropdown.css)

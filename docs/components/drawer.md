@@ -17,6 +17,12 @@
 
 ## Copy & Paste
 
+## Include in template
+
+```jinja
+{% include "greeble/drawer.html" %}
+```
+
 ```html
 <div class="greeble-drawer-trigger">
   <button class="greeble-button greeble-button--primary" type="button"

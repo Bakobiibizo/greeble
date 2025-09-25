@@ -11,6 +11,12 @@
 - Theming hooks: `.greeble-palette__result`, `.greeble-palette__detail`, `.greeble-palette__layout`,
   and `.greeble-palette__form` expose layout and colour customisation points.
 
+## Include in template
+
+```jinja
+{% include "greeble/palette.html" %}
+```
+
 ## Copy & Paste
 
 ```html

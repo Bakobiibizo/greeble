@@ -17,6 +17,12 @@
 - Use `HX-Trigger` headers in the response to emit `greeble:click` (or any custom event) so other
   components can react.
 
+## Include in template
+
+```jinja
+{% include "greeble/button.html" %}
+```
+
 ## Copy & Paste
 
 ```html

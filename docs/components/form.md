@@ -11,6 +11,12 @@
 - Theming hooks: `.greeble-validated-form__body`, `.greeble-field--invalid`, and
   `.greeble-validated-form__actions`.
 
+## Include in template
+
+```jinja
+{% include "greeble/form.html" %}
+```
+
 ## Copy & Paste
 
 ```html

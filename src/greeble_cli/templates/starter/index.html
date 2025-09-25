@@ -20,57 +20,18 @@
       </a>
     </header>
 
-    <main class="site-main stack">
-      <section class="demo" id="modal-demo">
-        <header>
-          <h2 class="greeble-heading-2">Modal</h2>
-          <p>Open the modal to invite a teammate.</p>
-        </header>
-        {% include "greeble/modal.html" %}
-      </section>
+    <main class="site-main stack" style="align-items:center; text-align:center; gap:2rem; padding:4rem 1rem;">
+      <img src="/static/logo.svg" alt="Greeble" width="96" height="96" style="opacity:.9" />
+      <h2 class="greeble-heading-2">Welcome to your Greeble starter</h2>
+      <p class="greeble-body">A minimal landing page using Greeble styles. Customize this page and add components as you go.</p>
 
-      <section class="demo" id="dropdown-demo">
-        <header>
-          <h2 class="greeble-heading-2">Workspace menu</h2>
-          <p>Trigger HTMX actions from the dropdown.</p>
-        </header>
-        {% include "greeble/dropdown.html" %}
-        <div id="workspace-panel" aria-live="polite"></div>
-        <div id="invite-root" aria-live="polite"></div>
-      </section>
+      <div class="cluster" style="gap:1rem; justify-content:center;">
+        <a class="greeble-button greeble-button--primary" href="{{ docs_url }}" target="_blank" rel="noreferrer">Docs</a>
+        <a class="greeble-button" href="{{ github_url }}" target="_blank" rel="noreferrer">GitHub</a>
+        <a class="greeble-button" href="{{ demo_url }}" target="_blank" rel="noreferrer">Demo</a>
+      </div>
 
-      <section class="demo" id="command-palette-demo">
-        {% include "greeble/palette.html" %}
-      </section>
-
-      <section class="demo" id="form-demo">
-        {% include "greeble/form.html" %}
-      </section>
-
-      <section class="demo" id="tabs-demo">
-        {% include "greeble/tabs.html" %}
-      </section>
-
-      <section class="demo" id="drawer-demo">
-        {% include "greeble/drawer.html" %}
-      </section>
-
-      <section class="demo" id="table-demo">
-        {% include "greeble/table.html" %}
-      </section>
-
-      <section class="demo" id="stepper-demo">
-        {% include "greeble/stepper.html" %}
-      </section>
-
-      <section class="demo" id="infinite-demo">
-        {% include "greeble/infinite-list.html" %}
-      </section>
-
-      <section class="demo" id="toast-demo">
-        {% include "greeble/toast.root.html" %}
-        {% include "greeble/toast.item.html" %}
-      </section>
+      <p class="greeble-caption" style="opacity:.8">You can inspect component templates under <code>templates/greeble/</code> and copy snippets as needed.</p>
     </main>
   </body>
 </html>

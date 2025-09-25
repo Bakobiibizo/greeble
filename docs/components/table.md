@@ -13,6 +13,12 @@
   actions, and `greeble:toast` when exports queue background jobs.
 - Theming hooks: Override `.greeble-table__status--*` colors or container background to match brand palette.
 
+## Include in template
+
+```jinja
+{% include "greeble/table.html" %}
+```
+
 ## Copy & Paste
 
 ```html

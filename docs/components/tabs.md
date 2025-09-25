@@ -11,6 +11,12 @@
 - Theming hooks: `.greeble-tabs__tab`, `.greeble-tabs__tab[aria-selected="true"]`, and
   `.greeble-tabs__panel`.
 
+## Include in template
+
+```jinja
+{% include "greeble/tabs.html" %}
+```
+
 ## Copy & Paste
 
 ```html

@@ -27,7 +27,8 @@ from greeble.demo import (
 )
 from greeble.demo.helpers import ProductLike
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+# Project root when this file is located at src/greeble_starter/app.py
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 TEMPLATES = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 app = FastAPI(title="Greeble Starter")
 app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")

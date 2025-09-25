@@ -30,7 +30,9 @@ STARTER_STATIC_FILES = {
 }
 
 STARTER_APP_FILES = {
-    "app/main.py": "app_main.py",
+    "src/greeble_starter/app.py": "app_main.py",
+    "src/greeble_starter/__init__.py": "package_init.py",
+    "src/greeble_starter/__main__.py": "package_dunder_main.py",
 }
 
 STARTER_ROOT_FILES = {

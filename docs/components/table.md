@@ -77,3 +77,9 @@
 - DELETE /table/accounts/{slug}
   - 200 OK — returns out-of-band toast only; client removes row on success
   - Headers: `HX-Trigger: {"greeble:table:archive": {"org": "<org>"}}`
+
+## View source
+
+- Template: [table.html](https://github.com/Bakobiibizo/greeble/blob/main/packages/greeble_components/components/table/templates/table.html)
+- Partial: [table.partial.html](https://github.com/Bakobiibizo/greeble/blob/main/packages/greeble_components/components/table/templates/table.partial.html)
+- Styles: [table.css](https://github.com/Bakobiibizo/greeble/blob/main/packages/greeble_components/components/table/static/table.css)

@@ -92,3 +92,9 @@ optionally close the drawer.
 - POST /drawer/subscribe
   - 200 OK (success) — returns out-of-band toast (and optionally clears drawer root)
   - 400 Bad Request (validation) — returns the same partial with inline errors; keep drawer mounted
+
+## View source
+
+- Template: [drawer.html](https://github.com/Bakobiibizo/greeble/blob/main/packages/greeble_components/components/drawer/templates/drawer.html)
+- Partial: [drawer.partial.html](https://github.com/Bakobiibizo/greeble/blob/main/packages/greeble_components/components/drawer/templates/drawer.partial.html)
+- Styles: [drawer.css](https://github.com/Bakobiibizo/greeble/blob/main/packages/greeble_components/components/drawer/static/drawer.css)

@@ -46,3 +46,10 @@ Return the modal partial example to hydrate the dialog. Close endpoints should r
     - Out-of-band updates: `#modal-root` cleared (empty element) and toast container with success toast
     - Headers: optional `HX-Trigger-After-Swap` to signal follow-up actions
   - 400 Bad Request (validation) — returns modal partial with inline errors; HTMX keeps dialog mounted
+
+## View source
+
+- Template: [modal.html](https://github.com/Bakobiibizo/greeble/blob/main/packages/greeble_components/components/modal/templates/modal.html)
+- Partial: [modal.partial.html](https://github.com/Bakobiibizo/greeble/blob/main/packages/greeble_components/components/modal/templates/modal.partial.html)
+- Hyperscript: [modal.hyperscript.html](https://github.com/Bakobiibizo/greeble/blob/main/packages/greeble_components/components/modal/templates/modal.hyperscript.html)
+- Styles: [modal.css](https://github.com/Bakobiibizo/greeble/blob/main/packages/greeble_components/components/modal/static/modal.css)

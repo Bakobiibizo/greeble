@@ -303,17 +303,12 @@ def render_page(body_html: str) -> HTMLResponse:
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Greeble Demo</title>
     <link rel="stylesheet" href="/static/greeble/greeble-core.css" />
+    <link rel="stylesheet" href="/static/greeble/greeble-landing.css" />
     <style>
       :root {
         color-scheme: light dark;
       }
-      body {
-        font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell,
-          Noto Sans, sans-serif;
-        margin: 0;
-        background: var(--surface-elevated, #111);
-        color: var(--text-primary, #f5f5f5);
-      }
+      body { margin: 0; }
       header.site-header {
         padding: 1.5rem clamp(1.5rem, 3vw, 3rem);
         display: flex;

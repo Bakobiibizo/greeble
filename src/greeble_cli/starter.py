@@ -27,6 +27,8 @@ STARTER_COMPONENTS: tuple[str, ...] = (
 
 STARTER_STATIC_FILES = {
     "static/site.css": "site.css",
+    "static/logo.svg": "logo.svg",
+    "static/greeble/greeble-landing.css": "greeble-landing.css",
 }
 
 STARTER_APP_FILES = {

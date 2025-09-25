@@ -67,6 +67,8 @@ def test_cli_add_component_custom_docs(tmp_path: Path) -> None:
     assert exit_code == 0
     assert (project_root / "templates" / "greeble" / "modal.html").exists()
     assert (project_root / "documentation" / "components" / "modal.md").exists()
+    # Hyperscript snippet should be included for modal
+    assert (project_root / "templates" / "greeble" / "modal.hyperscript.html").exists()
 
 
 def test_cli_add_nonexistent_component(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
@@ -156,6 +158,9 @@ def test_cli_new_starter(tmp_path: Path) -> None:
     assert modal_template.exists()
     modal_partial = project_root / "templates" / "greeble" / "modal.partial.html"
     assert modal_partial.exists()
+    # Hyperscript snippet should be present in starter assets as well
+    modal_hyperscript = project_root / "templates" / "greeble" / "modal.hyperscript.html"
+    assert modal_hyperscript.exists()
 
     docs_path = project_root / "docs" / "components" / "modal.md"
     assert docs_path.exists()

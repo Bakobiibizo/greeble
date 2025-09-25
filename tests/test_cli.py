@@ -148,7 +148,7 @@ def test_cli_new_starter(tmp_path: Path) -> None:
     exit_code = main(["new", str(project_root), "--include-docs"])
     assert exit_code == 0
 
-    starter_main = project_root / "app" / "main.py"
+    starter_main = project_root / "src" / "greeble_starter" / "app.py"
     assert starter_main.exists()
     content = starter_main.read_text(encoding="utf-8")
     assert "FastAPI" in content

@@ -4,34 +4,33 @@ This living roadmap outlines the planned work for Greeble. It’s organized as N
 
 ## Now (in progress)
 
-- Build Django and Flask adapter implementations (template tags, middleware/blueprint) to reach parity with FastAPI adapter.
-- Implement Tailwind preset exports and a CLI-driven theme/init workflow so teams can adopt tokens quickly.
-- Stand up the docs site with live examples and “view source”; fold the landing demo content into the site.
-- Add accessibility (axe) and browser snapshot automation to align with testing strategy.
-- Clarify Hyperscript packaging strategy (bundle vs per-component inclusion) and wire into CLI scaffolds.
-- Finalize distribution layout (src vs packages/) ahead of publishing to PyPI; ensure packaging includes starter assets.
+- Deliver Django template tags and middleware to hit parity with FastAPI helpers; begin porting the blueprint pattern for Flask.
+- Implement Tailwind preset exports (`preset.cjs` / `index.js`) and land a CLI-driven `theme init` workflow so starters consume tokens out of the box.
+- Finish folding the landing demo into the MkDocs site: promote the new minimal landing as home, add live component examples with “view source,” and align shared assets (favicons, icons) across starters and demos.
+- Unify styling across the FastAPI, Django, and Flask demos so they inherit the canonical look and feel from `examples/site/landing.py`.
+- Clarify the Hyperscript distribution story (bundle vs per-component) and update CLI scaffolds and docs to match the chosen approach.
+- Lock the distribution layout (`src/` vs `packages/`) and packaging manifest so starter assets and adapters publish cleanly to PyPI.
 
 ## Next (queued)
 
-- Expand tests once Django/Flask adapters land; introduce docs-site smoke tests.
-- Integrate CI gating with coverage metrics; add accessibility checks and visual regression to CI.
+- Backfill automated coverage once Django/Flask adapters land: adapter contract tests, docs-site smoke tests, and a generated starter boot/run check.
+- Integrate CI gating with coverage metrics and introduce accessibility (axe) plus visual regression (Playwright) automation.
 - Reconcile adapter code between `src/greeble/adapters/` and `packages/adapters/` to avoid duplication.
-- Document override patterns for `greeble_core` tokens and consider packaging tokens as static assets in the CLI starter.
-- Implement Tailwind preset export deliverables (`preset.cjs`/`index.js`) and add tests/docs; wire into `greeble new`.
+- Document override patterns for `greeble_core` tokens and ship starter-friendly guidance (consider packaging tokens as static assets).
+- Extend `greeble new` with Django and Flask starter blueprints once adapters stabilize.
 
 ## Later (backlog)
 
-- Extend `greeble new` to generate Django/Flask starter templates once adapters are ready; preset Tailwind integration.
 - Add additional components beyond v0.3 (file upload, data grid, date picker); update manifest/docs accordingly.
-- Explore optional `greeble theme init` CLI command once Tailwind preset and token tooling are complete.
+- Explore optional advanced `greeble theme init` tooling after preset export and tokens workflow stabilize.
 - Document security patterns (CSRF, rate limiting) per framework.
 
 ## Milestones (targeted sequencing)
 
 - v0.2
   - Django + Flask adapter parity (min viable template tags, middleware/blueprint, examples)
-  - Tailwind preset initial export wired to CLI; docs for token mapping
-  - Docs site skeleton with live examples for core components
+  - Tailwind preset initial export wired to CLI; docs for token mapping and starter consumption
+  - Docs site home unified with landing demo, live component examples, and “view source” affordances
 
 - v0.3
   - Accessibility (axe) + visual regression automation (Playwright) with CI gating

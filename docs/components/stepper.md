@@ -11,6 +11,12 @@
 - Theming hooks: `.greeble-stepper__badge`, `.greeble-stepper__step[aria-current]`, and
   `.greeble-stepper__panel`.
 
+## Include in template
+
+```jinja
+{% include "greeble/stepper.html" %}
+```
+
 ## Copy & Paste
 
 ```html

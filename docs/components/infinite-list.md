@@ -11,6 +11,12 @@
   `<strong>` headings, descriptive copy). Provide manual controls in addition to the sentinel.
 - Theming hooks: `.greeble-feed__item`, `.greeble-feed__sentinel`, and `.greeble-feed__description`.
 
+## Include in template
+
+```jinja
+{% include "greeble/infinite-list.html" %}
+```
+
 ## Copy & Paste
 
 ```html

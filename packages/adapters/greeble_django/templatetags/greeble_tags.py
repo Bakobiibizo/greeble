@@ -14,6 +14,7 @@ from typing import Any
 
 from django import template
 from django.middleware.csrf import get_token
+from django.utils.safestring import mark_safe
 
 register = template.Library()
 
@@ -21,10 +22,11 @@ register = template.Library()
 @register.simple_tag
 def greeble_toast_container() -> str:
     """Emit the Greeble toast region container."""
-    return (
+    html = (
         '<div id="greeble-toasts" class="greeble-toast-region" '
         'aria-live="polite" aria-label="Notifications"></div>'
     )
+    return mark_safe(html)
 
 
 @register.simple_tag(takes_context=True)

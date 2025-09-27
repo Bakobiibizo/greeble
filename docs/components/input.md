@@ -19,6 +19,12 @@
 - Full form submissions typically respond with out-of-band toasts and a fresh input group to clear
   the field.
 
+## Include in template
+
+```jinja
+{% include "greeble/input.html" %}
+```
+
 ## Copy & Paste
 
 ```html

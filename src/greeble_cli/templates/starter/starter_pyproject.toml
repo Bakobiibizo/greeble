@@ -9,6 +9,7 @@ dependencies = [
     "uvicorn>=0.23.0",
     "jinja2>=3.1.2",
     "python-multipart>=0.0.6",
+    "greeble",
 ]
 
 [project.optional-dependencies]
@@ -23,3 +24,6 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/greeble_starter"]
+
+[tool.uv.sources]
+greeble = { git = "https://github.com/bakobiibizo/greeble" }

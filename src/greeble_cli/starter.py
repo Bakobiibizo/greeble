@@ -27,6 +27,8 @@ STARTER_COMPONENTS: tuple[str, ...] = (
 
 STARTER_STATIC_FILES = {
     "static/site.css": "site.css",
+    "static/logo.svg": "logo.svg",
+    "static/greeble/greeble-landing.css": "greeble-landing.css",
 }
 
 STARTER_APP_FILES = {
@@ -52,6 +54,8 @@ class StarterError(RuntimeError):
 
 
 TEMPLATES_DIR = Path(__file__).resolve().parent / "templates" / "starter"
+REPO_ROOT = Path(__file__).resolve().parents[3]
+PUBLIC_IMAGES = REPO_ROOT / "public" / "images"
 
 
 def _write_file(destination: Path, template_name: str, *, dry_run: bool) -> None:
@@ -111,6 +115,24 @@ def scaffold_starter(
     index_dest = project_root / "templates/index.html"
     _write_file(index_dest, "index.html", dry_run=dry_run)
     project_files.append(index_dest)
+
+    # Best-effort: copy branding icons into starter static/images for favicons
+    try:
+        icons = [
+            "greeble-icon-black.svg",
+            "greeble-icon-alpha-white.png",
+            "greeble-icon-alpha-black.png",
+        ]
+        dest_dir = project_root / "static" / "images"
+        if not dry_run:
+            dest_dir.mkdir(parents=True, exist_ok=True)
+        for name in icons:
+            source = PUBLIC_IMAGES / name
+            if source.exists() and not dry_run:
+                shutil.copy2(source, dest_dir / name)
+    except Exception:  # pragma: no cover - non-fatal
+        # Non-fatal; icons are optional and may be absent when installed from sdist/wheel
+        pass
 
     component_plans_sorted = sorted(component_plans, key=lambda path: tuple(path.parts))
     project_files_sorted = sorted(project_files, key=lambda path: tuple(path.parts))

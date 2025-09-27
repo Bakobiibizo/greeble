@@ -103,6 +103,11 @@ app.mount(
     StaticFiles(directory=str(CORE_ASSETS)),
     name="greeble-static",
 )
+app.mount(
+    "/static/images",
+    StaticFiles(directory=str(ROOT / "public" / "images")),
+    name="example-images",
+)
 
 
 @dataclass
@@ -303,17 +308,14 @@ def render_page(body_html: str) -> HTMLResponse:
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Greeble Demo</title>
     <link rel="stylesheet" href="/static/greeble/greeble-core.css" />
+    <link rel="stylesheet" href="/static/greeble/greeble-landing.css" />
+    <link rel="icon" href="/static/images/greeble-icon-black.svg" type="image/svg+xml" media="(prefers-color-scheme: light)" />
+    <link rel="icon" href="/static/images/greeble-icon-alpha-white.png" sizes="any" media="(prefers-color-scheme: dark)" />
     <style>
       :root {
         color-scheme: light dark;
       }
-      body {
-        font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell,
-          Noto Sans, sans-serif;
-        margin: 0;
-        background: var(--surface-elevated, #111);
-        color: var(--text-primary, #f5f5f5);
-      }
+      body { margin: 0; }
       header.site-header {
         padding: 1.5rem clamp(1.5rem, 3vw, 3rem);
         display: flex;
@@ -351,7 +353,7 @@ def render_page(body_html: str) -> HTMLResponse:
         display: grid;
         gap: 1.25rem;
         padding: 1.5rem;
-        border-radius: 1rem;
+        border-radius: 0.7rem;
         background: rgba(255, 255, 255, 0.05);
         border: 1px solid rgba(255, 255, 255, 0.08);
         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
@@ -378,7 +380,7 @@ def render_page(body_html: str) -> HTMLResponse:
       }
       .demo aside, .demo article {
         background: rgba(0, 0, 0, 0.25);
-        border-radius: .75rem;
+        border-radius: .5rem;
         padding: 1rem;
       }
       .demo-listbox {
@@ -388,7 +390,7 @@ def render_page(body_html: str) -> HTMLResponse:
         max-height: 14rem;
         overflow-y: auto;
         border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: .75rem;
+        border-radius: .5rem;
       }
       .demo-listbox li[role="option"] {
         border-bottom: 1px solid rgba(255, 255, 255, 0.08);

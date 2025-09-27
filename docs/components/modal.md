@@ -17,6 +17,12 @@
   toast to close the dialog and inform the user. On validation failure, return the modal partial
   with inline errors and set the status to 400 so HTMX keeps the dialog mounted.
 
+## Include in template
+
+```jinja
+{% include "greeble/modal.html" %}
+```
+
 ## Copy & Paste
 
 ```html

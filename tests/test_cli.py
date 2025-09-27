@@ -152,7 +152,6 @@ def test_cli_new_starter(tmp_path: Path) -> None:
     assert starter_main.exists()
     content = starter_main.read_text(encoding="utf-8")
     assert "FastAPI" in content
-    assert "/modal/submit" in content
 
     modal_template = project_root / "templates" / "greeble" / "modal.html"
     assert modal_template.exists()

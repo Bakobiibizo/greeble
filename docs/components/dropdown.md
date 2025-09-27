@@ -10,6 +10,12 @@
 - Theming hooks: `.greeble-dropdown__panel`, `.greeble-dropdown__item`, `.greeble-dropdown__chevron`,
   and `.greeble-dropdown__item-kbd` can all be themed via CSS or tokens.
 
+## Include in template
+
+```jinja
+{% include "greeble/dropdown.html" %}
+```
+
 ## Copy & Paste
 
 ```html

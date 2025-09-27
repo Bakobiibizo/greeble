@@ -1,3 +1,24 @@
+## [0.1.3] - 2025-09-26
+
+### feat
+- unify landing assets and refresh docs (c137ed0)
+- minimal landing with /docs redirect; add copyable Jinja include snippets across components; logo + env-configured links; adjust starter test (a874864)
+- console entry supports --host/--port/--[no-]reload and --log-level (defaults to 127.0.0.1:8050, reload on) (#11) (dc5daf1)
+- src layout with greeble_starter package (#10) (c919d20)
+- include Hyperscript runtime in starter and copy modal hyperscript; tests cover new assets (9830798)
+- theme init --force flag; guard overwrites for preset and config; use f-string for require_path (1151531)
+- add Please ask your administrator. to scaffold Tailwind config and copy preset (9554604)
+
+### fix
+- add responsive layout for landing grid (a0cc414)
+
+### docs
+- scaffold MkDocs Material site, add nav, and view-source links; dev CLI gains docs-serve/docs-build (26d60a4)
+
+### other
+- style(landing): light/dark favicons via /static/images; mount icons for demos; scaffold icons into starters; unify reduced radii (628733b)
+- style(landing): establish canonical landing styles and apply across starter + examples; link canonical CSS; darken surfaces (efc5748)
+
 ## [0.1.2] - 2025-09-24
 
 ### feat

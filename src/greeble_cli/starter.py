@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import shutil
 from dataclasses import dataclass
+from importlib import resources
 from pathlib import Path
 
 from .manifest import Manifest
@@ -28,7 +29,6 @@ STARTER_COMPONENTS: tuple[str, ...] = (
 STARTER_STATIC_FILES = {
     "static/site.css": "site.css",
     "static/logo.svg": "logo.svg",
-    "static/greeble/greeble-landing.css": "greeble-landing.css",
 }
 
 STARTER_APP_FILES = {
@@ -54,8 +54,9 @@ class StarterError(RuntimeError):
 
 
 TEMPLATES_DIR = Path(__file__).resolve().parent / "templates" / "starter"
-REPO_ROOT = Path(__file__).resolve().parents[3]
+REPO_ROOT = Path(__file__).resolve().parents[2]
 PUBLIC_IMAGES = REPO_ROOT / "public" / "images"
+LANDING_STYLES_DEST = Path("static/greeble/greeble-landing.css")
 
 
 def _write_file(destination: Path, template_name: str, *, dry_run: bool) -> None:
@@ -66,6 +67,33 @@ def _write_file(destination: Path, template_name: str, *, dry_run: bool) -> None
         return
     destination.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(source, destination)
+
+
+def _copy_landing_styles(destination: Path, *, dry_run: bool) -> None:
+    if dry_run:
+        return
+    destination.parent.mkdir(parents=True, exist_ok=True)
+
+    try:
+        traversable = resources.files("greeble_core").joinpath(
+            "assets", "css", "greeble-landing.css"
+        )
+        with resources.as_file(traversable) as path:
+            source = Path(path)
+            if source.is_file():
+                shutil.copy2(source, destination)
+                return
+    except (ModuleNotFoundError, FileNotFoundError):  # pragma: no cover - environment dependent
+        pass
+
+    repo_candidate = (
+        REPO_ROOT / "packages" / "greeble_core" / "assets" / "css" / "greeble-landing.css"
+    )
+    if repo_candidate.is_file():
+        shutil.copy2(repo_candidate, destination)
+        return
+
+    raise StarterError("Landing stylesheet could not be located in greeble_core assets")
 
 
 def scaffold_starter(
@@ -111,6 +139,10 @@ def scaffold_starter(
         dest = project_root / rel
         _write_file(dest, template_name, dry_run=dry_run)
         project_files.append(dest)
+
+    landing_dest = project_root / LANDING_STYLES_DEST
+    _copy_landing_styles(landing_dest, dry_run=dry_run)
+    project_files.append(landing_dest)
 
     index_dest = project_root / "templates/index.html"
     _write_file(index_dest, "index.html", dry_run=dry_run)

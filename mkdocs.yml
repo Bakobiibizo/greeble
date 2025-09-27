@@ -1,0 +1,50 @@
+site_name: Greeble
+site_description: HTML-first, HTMX-powered components for Python-first apps
+site_url: https://bakobiibizo.github.io/greeble/
+repo_url: https://github.com/Bakobiibizo/greeble
+repo_name: Bakobiibizo/greeble
+edit_uri: edit/release-candidate/docs/
+
+theme:
+  name: material
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.sections
+    - content.code.copy
+    - content.tabs.link
+  palette:
+    - scheme: slate
+      primary: indigo
+      accent: blue
+
+markdown_extensions:
+  - admonition
+  - toc:
+      permalink: true
+  - tables
+  - def_list
+  - attr_list
+  - footnotes
+
+nav:
+  - Overview: site/index.md
+  - Progress: progress.md
+  - Roadmap: roadmap.md
+  - Architecture: architecture.md
+  - CLI: cli.md
+  - Adapters: adapters.md
+  - Components:
+      - Introduction: components/README.md
+      - Button: components/button.md
+      - Drawer: components/drawer.md
+      - Dropdown: components/dropdown.md
+      - Form (validated): components/form.md
+      - Infinite List: components/infinite-list.md
+      - Input: components/input.md
+      - Modal: components/modal.md
+      - Palette: components/palette.md
+      - Stepper: components/stepper.md
+      - Table: components/table.md
+      - Tabs: components/tabs.md
+      - Toast: components/toast.md

@@ -67,6 +67,8 @@ def main(argv: list[str] | None = None) -> int:
             "build",
             "check",
             "version",
+            "docs-serve",
+            "docs-build",
             "release",
             "branch-finalize",
             "branch-rebase",
@@ -126,6 +128,13 @@ def main(argv: list[str] | None = None) -> int:
             return run_mypy_then_pytest_quiet()
         case "version":
             return handle_version(passthrough)
+        case "docs-serve":
+            # Serve docs with MkDocs Material if installed
+            # Default bind: localhost:8000; allow passthrough to override
+            return run(["mkdocs", "serve", *passthrough])
+        case "docs-build":
+            # Build static docs site into ./site (default)
+            return run(["mkdocs", "build", *passthrough])
         case "release":
             return handle_release(passthrough)
         case "branch-finalize":

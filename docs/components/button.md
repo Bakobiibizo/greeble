@@ -17,6 +17,12 @@
 - Use `HX-Trigger` headers in the response to emit `greeble:click` (or any custom event) so other
   components can react.
 
+## Include in template
+
+```jinja
+{% include "greeble/button.html" %}
+```
+
 ## Copy & Paste
 
 ```html
@@ -36,3 +42,8 @@ Wrap a cluster of buttons in `.greeble-button-group` to space them evenly.
 - Typical HTMX endpoints (e.g., GET/POST/DELETE)
   - 200 OK — returns a fragment for the target region; may include out-of-band updates and `HX-Trigger` payloads
   - 4xx — return inline error fragment or toast guidance; keep focus handling consistent
+
+## View source
+
+- Template: [button.html](https://github.com/Bakobiibizo/greeble/blob/main/packages/greeble_components/components/button/templates/button.html)
+- Styles: [button.css](https://github.com/Bakobiibizo/greeble/blob/main/packages/greeble_components/components/button/static/button.css)

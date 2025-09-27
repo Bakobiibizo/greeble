@@ -7,6 +7,13 @@
 - Accessibility: Each toast is `role="status"`; dismiss buttons include `aria-label`; icons are decorative `aria-hidden`.
 - Theming hooks: Override custom properties (`--_toast-*`) or variant colors to match brand guidelines.
 
+## Include in template
+
+```jinja
+{% include "greeble/toast.root.html" %}
+{% include "greeble/toast.item.html" %}
+```
+
 ## Server contract
 
 - Any endpoint can return a toast out-of-band by wrapping the item markup in a `<div id="greeble-toasts" hx-swap-oob="true">…</div>` container.
@@ -23,6 +30,11 @@
 <div id="greeble-toasts" class="greeble-toast-region" aria-live="polite" aria-label="Notifications"></div>
 ```
 
+## View source
+
+- Root: [toast.root.html](https://github.com/Bakobiibizo/greeble/blob/main/packages/greeble_components/components/toast/templates/toast.root.html)
+- Item: [toast.item.html](https://github.com/Bakobiibizo/greeble/blob/main/packages/greeble_components/components/toast/templates/toast.item.html)
+- Styles: [toast.css](https://github.com/Bakobiibizo/greeble/blob/main/packages/greeble_components/components/toast/static/toast.css)
 ## Keyboard map
 
 - Tab / Shift+Tab – Move focus to the dismiss button.

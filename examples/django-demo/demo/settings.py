@@ -4,6 +4,8 @@ import os
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+# Repository root (two levels up from examples/django-demo)
+ROOT = BASE_DIR.parent.parent
 SECRET_KEY = "insecure-demo-key"
 DEBUG = str(os.getenv("DJANGO_DEBUG", "0")).lower() in {"1", "true", "yes"}
 ALLOWED_HOSTS: list[str] = ["*"]
@@ -48,4 +50,11 @@ TEMPLATES = [
 ]
 
 STATIC_URL = "/static/"
+# Map canonical core assets and repo public images under /static/greeble and /static/images
+CORE_ASSETS = ROOT / "packages" / "greeble_core" / "assets" / "css"
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+    ("greeble", CORE_ASSETS),
+    ("images", ROOT / "public" / "images"),
+]
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

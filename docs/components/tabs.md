@@ -11,6 +11,12 @@
 - Theming hooks: `.greeble-tabs__tab`, `.greeble-tabs__tab[aria-selected="true"]`, and
   `.greeble-tabs__panel`.
 
+## Include in template
+
+```jinja
+{% include "greeble/tabs.html" %}
+```
+
 ## Copy & Paste
 
 ```html
@@ -66,3 +72,9 @@ Panel response example:
 - GET /tabs/{tabKey}
   - 200 OK — returns panel fragment for the requested tab
   - Headers: `HX-Trigger: {"greeble:tab:change": {"tab": "<tabKey>"}}`
+
+## View source
+
+- Template: [tabs.html](https://github.com/Bakobiibizo/greeble/blob/main/packages/greeble_components/components/tabs/templates/tabs.html)
+- Partial: [tabs.partial.html](https://github.com/Bakobiibizo/greeble/blob/main/packages/greeble_components/components/tabs/templates/tabs.partial.html)
+- Styles: [tabs.css](https://github.com/Bakobiibizo/greeble/blob/main/packages/greeble_components/components/tabs/static/tabs.css)

@@ -11,6 +11,12 @@
   `<strong>` headings, descriptive copy). Provide manual controls in addition to the sentinel.
 - Theming hooks: `.greeble-feed__item`, `.greeble-feed__sentinel`, and `.greeble-feed__description`.
 
+## Include in template
+
+```jinja
+{% include "greeble/infinite-list.html" %}
+```
+
 ## Copy & Paste
 
 ```html
@@ -56,3 +62,9 @@
   - 200 OK — returns one or more `<li>` items appended to the list
   - 204 No Content — optional; indicates no more items (client may remove sentinel)
   - Headers: optional `HX-Trigger: {"greeble:list:append": {"count": <int>}}`
+
+## View source
+
+- Template: [infinite-list.html](https://github.com/Bakobiibizo/greeble/blob/main/packages/greeble_components/components/infinite-list/templates/infinite-list.html)
+- Partial: [infinite-list.partial.html](https://github.com/Bakobiibizo/greeble/blob/main/packages/greeble_components/components/infinite-list/templates/infinite-list.partial.html)
+- Styles: [infinite-list.css](https://github.com/Bakobiibizo/greeble/blob/main/packages/greeble_components/components/infinite-list/static/infinite-list.css)

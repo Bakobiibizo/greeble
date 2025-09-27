@@ -1,0 +1,60 @@
+/* Greeble canonical landing styles */
+:root { color-scheme: dark; }
+
+body {
+  margin: 0;
+  background: radial-gradient(1200px 600px at 20% -10%, rgba(106, 161, 255, 0.08), transparent 60%),
+              radial-gradient(900px 500px at 80% 110%, rgba(106, 161, 255, 0.06), transparent 65%),
+              var(--greeble-color-background);
+  color: var(--greeble-color-foreground, #e8e8ea);
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(12, 12, 20, 0.65);
+  backdrop-filter: saturate(160%) blur(8px);
+}
+
+.site-main {
+  min-height: calc(100vh - 80px);
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+  gap: 2rem;
+}
+
+.card {
+  width: 100%;
+  max-width: 840px;
+  border-radius: 0.7rem;
+  padding: 2.25rem;
+  background: rgba(12, 12, 20, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: var(--greeble-shadow-2);
+  text-align: center;
+}
+
+.stack { display: grid; gap: var(--greeble-spacing-3); }
+.cluster { display: flex; gap: var(--greeble-spacing-2); align-items: center; flex-wrap: wrap; }
+
+.code-block {
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  overflow: auto;
+}
+
+.install-actions { display: flex; justify-content: center; }
+
+.greeble-button { border-radius: calc(var(--greeble-radius-medium) * 0.7); transition: transform 120ms ease, box-shadow 120ms ease, background-color 120ms ease, border-color 120ms ease; }
+.greeble-button:hover { transform: translateY(-1px); box-shadow: 0 6px 22px rgba(0, 0, 0, 0.28); }
+.greeble-button--ghost { background: rgba(20, 20, 28, 0.7); border-color: #2a2a32; }
+.greeble-button--ghost:hover { background: rgba(24, 24, 32, 0.85); }
+
+.text-gradient { background: linear-gradient(90deg, var(--greeble-color-muted), var(--greeble-color-accent)); -webkit-background-clip: text; background-clip: text; color: transparent; }

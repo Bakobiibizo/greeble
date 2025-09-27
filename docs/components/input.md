@@ -19,6 +19,12 @@
 - Full form submissions typically respond with out-of-band toasts and a fresh input group to clear
   the field.
 
+## Include in template
+
+```jinja
+{% include "greeble/input.html" %}
+```
+
 ## Copy & Paste
 
 ```html
@@ -31,6 +37,10 @@
 </div>
 ```
 
+## View source
+
+- Template: [input.html](https://github.com/Bakobiibizo/greeble/blob/main/packages/greeble_components/components/input/templates/input.html)
+- Styles: [input.css](https://github.com/Bakobiibizo/greeble/blob/main/packages/greeble_components/components/input/static/input.css)
 ## Keyboard map
 
 - Tab / Shift+Tab – Move between fields and associated buttons.

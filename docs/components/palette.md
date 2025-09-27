@@ -11,6 +11,12 @@
 - Theming hooks: `.greeble-palette__result`, `.greeble-palette__detail`, `.greeble-palette__layout`,
   and `.greeble-palette__form` expose layout and colour customisation points.
 
+## Include in template
+
+```jinja
+{% include "greeble/palette.html" %}
+```
+
 ## Copy & Paste
 
 ```html
@@ -86,3 +92,9 @@ Adjust the copy and command payloads to match your product taxonomy.
 - POST /palette/select
   - 200 OK — returns detail panel content for the selected item
   - Headers: `HX-Trigger: {"greeble:palette:select": {"command": "<key>"}}`
+
+## View source
+
+- Template: [palette.html](https://github.com/Bakobiibizo/greeble/blob/main/packages/greeble_components/components/palette/templates/palette.html)
+- Partial: [palette.partial.html](https://github.com/Bakobiibizo/greeble/blob/main/packages/greeble_components/components/palette/templates/palette.partial.html)
+- Styles: [palette.css](https://github.com/Bakobiibizo/greeble/blob/main/packages/greeble_components/components/palette/static/palette.css)

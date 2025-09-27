@@ -11,6 +11,12 @@
 - Theming hooks: `.greeble-stepper__badge`, `.greeble-stepper__step[aria-current]`, and
   `.greeble-stepper__panel`.
 
+## Include in template
+
+```jinja
+{% include "greeble/stepper.html" %}
+```
+
 ## Copy & Paste
 
 ```html
@@ -80,3 +86,9 @@ status.
 - POST /stepper/{stepKey}
   - 200 OK — returns next step content; may emit `{ "greeble:stepper:complete": true }` when finished
   - 400 Bad Request — returns same step content with inline errors; keep `aria-live` announcements
+
+## View source
+
+- Template: [stepper.html](https://github.com/Bakobiibizo/greeble/blob/main/packages/greeble_components/components/stepper/templates/stepper.html)
+- Partial: [stepper.partial.html](https://github.com/Bakobiibizo/greeble/blob/main/packages/greeble_components/components/stepper/templates/stepper.partial.html)
+- Styles: [stepper.css](https://github.com/Bakobiibizo/greeble/blob/main/packages/greeble_components/components/stepper/static/stepper.css)

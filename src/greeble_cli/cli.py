@@ -777,7 +777,6 @@ def cmd_theme_init(args: argparse.Namespace, manifest: Manifest) -> int:
     # Compute destinations
     preset_dest = project_root / preset_rel
     config_path = project_root / config_rel
-
     # Prepare bundle of preset files to copy alongside preset.cjs
     preset_targets: dict[Path, Path] = {
         preset_src: preset_dest,

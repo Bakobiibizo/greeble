@@ -68,5 +68,20 @@
         <p class="greeble-caption" style="opacity:.8">You can inspect component templates under <code>templates/greeble/</code> and copy snippets as needed.</p>
       </div>
     </main>
+    <script>
+      document.addEventListener('click', function (e) {
+        const btn = e.target.closest('[data-copy]');
+        if (!btn) return;
+        const selector = btn.getAttribute('data-copy');
+        const code = document.querySelector(selector);
+        if (!code) return;
+        const text = code.innerText.trim();
+        navigator.clipboard.writeText(text).then(function () {
+          const prev = btn.textContent;
+          btn.textContent = 'Copied!';
+          setTimeout(function () { btn.textContent = prev; }, 1200);
+        });
+      });
+    </script>
   </body>
 </html>

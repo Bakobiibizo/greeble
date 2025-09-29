@@ -17,6 +17,7 @@ from django.utils.safestring import mark_safe
 
 from ..csrf import csrf_headers_json, serialize_headers
 from ..pagination import Pagination, pagination_context
+from django.middleware.csrf import get_token
 
 register = template.Library()
 

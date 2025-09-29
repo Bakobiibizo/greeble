@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import contextlib
 import shutil
 from dataclasses import dataclass
 from importlib import resources
@@ -31,6 +32,8 @@ STARTER_STATIC_FILES = {
     "static/logo.svg": "logo.svg",
 }
 
+HYPERSCRIPT_DEST = Path("static/greeble/hyperscript/greeble.hyperscript")
+
 STARTER_APP_FILES = {
     "src/greeble_starter/app.py": "app_main.py",
     "src/greeble_starter/__init__.py": "package_init.py",
@@ -57,6 +60,9 @@ TEMPLATES_DIR = Path(__file__).resolve().parent / "templates" / "starter"
 REPO_ROOT = Path(__file__).resolve().parents[2]
 PUBLIC_IMAGES = REPO_ROOT / "public" / "images"
 LANDING_STYLES_DEST = Path("static/greeble/greeble-landing.css")
+HYPERSCRIPT_REPO_PATH = (
+    REPO_ROOT / "packages" / "greeble_hyperscript" / "assets" / "greeble.hyperscript"
+)
 
 
 def _write_file(destination: Path, template_name: str, *, dry_run: bool) -> None:
@@ -74,7 +80,7 @@ def _copy_landing_styles(destination: Path, *, dry_run: bool) -> None:
         return
     destination.parent.mkdir(parents=True, exist_ok=True)
 
-    try:
+    with contextlib.suppress(ModuleNotFoundError, FileNotFoundError):
         traversable = resources.files("greeble_core").joinpath(
             "assets", "css", "greeble-landing.css"
         )
@@ -83,8 +89,6 @@ def _copy_landing_styles(destination: Path, *, dry_run: bool) -> None:
             if source.is_file():
                 shutil.copy2(source, destination)
                 return
-    except (ModuleNotFoundError, FileNotFoundError):  # pragma: no cover - environment dependent
-        pass
 
     repo_candidate = (
         REPO_ROOT / "packages" / "greeble_core" / "assets" / "css" / "greeble-landing.css"
@@ -94,6 +98,28 @@ def _copy_landing_styles(destination: Path, *, dry_run: bool) -> None:
         return
 
     raise StarterError("Landing stylesheet could not be located in greeble_core assets")
+
+
+def _copy_hyperscript_bundle(destination: Path, *, dry_run: bool) -> None:
+    if dry_run:
+        return
+    destination.parent.mkdir(parents=True, exist_ok=True)
+
+    with contextlib.suppress(ModuleNotFoundError, FileNotFoundError):
+        traversable = resources.files("greeble_hyperscript").joinpath(
+            "assets", "greeble.hyperscript"
+        )
+        with resources.as_file(traversable) as path:
+            source = Path(path)
+            if source.is_file():
+                shutil.copy2(source, destination)
+                return
+
+    if HYPERSCRIPT_REPO_PATH.is_file():
+        shutil.copy2(HYPERSCRIPT_REPO_PATH, destination)
+        return
+
+    raise StarterError("Hyperscript bundle could not be located in greeble_hyperscript assets")
 
 
 def scaffold_starter(
@@ -144,12 +170,16 @@ def scaffold_starter(
     _copy_landing_styles(landing_dest, dry_run=dry_run)
     project_files.append(landing_dest)
 
+    hyperscript_dest = project_root / HYPERSCRIPT_DEST
+    _copy_hyperscript_bundle(hyperscript_dest, dry_run=dry_run)
+    project_files.append(hyperscript_dest)
+
     index_dest = project_root / "templates/index.html"
     _write_file(index_dest, "index.html", dry_run=dry_run)
     project_files.append(index_dest)
 
     # Best-effort: copy branding icons into starter static/images for favicons
-    try:
+    with contextlib.suppress(Exception):  # pragma: no cover - non-fatal
         icons = [
             "greeble-icon-black.svg",
             "greeble-icon-alpha-white.png",
@@ -162,9 +192,6 @@ def scaffold_starter(
             source = PUBLIC_IMAGES / name
             if source.exists() and not dry_run:
                 shutil.copy2(source, dest_dir / name)
-    except Exception:  # pragma: no cover - non-fatal
-        # Non-fatal; icons are optional and may be absent when installed from sdist/wheel
-        pass
 
     component_plans_sorted = sorted(component_plans, key=lambda path: tuple(path.parts))
     project_files_sorted = sorted(project_files, key=lambda path: tuple(path.parts))

@@ -1,0 +1,82 @@
+behavior ModalAutofocus
+  on htmx:afterSwap from document
+    js
+      (function (event) {
+        var target = event.target || document;
+        var focusNode = target.querySelector('[data-modal-focus]');
+        if (!focusNode) {
+          focusNode = document.querySelector('[data-modal-focus]');
+        }
+        if (focusNode && typeof focusNode.focus === 'function') {
+          focusNode.focus();
+        }
+      })(_event);
+    end
+
+behavior CopyCommand
+  on click from document delegating to [data-copy]
+    js
+      (function (event) {
+        var button = event.target.closest('[data-copy]');
+        if (!button) return;
+        var selector = button.dataset.copy;
+        if (!selector) return;
+        var node = document.querySelector(selector);
+        if (!node) return;
+        var text = (node.innerText || '').trim();
+        navigator.clipboard.writeText(text).then(function () {
+          var original = button.innerText;
+          button.innerText = 'Copied!';
+          setTimeout(function () {
+            button.innerText = original;
+          }, 1200);
+        }).catch(function (err) {
+          console.error(err);
+        });
+      })(_event);
+    end
+
+behavior ToastListener
+  on greeble:toast from document
+    js
+      (function(detail){
+        const root = document.getElementById('greeble-toasts');
+        if (!root) return;
+        const payloads = Array.isArray(detail) ? detail : [detail];
+        payloads.filter(Boolean).forEach(function(toast){
+          const el = document.createElement('div');
+          el.className = 'greeble-toast greeble-toast--' + (toast.level || 'info');
+          el.setAttribute('role', 'status');
+
+          const body = document.createElement('div');
+          body.className = 'greeble-toast__body';
+          if (toast.title) {
+            const title = document.createElement('p');
+            title.className = 'greeble-toast__title';
+            title.textContent = toast.title;
+            body.appendChild(title);
+          }
+          if (toast.message) {
+            const message = document.createElement('p');
+            message.className = 'greeble-toast__message';
+            message.textContent = toast.message;
+            body.appendChild(message);
+          }
+          el.appendChild(body);
+
+          const dismiss = document.createElement('button');
+          dismiss.className = 'greeble-icon-button greeble-toast__dismiss';
+          dismiss.setAttribute('aria-label', 'Dismiss');
+          dismiss.textContent = '×';
+          dismiss.addEventListener('click', function(){ el.remove(); });
+          el.appendChild(dismiss);
+
+          root.appendChild(el);
+          setTimeout(function(){ el.remove(); }, 5000);
+        });
+      })(_event.detail);
+    end
+
+install ModalAutofocus on document
+install CopyCommand on document delegating to [data-copy]
+install ToastListener on document

@@ -9,51 +9,26 @@
     <link rel="icon" href="/static/images/greeble-icon-black.svg" type="image/svg+xml" media="(prefers-color-scheme: light)" />
     <link rel="icon" href="/static/images/greeble-icon-alpha-white.png" sizes="any" media="(prefers-color-scheme: dark)" />
     <script src="https://unpkg.com/htmx.org@1.9.12" defer></script>
-    <script>
-      // Minimal client to render toasts from HX-Trigger events
-      (function () {
-        function renderToast(t) {
-          var root = document.getElementById("greeble-toasts");
-          if (!root) return;
-          var el = document.createElement("div");
-          el.className = "greeble-toast greeble-toast--" + (t.level || "info");
-          el.setAttribute("role", "status");
-          var body = document.createElement("div");
-          body.className = "greeble-toast__body";
-          var title = document.createElement("p");
-          title.className = "greeble-toast__title";
-          title.textContent = t.title || "";
-          var msg = document.createElement("p");
-          msg.className = "greeble-toast__message";
-          msg.textContent = t.message || "";
-          body.appendChild(title);
-          body.appendChild(msg);
-          var btn = document.createElement("button");
-          btn.className = "greeble-icon-button greeble-toast__dismiss";
-          btn.setAttribute("aria-label", "Dismiss");
-          btn.textContent = "×";
-          btn.addEventListener("click", function () { el.remove(); });
-          el.appendChild(body);
-          el.appendChild(btn);
-          root.appendChild(el);
-          setTimeout(function () { el.remove(); }, 5000);
-        }
-
-        document.addEventListener("greeble:toast", function (e) {
-          var data = e.detail;
-          if (Array.isArray(data)) {
-            data.forEach(renderToast);
-          } else if (data && (data.message || data.level || data.title)) {
-            renderToast(data);
-          }
-        });
-      })();
-    </script>
+    <script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
+    <script type="text/hyperscript" src="/static/greeble/hyperscript/greeble.hyperscript"></script>
   </head>
   <body>
+    <header class="site-header">
+      <div class="cluster">
+        <strong>Greeble Flask Demo</strong>
+        <nav class="cluster" aria-label="Demo navigation">
+          <a href="/">Home</a>
+        </nav>
+      </div>
+      <div class="cluster">
+        <a class="greeble-button greeble-button--ghost" href="https://github.com/bakobiibizo/greeble">Source</a>
+      </div>
+    </header>
     <div id="greeble-toasts" class="greeble-toast-region" aria-live="polite" aria-label="Notifications"></div>
-    <main>
-      {% block content %}{% endblock %}
+    <main class="site-main">
+      <div class="card stack">
+        {% block content %}{% endblock %}
+      </div>
     </main>
   </body>
 </html>

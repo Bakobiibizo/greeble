@@ -14,10 +14,12 @@ app = Flask(__name__)
 # Mount canonical core assets and repo public images under /static/
 ROOT = Path(__file__).resolve().parents[2]
 CORE_ASSETS = ROOT / "packages" / "greeble_core" / "assets" / "css"
+HYPERSCRIPT_ASSETS = ROOT / "packages" / "greeble_hyperscript" / "assets"
 app.wsgi_app = SharedDataMiddleware(  # type: ignore[assignment]
     app.wsgi_app,
     {
         "/static/greeble": str(CORE_ASSETS),
+        "/static/greeble/hyperscript": str(HYPERSCRIPT_ASSETS),
         "/static/images": str(ROOT / "public" / "images"),
     },
 )

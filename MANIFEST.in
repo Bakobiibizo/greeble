@@ -1,0 +1,3 @@
+# Ensure Tailwind preset assets ship with source distributions
+recursive-include packages/greeble_tailwind_preset *.cjs *.js *.md
+recursive-include packages/greeble_hyperscript *.hyperscript *.md

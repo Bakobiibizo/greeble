@@ -765,7 +765,8 @@ def cmd_theme_init(args: argparse.Namespace, manifest: Manifest) -> int:
     content_globs: list[str] = list(args.content or [])
 
     # Locate the preset source in the repo
-    preset_src = manifest.root / "packages" / "greeble_tailwind_preset" / "preset.cjs"
+    preset_dir = manifest.root / "packages" / "greeble_tailwind_preset"
+    preset_src = preset_dir / "preset.cjs"
     if not preset_src.exists():
         print(
             f"error: preset source not found at {preset_src}. Ensure the repository includes packages/greeble_tailwind_preset/preset.cjs",
@@ -777,17 +778,36 @@ def cmd_theme_init(args: argparse.Namespace, manifest: Manifest) -> int:
     preset_dest = project_root / preset_rel
     config_path = project_root / config_rel
 
-    # Create parent directories and copy preset
-    preset_dest.parent.mkdir(parents=True, exist_ok=True)
-    if preset_dest.exists():
-        if not args.force:
-            print(
-                f"error: preset already exists at {preset_dest}. Re-run with --force to overwrite",
-                file=sys.stderr,
-            )
-            return 2
-        print(f"Warning: Overwriting existing preset at {preset_dest}", file=sys.stderr)
-    preset_dest.write_text(preset_src.read_text(encoding="utf-8"), encoding="utf-8")
+    # Prepare bundle of preset files to copy alongside preset.cjs
+    preset_targets: dict[Path, Path] = {
+        preset_src: preset_dest,
+    }
+    theme_src = preset_dir / "theme.cjs"
+    if theme_src.exists():
+        preset_targets[theme_src] = preset_dest.parent / "theme.cjs"
+    index_js_src = preset_dir / "index.js"
+    if index_js_src.exists():
+        preset_targets[index_js_src] = preset_dest.parent / "index.js"
+
+    # Create parent directories and handle overwrite checks
+    for dest in preset_targets.values():
+        dest.parent.mkdir(parents=True, exist_ok=True)
+
+    existing = [dest for dest in preset_targets.values() if dest.exists()]
+    if existing and not args.force:
+        paths = "\n  - ".join(str(p) for p in existing)
+        print(
+            "error: the following preset files already exist:\n  - "
+            + paths
+            + "\nRe-run with --force to overwrite",
+            file=sys.stderr,
+        )
+        return 2
+
+    for src, dest in preset_targets.items():
+        if dest.exists() and args.force:
+            print(f"Warning: Overwriting existing preset asset at {dest}", file=sys.stderr)
+        dest.write_text(src.read_text(encoding="utf-8"), encoding="utf-8")
 
     # Generate tailwind configuration
     # Use POSIX-style path for require()
@@ -814,10 +834,11 @@ def cmd_theme_init(args: argparse.Namespace, manifest: Manifest) -> int:
     config_path.write_text(config_js, encoding="utf-8")
 
     # Print summary
-    rel_preset = preset_dest.relative_to(project_root)
     rel_config = config_path.relative_to(project_root)
+    copied = sorted({path.relative_to(project_root) for path in preset_targets.values()})
     print("Scaffolded Tailwind configuration:")
-    print(f"  - Copied preset to: {rel_preset}")
+    for rel in copied:
+        print(f"  - Copied preset asset: {rel}")
     print(f"  - Wrote config:     {rel_config}")
     return 0
 

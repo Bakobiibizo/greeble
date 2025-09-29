@@ -78,6 +78,10 @@ Load the template tags and add CSRF to HTMX requests via `hx-headers`:
   hx-target="#form-status" hx-swap="innerHTML">
   ...
 </form>
+
+{% with pagination=greeble_pagination_context paginated_accounts %}
+  {% include "greeble/pagination.html" with pagination=pagination %}
+{% endwith %}
 ```
 
 Django settings configuration:
@@ -86,15 +90,31 @@ Django settings configuration:
 # settings.py
 INSTALLED_APPS = [
     # ...
-    "greeble.adapters",   # enables `{% load greeble_tags %}`
+    "greeble.adapters",            # optional: legacy helpers (`greeble.adapters.django`)
+    "packages.adapters.greeble_django",  # provides template tags and middleware
 ]
 
 MIDDLEWARE = [
     # ...
+    "django.contrib.sessions.middleware.SessionMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
-    "greeble.adapters.middleware.GreebleMessagesToToastsMiddleware",
+    "packages.adapters.greeble_django.middleware.GreebleMessagesToToastsMiddleware",
 ]
 ```
+
+Project code can also import helpers directly from the packaged adapter:
+
+```python
+from packages.adapters.greeble_django import (
+    csrf_header,
+    csrf_headers_json,
+    paginate_sequence,
+    pagination_context,
+)
+```
+
+Those utilities mirror the FastAPI adapter behaviour and keep imports lazy so they can safely ship in
+starter templates even before Django is installed.
 
 Client toast listener (minimal example):
 

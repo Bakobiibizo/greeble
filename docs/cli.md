@@ -34,6 +34,15 @@ Options:
 - `--force` – overwrite any existing files in the destination
 - `--dry-run` – preview the files that would be generated without writing
 
+The starter copies shared design tokens, landing styles, and the bundled Hyperscript behaviors into
+`static/greeble/`. To enable modal focus management, toast rendering, and delegated copy buttons, make
+sure your base layout loads the script:
+
+```html
+<script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
+<script type="text/hyperscript" src="/static/greeble/hyperscript/greeble.hyperscript"></script>
+```
+
 ### `greeble add <component>`
 
 Copies template and static files for a component into your project.

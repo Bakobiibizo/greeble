@@ -1,0 +1,102 @@
+/* Copied from packages/greeble_core/assets/css/greeble-core.css */
+:root {
+  --greeble-color-background: #0b0b0c;
+  --greeble-color-foreground: #e8e8ea;
+  --greeble-color-muted: #a0a0a7;
+  --greeble-color-accent: #6aa1ff;
+  --greeble-radius-medium: 12px;
+  --greeble-shadow-1: 0 1px 2px rgba(0, 0, 0, .2);
+  --greeble-shadow-2: 0 8px 30px rgba(0, 0, 0, .35);
+  --greeble-spacing-1: .25rem;
+  --greeble-spacing-2: .5rem;
+  --greeble-spacing-3: .75rem;
+  --greeble-spacing-4: 1rem;
+  --greeble-focus-ring: 0 0 0 3px rgba(106, 161, 255, .5);
+}
+
+html, body {
+  background: var(--greeble-color-background);
+  color: var(--greeble-color-foreground);
+}
+
+.stack { display: grid; gap: var(--greeble-spacing-3); }
+.cluster { display: flex; gap: var(--greeble-spacing-2); align-items: center; flex-wrap: wrap; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+*:focus-visible { outline: none; box-shadow: var(--greeble-focus-ring); }
+
+.greeble-button {
+  --_btn-bg: #1a1a20;
+  --_btn-fg: var(--greeble-color-foreground);
+  --_btn-border: #2a2a32;
+  --_btn-shadow: var(--greeble-shadow-1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--greeble-spacing-2);
+  min-height: 2.5rem;
+  padding: var(--greeble-spacing-2) var(--greeble-spacing-4);
+  border-radius: var(--greeble-radius-medium);
+  border: 1px solid var(--_btn-border);
+  background: var(--_btn-bg);
+  color: var(--_btn-fg);
+  font: inherit;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.1;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: var(--_btn-shadow);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease;
+}
+
+.greeble-button--primary { --_btn-bg: var(--greeble-color-accent); --_btn-fg: #0b0b0c; --_btn-border: transparent; }
+.greeble-button--ghost { --_btn-bg: rgba(26, 26, 32, 0.6); --_btn-border: rgba(255, 255, 255, 0.1); }
+.greeble-button--icon { padding: var(--greeble-spacing-2); width: 2.5rem; }
+.greeble-button:focus-visible { box-shadow: var(--greeble-focus-ring); }
+
+.greeble-input {
+  display: block;
+  inline-size: 100%;
+  min-height: 2.5rem;
+  padding: var(--greeble-spacing-2) var(--greeble-spacing-3);
+  border-radius: 10px;
+  border: 1px solid #2a2a32;
+  background: #151518;
+  color: var(--greeble-color-foreground);
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.greeble-input::placeholder { color: rgba(232, 232, 234, 0.5); }
+.greeble-input:focus-visible { outline: none; border-color: transparent; box-shadow: var(--greeble-focus-ring); }
+
+.greeble-modal { position: fixed; inset: 0; display: grid; place-items: center; }
+.greeble-modal__backdrop { position: absolute; inset: 0; background: rgba(0, 0, 0, .5); }
+.greeble-modal__panel {
+  position: relative;
+  background: #101014;
+  color: var(--greeble-color-foreground);
+  border-radius: var(--greeble-radius-medium);
+  padding: var(--greeble-spacing-4);
+  box-shadow: var(--greeble-shadow-2);
+  min-inline-size: 320px;
+}
+
+.greeble-toast-region { display: grid; gap: var(--greeble-spacing-2); }
+.greeble-toast { display: flex; justify-content: space-between; gap: var(--greeble-spacing-3); align-items: center; padding: var(--greeble-spacing-3); border-radius: var(--greeble-radius-medium); background: rgba(20, 20, 28, 0.85); box-shadow: var(--greeble-shadow-1); border: 1px solid rgba(255, 255, 255, 0.08); }
+.greeble-toast__body { display: grid; gap: 0.25rem; }
+.greeble-toast__title { font-weight: 600; margin: 0; }
+.greeble-toast__message { margin: 0; color: var(--greeble-color-muted); }
+
+.greeble-table { width: 100%; border-collapse: collapse; background: rgba(16, 16, 24, 0.7); border-radius: 0.75rem; overflow: hidden; }
+.greeble-table th, .greeble-table td { padding: var(--greeble-spacing-3); border-bottom: 1px solid rgba(255, 255, 255, 0.08); text-align: left; }
+.greeble-table thead th { text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.08em; color: rgba(232, 232, 234, 0.75); }
+.greeble-table tbody tr:last-child td { border-bottom: none; }
+
+.greeble-pagination { display: flex; gap: var(--greeble-spacing-2); align-items: center; justify-content: flex-end; }
+
+.greeble-badge { display: inline-flex; align-items: center; padding: 0.2rem 0.55rem; border-radius: 999px; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.greeble-badge--success { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
+.greeble-badge--warning { background: rgba(234, 179, 8, 0.25); color: #facc15; }
+
+.greeble-icon-button { background: transparent; border: none; color: inherit; cursor: pointer; font-size: 1rem; }

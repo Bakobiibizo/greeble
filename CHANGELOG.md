@@ -1,4 +1,4 @@
-## [0.2.0] - 2025-09-29
+## [0.1.4] - 2025-09-29
 
 ### other
 - Refresh documentation site and landing assets (6cc2ae9)

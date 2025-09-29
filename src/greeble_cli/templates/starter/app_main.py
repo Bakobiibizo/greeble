@@ -1,8 +1,6 @@
 from __future__ import annotations
 
-
 import itertools
-
 import os
 from pathlib import Path
 
@@ -19,7 +17,6 @@ TEMPLATES = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 app = FastAPI(title="Greeble Starter", docs_url=None, redoc_url=None)
 app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
 DEFAULT_DOCS_URL = "https://greeble-synai.ngrok.dev/docs"
-=======
 _ = itertools  # keep import used (placeholder to satisfy lint if needed)
 
 
@@ -40,10 +37,12 @@ async def index(request: Request) -> HTMLResponse:
         },
     )
 
+
 @app.get("/docs", include_in_schema=False)
 async def docs_redirect() -> RedirectResponse:
     target = os.getenv("GREEBLE_DOCS_URL", DEFAULT_DOCS_URL)
     return RedirectResponse(target, status_code=307)
+
 
 def _component_template(filename: str) -> str:
     return load_project_component_template(BASE_DIR, filename)

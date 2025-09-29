@@ -252,4 +252,6 @@ def test_cli_theme_init_force_overwrites(tmp_path: Path) -> None:
     force_args = args + ["--force"]
     assert main(force_args) == 0
     content = preset_asset.read_text(encoding="utf-8")
-    assert "createPreset" in content, "Force run should overwrite with canonical preset contents"
+    assert "--greeble-color-background" in content, (
+        "Force run should overwrite with canonical preset contents"
+    )

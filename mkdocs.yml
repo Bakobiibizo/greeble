@@ -18,6 +18,10 @@ theme:
       primary: indigo
       accent: blue
 
+extra_css:
+  - assets/css/greeble-core.css
+  - assets/css/docs-demo.css
+
 markdown_extensions:
   - admonition
   - toc:

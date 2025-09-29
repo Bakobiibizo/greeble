@@ -7,6 +7,7 @@
 - Accessibility: `role="dialog"`, `aria-modal="true"`, labelled via `aria-labelledby`/`aria-describedby`; panel receives focus via `tabindex="-1"`; close button carries `aria-label`.
 - Events: Emit `HX-Trigger: {"greeble:modal:open": true}` when returning the partial and `HX-Trigger-After-Swap` to signal closing.
 - Theming hooks: Panel and actions inherit tokens; `.greeble-badge`, `.greeble-modal__actions`, `.greeble-checkbox` expose specific styling knobs.
+- Client behaviors: Load the bundled Hyperscript file to focus the modal panel and power delegated copy buttons.
 
 ## Server contract
 
@@ -30,7 +31,12 @@
 <div id="modal-root" aria-live="polite"></div>
 ```
 
-Return the modal partial example to hydrate the dialog. Close endpoints should respond with an empty string to remove the modal from the DOM.
+Return the modal partial example to hydrate the dialog. Close endpoints should respond with an empty string to remove the modal from the DOM. Include the shared Hyperscript bundle so the modal grabs focus when rendered:
+
+```html
+<script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
+<script type="text/hyperscript" src="/static/greeble/hyperscript/greeble.hyperscript"></script>
+```
 
 ## Keyboard map
 

@@ -1,6 +1,6 @@
 [project]
 name = "greeble"
-version = "0.1.4"
+version = "0.0.8"
 description = "HTML-first component library that delivers copy and paste snippets powered by HTMX for rapid UI construction"
 readme = "README.md"
 requires-python = ">=3.12"

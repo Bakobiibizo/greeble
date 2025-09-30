@@ -4,20 +4,17 @@ This living roadmap outlines the planned work for Greeble. It’s organized as N
 
 ## Now (in progress)
 
-- Deliver Django template tags and middleware to hit parity with FastAPI helpers; begin porting the blueprint pattern for Flask.
-- Implement Tailwind preset exports (`preset.cjs` / `index.js`) and land a CLI-driven `theme init` workflow so starters consume tokens out of the box.
-- Finish folding the landing demo into the MkDocs site: promote the new minimal landing as home, add live component examples with “view source,” and align shared assets (favicons, icons) across starters and demos.
-- Unify styling across the FastAPI, Django, and Flask demos so they inherit the canonical look and feel from `examples/site/landing.py`.
-- Clarify the Hyperscript distribution story (bundle vs per-component) and update CLI scaffolds and docs to match the chosen approach.
-- Lock the distribution layout (`src/` vs `packages/`) and packaging manifest so starter assets and adapters publish cleanly to PyPI.
+- Centralize HTMX-aware response helpers across FastAPI, Django, and Flask (headers, CSRF utilities, message-to-toast middleware).
+- Ship Django template tags/middleware and a Flask blueprint so adapters hit feature parity with the FastAPI helpers.
+- Align demos and starters on the canonical asset pipeline (shared head markup, icons, Tailwind preset wiring) and document override patterns.
+- Finalize component contracts (markup requirements, events, tokens) with validation tooling baked into CI.
 
 ## Next (queued)
 
-- Backfill automated coverage once Django/Flask adapters land: adapter contract tests, docs-site smoke tests, and a generated starter boot/run check.
-- Integrate CI gating with coverage metrics and introduce accessibility (axe) plus visual regression (Playwright) automation.
-- Reconcile adapter code between `src/greeble/adapters/` and `packages/adapters/` to avoid duplication.
-- Document override patterns for `greeble_core` tokens and ship starter-friendly guidance (consider packaging tokens as static assets).
-- Extend `greeble new` with Django and Flask starter blueprints once adapters stabilize.
+- Bundle client behaviour (`greeble.js`) that registers Hyperscript snippets, exposes toast/focus helpers, and hooks HTMX lifecycle events.
+- Expand CLI workflows (`greeble new`, `sync`, `doctor`) with post-scaffold diagnostics, diff-aware sync, and framework-specific checks.
+- Land accessibility-first component updates (modal/dialog focus management, tabs roving tabindex, toast live regions) and enforce through automated tests.
+- Establish Playwright + axe-core pipelines for component snapshots and smoke tests across framework adapters.
 
 ## Later (backlog)
 
@@ -27,20 +24,22 @@ This living roadmap outlines the planned work for Greeble. It’s organized as N
 
 ## Milestones (targeted sequencing)
 
-- v0.2
-  - Django + Flask adapter parity (min viable template tags, middleware/blueprint, examples)
-  - Tailwind preset initial export wired to CLI; docs for token mapping and starter consumption
-  - Docs site home unified with landing demo, live component examples, and “view source” affordances
+- 0.0.9
+  - Shared HTMX response helper (`set_htmx_headers`) adopted across adapters and demos.
+  - Django CSRF tag/macro, toast middleware, and Flask blueprint with namespaced partials delivered.
+  - Tailwind preset/token docs refreshed; starters consume canonical head markup and asset pipeline.
+  - Component contracts authored with automated validation covering modal, drawer, tabs, toast, and form flows.
 
-- v0.3
-  - Accessibility (axe) + visual regression automation (Playwright) with CI gating
-  - Hyperscript packaging clarified and integrated in CLI/new scaffold
-  - Distribution layout finalized for publishing; starter assets packaged
+- 0.0.10
+  - Client bundle (`greeble.js`) shipping hyperscript behaviours, focus/scroll helpers, and HTMX hooks.
+  - CLI polish: post-scaffold doctor, diff-aware sync, richer doctor diagnostics published.
+  - Accessibility automation landed (Playwright + axe-core) covering modal/dialog, tabs, toast, and form components.
+  - Visual regression baselines and starter smoke tests executed across FastAPI/Django/Flask apps.
 
-- v0.4+
-  - Additional components: file upload, data grid, date picker
-  - Expand framework docs (security patterns per framework)
-  - Broaden adapter contract tests and sample apps
+- 0.0.11+
+  - Performance work (minified CSS/JS bundles, swap-granularity guidance, streaming patterns) documented and enforced.
+  - Security guidance expanded (CSP recipes with Hyperscript, HTMX idempotency patterns, escape auditing).
+  - Additional components (file upload, data grid, date picker) queued once foundations stabilize.
 
 ## How to follow along
 

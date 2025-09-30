@@ -1,4 +1,4 @@
-## [0.1.4] - 2025-09-29
+## [0.0.8] - 2025-09-29
 
 ### other
 - Refresh documentation site and landing assets (6cc2ae9)
@@ -8,7 +8,7 @@
 - Enhance CLI starter assets and Tailwind preset (e65ddc8)
 - Clean starter landing assets (2fe5a7f)
 
-## [0.1.3] - 2025-09-26
+## [0.0.7] - 2025-09-26
 
 ### feat
 - unify landing assets and refresh docs (c137ed0)
@@ -29,7 +29,7 @@
 - style(landing): light/dark favicons via /static/images; mount icons for demos; scaffold icons into starters; unify reduced radii (628733b)
 - style(landing): establish canonical landing styles and apply across starter + examples; link canonical CSS; darken surfaces (efc5748)
 
-## [0.1.2] - 2025-09-24
+## [0.0.6] - 2025-09-24
 
 ### feat
 - 2/3 centered layout with 1/6 gutters; increase early-access input padding; clarify palette to customer search with examples (dd91383)
@@ -48,7 +48,7 @@
 - auto-approve merge commit message in branch-finalize with --no-edit (e0596b6)
 - add template export and setup scripts (b6edf87)
 
-## [0.1.1] - 2025-09-23
+## [0.0.5] - 2025-09-23
 
 ### refactor
 - extract HTMX utils; preserve HX-Trigger toasts; tighten manifest library keys; demo parity + docs todos (b33e15b)
@@ -57,7 +57,7 @@
 - remove partial_html from Django/Flask; enforce template-based rendering; update tests (541f996)
 - changed demo to use env variables over hard coding debug=true (c465200)
 
-## [0.1.0] - 2025-09-23
+## [0.0.4] - 2025-09-23
 
 ### feat
 - tighten manifest validation and docs handling (4730fde)
@@ -128,7 +128,7 @@
 ### other
 - Initial commit (fcbcabd)
 
-## [0.0.2] - 2025-09-20
+## [0.0.1] - 2025-09-20
 
 ### feat
 - semantic versioning + release helpers; centralize tool configs; set initial version 0.0.1\n\n- dev version current|bump <major|minor|patch> with CHANGELOG generation and annotated tags\n- dev release rc to create/push release-candidate\n- dev protect-main uses gh CLI to enable branch protection\n- Commitizen pre-commit commit-msg hook enforcing Conventional Commits\n- Configs in pyproject (ruff, mypy, pytest, commitizen)\n- Docs version set to 0.0.1 (6072fed)

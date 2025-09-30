@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
-  <h1>Greeble Django Demo</h1>
-  <p>This page demonstrates HTMX partial rendering with Greeble adapters.</p>
-  <button class="greeble-button" hx-get="/demo/panel" hx-target="#panel-root" hx-swap="innerHTML">Load panel</button>
-  <section id="panel-root" aria-live="polite"></section>
+  <h1 class="text-gradient">Greeble Django Demo</h1>
+  <p>HTMX partial rendering using Django adapters. Trigger the panel to see HX-Trigger toasts.</p>
+  <div class="stack">
+    <button class="greeble-button" hx-get="/demo/panel" hx-target="#panel-root" hx-swap="innerHTML">Load panel</button>
+    <section id="panel-root" aria-live="polite"></section>
+  </div>
 {% endblock %}

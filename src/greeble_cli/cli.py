@@ -735,6 +735,11 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Overwrite existing preset/config files if they already exist",
     )
+    sub_theme_init.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Preview file operations without writing",
+    )
     sub_theme_init.set_defaults(func=cmd_theme_init)
 
     return parser
@@ -763,9 +768,11 @@ def cmd_theme_init(args: argparse.Namespace, manifest: Manifest) -> int:
     config_rel: Path = Path(args.config)
     preset_rel: Path = Path(args.preset_dest)
     content_globs: list[str] = list(args.content or [])
+    dry_run = bool(args.dry_run)
 
     # Locate the preset source in the repo
-    preset_src = manifest.root / "packages" / "greeble_tailwind_preset" / "preset.cjs"
+    preset_dir = manifest.root / "packages" / "greeble_tailwind_preset"
+    preset_src = preset_dir / "preset.cjs"
     if not preset_src.exists():
         print(
             f"error: preset source not found at {preset_src}. Ensure the repository includes packages/greeble_tailwind_preset/preset.cjs",
@@ -776,18 +783,43 @@ def cmd_theme_init(args: argparse.Namespace, manifest: Manifest) -> int:
     # Compute destinations
     preset_dest = project_root / preset_rel
     config_path = project_root / config_rel
+    # Prepare bundle of preset files to copy alongside preset.cjs
+    preset_targets: dict[Path, Path] = {
+        preset_src: preset_dest,
+    }
+    theme_src = preset_dir / "theme.cjs"
+    if theme_src.exists():
+        preset_targets[theme_src] = preset_dest.parent / "theme.cjs"
+    index_js_src = preset_dir / "index.js"
+    if index_js_src.exists():
+        preset_targets[index_js_src] = preset_dest.parent / "index.js"
 
-    # Create parent directories and copy preset
-    preset_dest.parent.mkdir(parents=True, exist_ok=True)
-    if preset_dest.exists():
-        if not args.force:
-            print(
-                f"error: preset already exists at {preset_dest}. Re-run with --force to overwrite",
-                file=sys.stderr,
-            )
+    # Create parent directories (unless dry-run) and handle overwrite checks
+    for dest in preset_targets.values():
+        if not dry_run:
+            dest.parent.mkdir(parents=True, exist_ok=True)
+
+    existing = [dest for dest in preset_targets.values() if dest.exists()]
+    if existing and not args.force:
+        paths = "\n  - ".join(str(p) for p in existing)
+        message = (
+            "The following preset files already exist:\n  - "
+            + paths
+            + "\nUse --force to overwrite."
+        )
+        if dry_run:
+            print("[dry-run] " + message)
+        else:
+            print("error: " + message, file=sys.stderr)
             return 2
-        print(f"Warning: Overwriting existing preset at {preset_dest}", file=sys.stderr)
-    preset_dest.write_text(preset_src.read_text(encoding="utf-8"), encoding="utf-8")
+
+    for src, dest in preset_targets.items():
+        if dest.exists() and args.force:
+            msg = f"Overwriting existing preset asset at {dest}"
+            print(("[dry-run] " if dry_run else "Warning: ") + msg, file=sys.stderr)
+        if dry_run:
+            continue
+        dest.write_text(src.read_text(encoding="utf-8"), encoding="utf-8")
 
     # Generate tailwind configuration
     # Use POSIX-style path for require()
@@ -802,23 +834,32 @@ def cmd_theme_init(args: argparse.Namespace, manifest: Manifest) -> int:
         "  ]\n"
         "};\n"
     )
-    config_path.parent.mkdir(parents=True, exist_ok=True)
+    if not dry_run:
+        config_path.parent.mkdir(parents=True, exist_ok=True)
     if config_path.exists():
         if not args.force:
-            print(
-                f"error: config already exists at {config_path}. Re-run with --force to overwrite",
-                file=sys.stderr,
-            )
-            return 2
-        print(f"Warning: Overwriting existing config at {config_path}", file=sys.stderr)
-    config_path.write_text(config_js, encoding="utf-8")
+            message = f"config already exists at {config_path}. Re-run with --force to overwrite"
+            if dry_run:
+                print(f"[dry-run] {message}")
+            else:
+                print(f"error: {message}", file=sys.stderr)
+                return 2
+        else:
+            prefix = "[dry-run] " if dry_run else "Warning: "
+            print(f"{prefix}Overwriting existing config at {config_path}", file=sys.stderr)
+    if not dry_run:
+        config_path.write_text(config_js, encoding="utf-8")
 
     # Print summary
-    rel_preset = preset_dest.relative_to(project_root)
     rel_config = config_path.relative_to(project_root)
-    print("Scaffolded Tailwind configuration:")
-    print(f"  - Copied preset to: {rel_preset}")
-    print(f"  - Wrote config:     {rel_config}")
+    copied = sorted({path.relative_to(project_root) for path in preset_targets.values()})
+    heading = "Planned Tailwind configuration:" if dry_run else "Scaffolded Tailwind configuration:"
+    print(heading)
+    for rel in copied:
+        verb = "Would copy" if dry_run else "Copied"
+        print(f"  - {verb} preset asset: {rel}")
+    verb_cfg = "Would write" if dry_run else "Wrote"
+    print(f"  - {verb_cfg} config:     {rel_config}")
     return 0
 
 

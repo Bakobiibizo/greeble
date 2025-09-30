@@ -1,11 +1,3 @@
-// Greeble Tailwind Preset
-// Maps Greeble CSS token variables to Tailwind theme scales.
-//   module.exports = {
-//     presets: [require('./tools/greeble/tailwind/preset.cjs')],
-//     content: ['./templates/**/*.html']
-//   }
-
-/** @type {import('tailwindcss').Config} */
 module.exports = {
   theme: {
     extend: {

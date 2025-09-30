@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import os
+import textwrap
 from collections.abc import AsyncIterator
 from pathlib import Path
 from string import Template
@@ -9,10 +10,13 @@ from string import Template
 from dotenv import load_dotenv
 from fastapi import FastAPI, Form, Request
 from fastapi.responses import HTMLResponse, Response, StreamingResponse
-from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
+from examples.shared.assets import apply_fastapi_assets, head_markup
 from greeble.adapters.fastapi import template_response
+
+from .data import INFINITE_ITEMS, STEP_CONTENT
+from .renderers import render_palette_results, render_table
 
 load_dotenv()
 
@@ -22,6 +26,9 @@ PORT = int(os.getenv("PORT", 8050))
 # Resolve repo root to point Jinja2 at component template folders
 ROOT = Path(__file__).resolve().parents[2]
 CPTS = ROOT / "packages" / "greeble_components" / "components"
+
+
+_infinite_index = 0
 
 # One Jinja2Templates per component folder (simplest; avoids multi-dir engine wiring)
 T_BUTTON = Jinja2Templates(directory=str(CPTS / "button" / "templates"))
@@ -37,55 +44,45 @@ T_STEPPER = Jinja2Templates(directory=str(CPTS / "stepper" / "templates"))
 T_INF_LIST = Jinja2Templates(directory=str(CPTS / "infinite-list" / "templates"))
 
 app = FastAPI(title="Greeble FastAPI Demo")
-
-# Serve core CSS for basic styling
-app.mount(
-    "/static/greeble",
-    StaticFiles(directory=str(ROOT / "packages" / "greeble_core" / "assets" / "css")),
-    name="greeble-static",
-)
+apply_fastapi_assets(app)
 
 
 def render_page(title: str, body_html: str) -> HTMLResponse:
-    """Return a minimal HTML page that includes HTMX and core styles."""
+    """Render canonical layout with shared assets and toast region."""
+
     html_tpl = Template(
-        """
-    <!doctype html>
-    <html lang="en">
-      <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>$title</title>
-        <link rel="stylesheet" href="/static/greeble/greeble-core.css" />
-        <style>
-          body {
-            font-family: system-ui, -apple-system, Segoe UI,
-              Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
-            padding: 2rem;
-          }
-          main { display: grid; gap: 1rem; }
-          table, th, td { border: 1px solid #2a2a32; border-collapse: collapse; }
-          th, td { padding: .5rem .75rem; }
-          .stack { display: grid; gap: .75rem; }
-          .cluster { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; }
-          .demo-card { padding: 1rem; border: 1px solid #2a2a32; border-radius: 10px; }
-        </style>
-        <script src="https://unpkg.com/htmx.org@1.9.12"></script>
-        <script src="https://unpkg.com/htmx.org/dist/ext/sse.js"></script>
-      </head>
-      <body>
-        <header class="cluster">
-          <a href="/">Home</a>
-          <strong>Greeble FastAPI Demo</strong>
-        </header>
-        <main class="stack">
-          <div class="demo-card">$body_html</div>
-        </main>
-      </body>
-    </html>
-    """
+        textwrap.dedent(
+            """
+            <!doctype html>
+            <html lang="en">
+              <head>
+                <meta charset="utf-8" />
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+                <title>$title</title>
+                $assets
+              </head>
+              <body>
+                <header class="site-header">
+                  <div class="cluster">
+                    <strong>Greeble FastAPI Demo</strong>
+                    <nav class="cluster" aria-label="Demo navigation">
+                      <a href="/">Home</a>
+                    </nav>
+                  </div>
+                  <div class="cluster">
+                    <a class="greeble-button greeble-button--ghost" href="https://github.com/bakobiibizo/greeble">Source</a>
+                  </div>
+                </header>
+                <div id="greeble-toasts" class="greeble-toast-region" aria-live="polite" aria-label="Notifications"></div>
+                <main class="site-main">
+                  <div class="card stack">$body_html</div>
+                </main>
+              </body>
+            </html>
+            """
+        )
     )
-    return HTMLResponse(html_tpl.substitute(title=title, body_html=body_html))
+    return HTMLResponse(html_tpl.substitute(title=title, body_html=body_html, assets=head_markup()))
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -97,23 +94,27 @@ def index() -> HTMLResponse:
         ("/demo/tabs", "Tabs (page) + GET /tabs/{tabKey}"),
         ("/demo/table", "Table (page) + GET /table?page=&sort="),
         ("/demo/modal", "Modal (page) + GET /modal/example, /modal/close, POST /modal/submit"),
-        ("/demo/toast", "Toasts (page) + POST /notify (OOB)"),
+        ("/demo/toast", "Toasts (page) + POST /notify"),
         ("/demo/drawer", "Drawer (page) + GET /drawer/open, /drawer/close"),
         ("/demo/palette", "Palette (page) + POST /palette/search"),
         ("/demo/stepper", "Stepper (page) + GET /stepper/{stepKey}"),
         ("/demo/infinite-list", "Infinite List (page) + GET /list"),
-        ("/demo/sse", "SSE demo (page) + GET /stream -> OOB fragments"),
+        ("/demo/sse", "SSE demo (page) + GET /stream"),
     ]
     lis = "\n".join([f'<li><a href="{href}">{label}</a></li>' for href, label in items])
     return render_page(
         "Demo Index",
-        f"""
-        <h1>Greeble FastAPI Demo</h1>
-        <p>Pages render trigger markup. Use the UI to call HTMX partial endpoints.</p>
-        <ul>
-        {lis}
-        </ul>
-        """,
+        textwrap.dedent(
+            f"""
+            <div class="stack">
+              <h1 class="text-gradient">Greeble FastAPI Demo</h1>
+              <p>Pages render trigger markup. Use the UI to call HTMX partial endpoints.</p>
+              <ul class="stack" style="list-style:none; padding:0; margin:0; text-align:left;">
+              {lis}
+              </ul>
+            </div>
+            """
+        ).strip(),
     )
 
 
@@ -172,7 +173,8 @@ def table_rows(request: Request) -> HTMLResponse:
     q = request.query_params
     page = q.get("page", "1")
     sort = q.get("sort", "")
-    return HTMLResponse(f"<tr><td>Row page={page} sort={sort}</td></tr>")
+    query = q.get("query", "")
+    return HTMLResponse(render_table(page=page, sort=sort, query=query))
 
 
 # --- Modal ----------------------------------------------------------------------
@@ -267,7 +269,7 @@ def palette_page(request: Request) -> Response:
 
 @app.post("/palette/search", response_class=HTMLResponse)
 def palette_search(q: str = Form("")) -> HTMLResponse:  # noqa: ARG001
-    html = '<ul role="listbox"><li role="option">Result</li></ul>'
+    html = render_palette_results(query=q)
     return HTMLResponse(html)
 
 
@@ -281,8 +283,22 @@ def stepper_page(request: Request) -> Response:
 
 
 @app.get("/stepper/{stepKey}", response_class=HTMLResponse)
-def stepper_partial(stepKey: str) -> HTMLResponse:  # noqa: ARG001
-    return HTMLResponse("<section>Step content</section>")
+def stepper_partial(stepKey: str) -> HTMLResponse:
+    content = STEP_CONTENT.get(stepKey)
+    if content is None:
+        return HTMLResponse("<div class='greeble-card'>Unknown step.</div>", status_code=404)
+
+    items = "".join(f"<li>{item}</li>" for item in content.get("tasks", []))
+    body = textwrap.dedent(
+        f"""
+        <section class="stack" hx-target="#stepper-panel" hx-swap="innerHTML">
+          <h3 class="greeble-heading-3">{content["title"]}</h3>
+          <p>{content["description"]}</p>
+          <ul class="stack">{items}</ul>
+        </section>
+        """
+    ).strip()
+    return HTMLResponse(body)
 
 
 # --- Infinite List --------------------------------------------------------------
@@ -296,7 +312,10 @@ def infinite_list_page(request: Request) -> Response:
 
 @app.get("/list", response_class=HTMLResponse)
 def infinite_list_items() -> HTMLResponse:
-    return HTMLResponse("<li>New Item</li>")
+    global _infinite_index
+    item = INFINITE_ITEMS[_infinite_index % len(INFINITE_ITEMS)]
+    _infinite_index += 1
+    return HTMLResponse(f"<li>{item}</li>")
 
 
 # --- SSE (Server-Sent Events) Demo --------------------------------------------

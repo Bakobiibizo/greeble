@@ -9,12 +9,15 @@ Usage:
 
 from __future__ import annotations
 
-import json
+import warnings
+from collections.abc import Mapping
 from typing import Any
 
 from django import template
-from django.middleware.csrf import get_token
 from django.utils.safestring import mark_safe
+
+from ..csrf import csrf_headers_json, serialize_headers
+from ..pagination import Pagination, pagination_context
 
 register = template.Library()
 
@@ -31,15 +34,54 @@ def greeble_toast_container() -> str:
 
 @register.simple_tag(takes_context=True)
 def greeble_csrf_headers(context: template.Context) -> str:
-    """Return a JSON string for hx-headers carrying the CSRF token."""
+    """Return a JSON string for `hx-headers` carrying the CSRF token."""
+
     request = context.get("request")
     if request is None:
         return "{}"
-    token = get_token(request)
-    return json.dumps({"X-CSRFToken": token})
+    return csrf_headers_json(request)
 
 
 @register.filter(name="hx_headers")
-def hx_headers(headers: dict[str, Any] | None) -> str:
-    """Serialize a dict to a JSON string for hx-headers usage."""
-    return json.dumps(headers or {})
+def hx_headers(headers: Mapping[str, Any] | None) -> str:
+    """Serialize a mapping to a JSON string for `hx-headers` usage."""
+
+    return serialize_headers(headers)
+
+
+@register.simple_tag(takes_context=True)
+def greeble_pagination_context(
+    context: template.Context,
+    pagination: Pagination,
+    *,
+    base_url: str | None = None,
+    query_params: Mapping[str, Any] | None = None,
+    page_param: str = "page",
+    window: int = 2,
+) -> dict[str, Any]:
+    """Return a pagination context suitable for rendering Greeble controls."""
+
+    request = context.get("request")
+    if base_url is None:
+        if request is None:
+            warnings.warn(
+                "greeble_pagination_context: request missing from context; provide base_url explicitly",
+                stacklevel=2,
+            )
+        base_url = request.path if request is not None else "/"
+
+    params: dict[str, Any]
+    if query_params is not None:
+        params = dict(query_params)
+    elif request is not None:
+        params = {k: request.GET.get(k) for k in request.GET}
+    else:
+        params = {}
+
+    return pagination_context(
+        pagination,
+        base_url=base_url,
+        query_params=params,
+        page_param=page_param,
+        window=window,
+    )

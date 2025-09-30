@@ -1,26 +1,16 @@
 from __future__ import annotations
 
 import os
-from pathlib import Path
 from typing import Any
 
 from flask import Flask, render_template, request
-from werkzeug.middleware.shared_data import SharedDataMiddleware
 
+from examples.shared.assets import apply_flask_assets
 from greeble.adapters import flask as g_flask
 
 app = Flask(__name__)
 
-# Mount canonical core assets and repo public images under /static/
-ROOT = Path(__file__).resolve().parents[2]
-CORE_ASSETS = ROOT / "packages" / "greeble_core" / "assets" / "css"
-app.wsgi_app = SharedDataMiddleware(  # type: ignore[assignment]
-    app.wsgi_app,
-    {
-        "/static/greeble": str(CORE_ASSETS),
-        "/static/images": str(ROOT / "public" / "images"),
-    },
-)
+apply_flask_assets(app)
 
 
 @app.get("/")

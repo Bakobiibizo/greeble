@@ -1,3 +1,13 @@
+## [0.1.4] - 2025-09-29
+
+### other
+- Refresh documentation site and landing assets (6cc2ae9)
+- Expand FastAPI demo with richer HTMX samples (38daece)
+- Harden Django adapter and demo integration (edddf90)
+- Refresh Flask demo with Greeble components (b57660a)
+- Enhance CLI starter assets and Tailwind preset (e65ddc8)
+- Clean starter landing assets (2fe5a7f)
+
 ## [0.1.3] - 2025-09-26
 
 ### feat

@@ -5,14 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Greeble Django Demo</title>
-    <link rel="stylesheet" href="/static/greeble/greeble-core.css" />
-    <link rel="stylesheet" href="/static/greeble/greeble-landing.css" />
-    <link rel="icon" href="/static/images/greeble-icon-black.svg" type="image/svg+xml" media="(prefers-color-scheme: light)" />
-    <link rel="icon" href="/static/images/greeble-icon-alpha-white.png" sizes="any" media="(prefers-color-scheme: dark)" />
-    <script src="https://unpkg.com/htmx.org@1.9.12" defer></script>
-    <script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
-    <script type="text/hyperscript" src="/static/greeble/hyperscript/greeble.hyperscript"></script>
-    <script type="text/hyperscript" src="/static/greeble/hyperscript/toast.hyperscript"></script>
+    {{ greeble_head_assets|safe }}
   </head>
   <body>
     <header class="site-header">

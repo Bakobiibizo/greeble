@@ -30,7 +30,6 @@ STARTER_COMPONENTS: tuple[str, ...] = (
 STARTER_STATIC_FILES = {
     "static/site.css": "site.css",
     "static/logo.svg": "logo.svg",
-    "static/greeble/greeble-landing.css": "greeble-landing.css",
 }
 
 HYPERSCRIPT_DEST = Path("static/greeble/hyperscript/greeble.hyperscript")
@@ -64,6 +63,7 @@ LANDING_STYLES_DEST = Path("static/greeble/greeble-landing.css")
 HYPERSCRIPT_REPO_PATH = (
     REPO_ROOT / "packages" / "greeble_hyperscript" / "assets" / "greeble.hyperscript"
 )
+LOGO_SOURCE = TEMPLATES_DIR / "logo.svg"
 
 
 def _write_file(destination: Path, template_name: str, *, dry_run: bool) -> None:
@@ -76,48 +76,58 @@ def _write_file(destination: Path, template_name: str, *, dry_run: bool) -> None
     shutil.copy2(source, destination)
 
 
-def _copy_landing_styles(destination: Path, *, dry_run: bool) -> None:
+def _copy_landing_styles(destination: Path, *, dry_run: bool, force: bool = False) -> None:
     if dry_run:
         return
     destination.parent.mkdir(parents=True, exist_ok=True)
+
+    def copy_from(source: Path) -> bool:
+        if not source.is_file():
+            return False
+        if destination.exists() and not force:
+            raise StarterError(f"Landing stylesheet already exists: {destination}")
+        shutil.copy2(source, destination)
+        return True
 
     with contextlib.suppress(ModuleNotFoundError, FileNotFoundError):
         traversable = resources.files("greeble_core").joinpath(
             "assets", "css", "greeble-landing.css"
         )
         with resources.as_file(traversable) as path:
-            source = Path(path)
-            if source.is_file():
-                shutil.copy2(source, destination)
+            if copy_from(Path(path)):
                 return
 
     repo_candidate = (
         REPO_ROOT / "packages" / "greeble_core" / "assets" / "css" / "greeble-landing.css"
     )
-    if repo_candidate.is_file():
-        shutil.copy2(repo_candidate, destination)
+    if copy_from(repo_candidate):
         return
 
     raise StarterError("Landing stylesheet could not be located in greeble_core assets")
 
 
-def _copy_hyperscript_bundle(destination: Path, *, dry_run: bool) -> None:
+def _copy_hyperscript_bundle(destination: Path, *, dry_run: bool, force: bool = False) -> None:
     if dry_run:
         return
     destination.parent.mkdir(parents=True, exist_ok=True)
+
+    def copy_from(source: Path) -> bool:
+        if not source.is_file():
+            return False
+        if destination.exists() and not force:
+            raise StarterError(f"Hyperscript bundle already exists: {destination}")
+        shutil.copy2(source, destination)
+        return True
 
     with contextlib.suppress(ModuleNotFoundError, FileNotFoundError):
         traversable = resources.files("greeble_hyperscript").joinpath(
             "assets", "greeble.hyperscript"
         )
         with resources.as_file(traversable) as path:
-            source = Path(path)
-            if source.is_file():
-                shutil.copy2(source, destination)
+            if copy_from(Path(path)):
                 return
 
-    if HYPERSCRIPT_REPO_PATH.is_file():
-        shutil.copy2(HYPERSCRIPT_REPO_PATH, destination)
+    if copy_from(HYPERSCRIPT_REPO_PATH):
         return
 
     raise StarterError("Hyperscript bundle could not be located in greeble_hyperscript assets")
@@ -168,11 +178,11 @@ def scaffold_starter(
         project_files.append(dest)
 
     landing_dest = project_root / LANDING_STYLES_DEST
-    _copy_landing_styles(landing_dest, dry_run=dry_run)
+    _copy_landing_styles(landing_dest, dry_run=dry_run, force=force)
     project_files.append(landing_dest)
 
     hyperscript_dest = project_root / HYPERSCRIPT_DEST
-    _copy_hyperscript_bundle(hyperscript_dest, dry_run=dry_run)
+    _copy_hyperscript_bundle(hyperscript_dest, dry_run=dry_run, force=force)
     project_files.append(hyperscript_dest)
 
     index_dest = project_root / "templates/index.html"

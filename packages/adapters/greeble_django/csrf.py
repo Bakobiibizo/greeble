@@ -49,6 +49,5 @@ def serialize_headers(headers: Mapping[str, Any] | None) -> str:
     raise predictable ``TypeError`` exceptions rather than silently failing.
     """
 
-    if headers is None:
-        return "{}"
-    return json.dumps(dict(headers))
+    payload = {} if headers is None else dict(headers)
+    return json.dumps(payload)

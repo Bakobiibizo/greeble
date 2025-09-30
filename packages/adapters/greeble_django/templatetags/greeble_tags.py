@@ -9,6 +9,7 @@ Usage:
 
 from __future__ import annotations
 
+import warnings
 from collections.abc import Mapping
 from typing import Any
 
@@ -63,8 +64,11 @@ def greeble_pagination_context(
     request = context.get("request")
     if base_url is None:
         if request is None:
-            raise ValueError("base_url is required when no request is present in the context")
-        base_url = request.path
+            warnings.warn(
+                "greeble_pagination_context: request missing from context; provide base_url explicitly",
+                stacklevel=2,
+            )
+        base_url = request.path if request is not None else "/"
 
     params: dict[str, Any]
     if query_params is not None:

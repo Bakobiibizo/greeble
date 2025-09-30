@@ -7,6 +7,7 @@ from pathlib import Path
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from flask import Flask
+from markupsafe import Markup
 from werkzeug.middleware.shared_data import SharedDataMiddleware
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -81,7 +82,7 @@ def public_images_path() -> Path:
     return PUBLIC_IMAGES
 
 
-def head_markup() -> str:
-    """HTML snippet pointing to the canonical Greeble assets."""
+def head_markup() -> Markup:
+    """Return the head asset HTML marked safe for template engines."""
 
-    return _HEAD_MARKUP
+    return Markup(_HEAD_MARKUP)

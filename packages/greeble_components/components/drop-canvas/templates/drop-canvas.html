@@ -1,0 +1,54 @@
+<!-- Drop Canvas (Copy & Paste Ready)
+A drop target for building pipelines/workflows from draggable cards.
+Use with draggable-card component for complete drag-and-drop UIs.
+-->
+<div class="greeble-drop-canvas" id="drop-canvas" data-greeble-drop-canvas>
+  <!-- Header with actions -->
+  <div class="greeble-drop-canvas__header">
+    <h3 class="greeble-drop-canvas__title">Pipeline</h3>
+    <div class="greeble-drop-canvas__actions">
+      <button type="button" class="greeble-button greeble-button--small greeble-button--ghost" id="drop-canvas-clear">
+        Clear
+      </button>
+    </div>
+  </div>
+
+  <!-- Drop zone for steps -->
+  <div class="greeble-drop-canvas__zone" id="drop-canvas-zone">
+    <!-- Empty state -->
+    <div class="greeble-drop-canvas__empty" id="drop-canvas-empty">
+      <svg class="greeble-drop-canvas__empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="17 8 12 3 7 8"/>
+        <line x1="12" y1="3" x2="12" y2="15"/>
+      </svg>
+      <p class="greeble-drop-canvas__empty-text">Drag items here to build a pipeline</p>
+    </div>
+
+    <!-- Steps container (populated dynamically) -->
+    <div class="greeble-drop-canvas__steps" id="drop-canvas-steps"></div>
+  </div>
+
+  <!-- Run button -->
+  <div class="greeble-drop-canvas__footer">
+    <button
+      type="button"
+      class="greeble-button greeble-button--primary greeble-drop-canvas__run"
+      id="drop-canvas-run"
+      disabled
+      hx-post="/pipeline/run"
+      hx-target="#drop-canvas-output"
+      hx-swap="innerHTML"
+    >
+      <span class="greeble-drop-canvas__run-text">Run Pipeline</span>
+      <span class="greeble-drop-canvas__run-spinner htmx-indicator">
+        <svg class="greeble-spinner" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="60" stroke-linecap="round"/>
+        </svg>
+      </span>
+    </button>
+  </div>
+</div>
+
+<!-- Output area -->
+<div id="drop-canvas-output" class="greeble-drop-canvas__output" aria-live="polite"></div>

@@ -1,0 +1,275 @@
+.greeble-drop-canvas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--greeble-spacing-3, 0.75rem);
+  background: var(--greeble-color-surface, #151518);
+  border-radius: var(--greeble-radius-medium, 12px);
+  padding: var(--greeble-spacing-4, 1rem);
+}
+
+.greeble-drop-canvas__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.greeble-drop-canvas__title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--greeble-color-foreground, #e8e8ea);
+}
+
+.greeble-drop-canvas__actions {
+  display: flex;
+  gap: var(--greeble-spacing-2, 0.5rem);
+}
+
+/* Drop Zone */
+.greeble-drop-canvas__zone {
+  min-height: 10rem;
+  padding: var(--greeble-spacing-4, 1rem);
+  border: 2px dashed var(--greeble-color-border, rgba(255, 255, 255, 0.15));
+  border-radius: var(--greeble-radius-small, 8px);
+  transition: all 0.2s ease;
+}
+
+.greeble-drop-canvas__zone--dragover {
+  border-color: var(--greeble-color-accent, #6aa1ff);
+  background: rgba(106, 161, 255, 0.05);
+}
+
+.greeble-drop-canvas__zone--has-steps {
+  border-style: solid;
+  border-color: var(--greeble-color-border, rgba(255, 255, 255, 0.15));
+}
+
+/* Empty State */
+.greeble-drop-canvas__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--greeble-spacing-2, 0.5rem);
+  padding: var(--greeble-spacing-6, 1.5rem);
+  text-align: center;
+}
+
+.greeble-drop-canvas__empty[hidden] {
+  display: none;
+}
+
+.greeble-drop-canvas__empty-icon {
+  inline-size: 3rem;
+  block-size: 3rem;
+  color: var(--greeble-color-muted, rgba(232, 232, 234, 0.3));
+}
+
+.greeble-drop-canvas__empty-text {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--greeble-color-muted, rgba(232, 232, 234, 0.5));
+}
+
+/* Steps Container */
+.greeble-drop-canvas__steps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--greeble-spacing-2, 0.5rem);
+}
+
+/* Individual Step */
+.greeble-drop-canvas__step {
+  display: flex;
+  flex-direction: column;
+  gap: var(--greeble-spacing-1, 0.25rem);
+  padding: var(--greeble-spacing-3, 0.75rem);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--greeble-radius-small, 8px);
+  transition: all 0.15s ease;
+}
+
+.greeble-drop-canvas__step:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.greeble-drop-canvas__step-header {
+  display: flex;
+  align-items: center;
+  gap: var(--greeble-spacing-2, 0.5rem);
+}
+
+.greeble-drop-canvas__step-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #fff;
+  background: var(--greeble-color-accent, #6aa1ff);
+  border-radius: 50%;
+}
+
+.greeble-drop-canvas__step-title {
+  flex: 1;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--greeble-color-foreground, #e8e8ea);
+}
+
+.greeble-drop-canvas__step-actions {
+  display: flex;
+  gap: var(--greeble-spacing-1, 0.25rem);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.greeble-drop-canvas__step:hover .greeble-drop-canvas__step-actions {
+  opacity: 1;
+}
+
+.greeble-drop-canvas__step-move,
+.greeble-drop-canvas__step-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+  padding: 0;
+  font-size: 0.75rem;
+  color: var(--greeble-color-muted, rgba(232, 232, 234, 0.5));
+  background: transparent;
+  border: none;
+  border-radius: var(--greeble-radius-small, 8px);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.greeble-drop-canvas__step-move:hover {
+  color: var(--greeble-color-foreground, #e8e8ea);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.greeble-drop-canvas__step-remove:hover {
+  color: var(--greeble-color-danger, #ef4444);
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.greeble-drop-canvas__step-move:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.greeble-drop-canvas__step-types {
+  display: flex;
+  align-items: center;
+  gap: var(--greeble-spacing-1, 0.25rem);
+  padding-left: calc(1.5rem + var(--greeble-spacing-2, 0.5rem));
+}
+
+.greeble-drop-canvas__step-arrow {
+  color: var(--greeble-color-muted, rgba(232, 232, 234, 0.5));
+  font-size: 0.75rem;
+}
+
+/* Connector */
+.greeble-drop-canvas__connector {
+  display: flex;
+  justify-content: center;
+  padding: var(--greeble-spacing-1, 0.25rem) 0;
+  color: var(--greeble-color-muted, rgba(232, 232, 234, 0.3));
+}
+
+.greeble-drop-canvas__connector svg {
+  inline-size: 1rem;
+  block-size: 1rem;
+}
+
+/* Footer */
+.greeble-drop-canvas__footer {
+  display: flex;
+  gap: var(--greeble-spacing-2, 0.5rem);
+}
+
+.greeble-drop-canvas__run {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--greeble-spacing-2, 0.5rem);
+}
+
+.greeble-drop-canvas__run:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.greeble-drop-canvas__run-spinner {
+  display: none;
+}
+
+.greeble-drop-canvas__run.htmx-request .greeble-drop-canvas__run-spinner {
+  display: inline-flex;
+}
+
+.greeble-drop-canvas__run.htmx-request .greeble-drop-canvas__run-text {
+  display: none;
+}
+
+/* Spinner */
+.greeble-spinner {
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  animation: greeble-spin 1s linear infinite;
+}
+
+@keyframes greeble-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Output */
+.greeble-drop-canvas__output {
+  margin-top: var(--greeble-spacing-4, 1rem);
+}
+
+.greeble-drop-canvas__output:empty {
+  display: none;
+}
+
+/* Type error toast */
+.greeble-drop-canvas__error {
+  position: fixed;
+  bottom: var(--greeble-spacing-4, 1rem);
+  right: var(--greeble-spacing-4, 1rem);
+  padding: var(--greeble-spacing-3, 0.75rem) var(--greeble-spacing-4, 1rem);
+  background: var(--greeble-color-danger, #ef4444);
+  color: #fff;
+  border-radius: var(--greeble-radius-small, 8px);
+  box-shadow: var(--greeble-shadow-2, 0 8px 30px rgba(0, 0, 0, 0.35));
+  z-index: 1000;
+  animation: greeble-slide-in 0.2s ease;
+}
+
+@keyframes greeble-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.greeble-drop-canvas__error-title {
+  font-weight: 600;
+  margin-bottom: var(--greeble-spacing-1, 0.25rem);
+}
+
+.greeble-drop-canvas__error-message {
+  font-size: 0.875rem;
+  opacity: 0.9;
+}

@@ -1,0 +1,56 @@
+<!-- Drop Zone (Copy & Paste Ready)
+A drag-and-drop file upload area with HTMX integration.
+Configure accepted file types, endpoint, and target via attributes.
+-->
+<div
+  class="greeble-drop-zone"
+  id="drop-zone"
+  data-greeble-drop-zone
+  data-accept=".pdf,.docx,.txt,.png,.jpg,.mp3,.wav"
+  data-max-size="10485760"
+  data-multiple="true"
+>
+  <input
+    type="file"
+    id="drop-zone-input"
+    class="greeble-drop-zone__input"
+    accept=".pdf,.docx,.txt,.png,.jpg,.mp3,.wav"
+    multiple
+    aria-describedby="drop-zone-help"
+  />
+  
+  <div class="greeble-drop-zone__content">
+    <svg class="greeble-drop-zone__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+      <polyline points="17 8 12 3 7 8"/>
+      <line x1="12" y1="3" x2="12" y2="15"/>
+    </svg>
+    <div class="greeble-drop-zone__text">
+      <p class="greeble-drop-zone__title">Drop files here</p>
+      <p class="greeble-drop-zone__subtitle" id="drop-zone-help">or click to browse</p>
+    </div>
+  </div>
+
+  <div class="greeble-drop-zone__files" id="drop-zone-files" hidden>
+    <!-- File list will be populated here -->
+  </div>
+
+  <div class="greeble-drop-zone__actions" id="drop-zone-actions" hidden>
+    <button type="button" class="greeble-button greeble-button--secondary greeble-button--small" id="drop-zone-clear">
+      Clear
+    </button>
+    <button
+      type="button"
+      class="greeble-button greeble-button--primary greeble-button--small"
+      id="drop-zone-upload"
+      hx-post="/files/upload"
+      hx-target="#drop-zone-result"
+      hx-swap="innerHTML"
+      hx-encoding="multipart/form-data"
+    >
+      Upload
+    </button>
+  </div>
+</div>
+
+<div id="drop-zone-result" aria-live="polite"></div>

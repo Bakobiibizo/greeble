@@ -5,6 +5,7 @@
 - **Outputs:** Ordered list of steps; run event with pipeline data.
 - **Dependencies:** Works with draggable-card component; HTMX optional for run action.
 - **Endpoints:** `POST /pipeline/run` (configurable via `hx-post`).
+- **Security:** See [Security Considerations](#security-considerations) below.
 - **Events:**
   - `greeble:canvas:stepadded` - Step added to pipeline
   - `greeble:canvas:stepremoved` - Step removed from pipeline
@@ -102,3 +103,52 @@ The canvas validates that each step's output type is compatible with the next st
 | audio | audio |
 | video | video |
 | any | (all types) |
+
+## Security Considerations
+
+When using this component with HTMX, ensure your backend implements proper security measures:
+
+### CSRF Protection
+
+Add a CSRF token to the run button:
+
+```html
+<button
+  id="drop-canvas-run"
+  hx-post="/pipeline/run"
+  hx-headers='{"X-CSRF-Token": "{{ csrf_token }}"}'
+>
+  Run Pipeline
+</button>
+```
+
+### Input Validation
+
+The component sanitizes step data before rendering, but your backend should also:
+
+1. **Validate step IDs** - Ensure they match expected patterns
+2. **Sanitize step titles** - Escape HTML/script content
+3. **Verify step types** - Check against a whitelist of allowed types
+4. **Authenticate requests** - Verify user has permission to run pipelines
+
+### Example Backend (Python/FastAPI)
+
+```python
+from fastapi import Depends, HTTPException
+from fastapi.security import CSRFProtect
+
+@app.post("/pipeline/run")
+async def run_pipeline(
+    steps: list[dict],
+    csrf_token: str = Depends(verify_csrf_token),
+    user: User = Depends(get_current_user)
+):
+    # Validate each step
+    for step in steps:
+        if not is_valid_step_id(step.get('id')):
+            raise HTTPException(400, "Invalid step ID")
+        if not is_allowed_type(step.get('produces')):
+            raise HTTPException(400, "Invalid step type")
+    
+    # Process pipeline...
+```

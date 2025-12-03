@@ -1,4 +1,36 @@
-/* Draggable Card */
+/* ==========================================================================
+   Draggable Card Component
+   
+   A draggable card for building pipeline/workflow interfaces.
+   Use with drop-canvas for complete drag-and-drop UIs.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Category Color Tokens
+   
+   These CSS custom properties define the color scheme for each category.
+   Override these to customize the appearance for your design system.
+   -------------------------------------------------------------------------- */
+:root {
+  /* Category: Ingestor (Blue) - Data input/ingestion services */
+  --greeble-category-ingestor: 59, 130, 246;
+  
+  /* Category: Generator (Purple) - Content generation services */
+  --greeble-category-generator: 139, 92, 246;
+  
+  /* Category: Formatter (Green) - Output formatting services */
+  --greeble-category-formatter: 16, 185, 129;
+  
+  /* Category: Processor (Pink) - Data processing services */
+  --greeble-category-processor: 236, 72, 153;
+  
+  /* Category: Tool (Orange) - Utility/tool services */
+  --greeble-category-tool: 249, 115, 22;
+}
+
+/* --------------------------------------------------------------------------
+   Base Card Styles
+   -------------------------------------------------------------------------- */
 .greeble-draggable-card {
   display: flex;
   flex-direction: column;
@@ -61,55 +93,66 @@
   line-height: 1.4;
 }
 
-/* Category Variants */
+/* --------------------------------------------------------------------------
+   Category Variants
+   
+   Each category uses CSS custom properties for consistent theming.
+   The RGB values allow for alpha channel manipulation.
+   -------------------------------------------------------------------------- */
+
+/* Ingestor: Blue - Data input/ingestion services */
 .greeble-draggable-card--ingestor {
-  background: rgba(59, 130, 246, 0.1);
-  border-color: rgba(59, 130, 246, 0.3);
+  background: rgba(var(--greeble-category-ingestor), 0.1);
+  border-color: rgba(var(--greeble-category-ingestor), 0.3);
 }
 
 .greeble-draggable-card--ingestor:hover {
-  border-color: rgba(59, 130, 246, 0.6);
-  background: rgba(59, 130, 246, 0.15);
+  border-color: rgba(var(--greeble-category-ingestor), 0.6);
+  background: rgba(var(--greeble-category-ingestor), 0.15);
 }
 
+/* Generator: Purple - Content generation services */
 .greeble-draggable-card--generator {
-  background: rgba(139, 92, 246, 0.1);
-  border-color: rgba(139, 92, 246, 0.3);
+  background: rgba(var(--greeble-category-generator), 0.1);
+  border-color: rgba(var(--greeble-category-generator), 0.3);
 }
 
 .greeble-draggable-card--generator:hover {
-  border-color: rgba(139, 92, 246, 0.6);
-  background: rgba(139, 92, 246, 0.15);
+  border-color: rgba(var(--greeble-category-generator), 0.6);
+  background: rgba(var(--greeble-category-generator), 0.15);
 }
 
+/* Formatter: Green - Output formatting services */
 .greeble-draggable-card--formatter {
-  background: rgba(16, 185, 129, 0.1);
-  border-color: rgba(16, 185, 129, 0.3);
+  background: rgba(var(--greeble-category-formatter), 0.1);
+  border-color: rgba(var(--greeble-category-formatter), 0.3);
 }
 
 .greeble-draggable-card--formatter:hover {
-  border-color: rgba(16, 185, 129, 0.6);
-  background: rgba(16, 185, 129, 0.15);
+  border-color: rgba(var(--greeble-category-formatter), 0.6);
+  background: rgba(var(--greeble-category-formatter), 0.15);
 }
 
+/* Processor: Pink - Data processing services */
 .greeble-draggable-card--processor {
-  background: rgba(236, 72, 153, 0.1);
-  border-color: rgba(236, 72, 153, 0.3);
+  background: rgba(var(--greeble-category-processor), 0.1);
+  border-color: rgba(var(--greeble-category-processor), 0.3);
 }
 
 .greeble-draggable-card--processor:hover {
-  border-color: rgba(236, 72, 153, 0.6);
-  background: rgba(236, 72, 153, 0.15);
+  border-color: rgba(var(--greeble-category-processor), 0.6);
+  background: rgba(var(--greeble-category-processor), 0.15);
 }
 
+/* Tool: Orange - Utility/tool services */
 .greeble-draggable-card--tool {
-  background: rgba(249, 115, 22, 0.1);
-  border-color: rgba(249, 115, 22, 0.3);
+  background: rgba(var(--greeble-category-tool), 0.1);
+  border-color: rgba(var(--greeble-category-tool), 0.3);
 }
 
 .greeble-draggable-card--tool:hover {
-  border-color: rgba(249, 115, 22, 0.6);
-  background: rgba(249, 115, 22, 0.15);
+  border-color: rgba(var(--greeble-category-tool), 0.6);
+  background: rgba(var(--greeble-category-tool), 0.15);
 }
 
 /* Compatibility states */
@@ -149,25 +192,25 @@
   color: var(--greeble-color-muted, rgba(232, 232, 234, 0.5));
 }
 
-/* Category title colors */
+/* Category title colors - uses the same color tokens as card variants */
 .greeble-card-palette__category[data-category="ingestor"] .greeble-card-palette__category-title {
-  color: #3B82F6;
+  color: rgb(var(--greeble-category-ingestor));
 }
 
 .greeble-card-palette__category[data-category="generator"] .greeble-card-palette__category-title {
-  color: #8B5CF6;
+  color: rgb(var(--greeble-category-generator));
 }
 
 .greeble-card-palette__category[data-category="formatter"] .greeble-card-palette__category-title {
-  color: #10B981;
+  color: rgb(var(--greeble-category-formatter));
 }
 
 .greeble-card-palette__category[data-category="processor"] .greeble-card-palette__category-title {
-  color: #EC4899;
+  color: rgb(var(--greeble-category-processor));
 }
 
 .greeble-card-palette__category[data-category="tool"] .greeble-card-palette__category-title {
-  color: #F97316;
+  color: rgb(var(--greeble-category-tool));
 }
 
 .greeble-card-palette__cards {

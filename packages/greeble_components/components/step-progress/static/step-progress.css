@@ -1,0 +1,220 @@
+.greeble-step-progress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--greeble-spacing-3, 0.75rem);
+}
+
+.greeble-step-progress[hidden] {
+  display: none;
+}
+
+.greeble-step-progress__steps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--greeble-spacing-2, 0.5rem);
+}
+
+/* Individual Step */
+.greeble-step-progress__step {
+  display: flex;
+  align-items: center;
+  gap: var(--greeble-spacing-3, 0.75rem);
+  padding: var(--greeble-spacing-2, 0.5rem) var(--greeble-spacing-3, 0.75rem);
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: var(--greeble-radius-small, 8px);
+  transition: all 0.2s ease;
+}
+
+/* Step Indicator */
+.greeble-step-progress__step-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 1.75rem;
+  block-size: 1.75rem;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--greeble-color-surface, #151518);
+  border: 2px solid var(--greeble-color-border, rgba(255, 255, 255, 0.15));
+  transition: all 0.2s ease;
+}
+
+.greeble-step-progress__step-number {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--greeble-color-muted, rgba(232, 232, 234, 0.5));
+}
+
+.greeble-step-progress__step-check,
+.greeble-step-progress__step-error {
+  inline-size: 1rem;
+  block-size: 1rem;
+}
+
+.greeble-step-progress__step-spinner {
+  inline-size: 1rem;
+  block-size: 1rem;
+  animation: greeble-spin 1s linear infinite;
+}
+
+@keyframes greeble-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Step Content */
+.greeble-step-progress__step-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--greeble-spacing-2, 0.5rem);
+  min-width: 0;
+}
+
+.greeble-step-progress__step-title {
+  font-size: 0.875rem;
+  color: var(--greeble-color-foreground, #e8e8ea);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.greeble-step-progress__step-time {
+  font-size: 0.75rem;
+  color: var(--greeble-color-muted, rgba(232, 232, 234, 0.5));
+  white-space: nowrap;
+}
+
+/* Status: Pending */
+.greeble-step-progress__step--pending {
+  opacity: 0.5;
+}
+
+.greeble-step-progress__step--pending .greeble-step-progress__step-indicator {
+  border-color: var(--greeble-color-border, rgba(255, 255, 255, 0.15));
+}
+
+/* Status: Active */
+.greeble-step-progress__step--active {
+  background: rgba(106, 161, 255, 0.1);
+}
+
+.greeble-step-progress__step--active .greeble-step-progress__step-indicator {
+  border-color: var(--greeble-color-accent, #6aa1ff);
+  color: var(--greeble-color-accent, #6aa1ff);
+}
+
+.greeble-step-progress__step--active .greeble-step-progress__step-title {
+  color: var(--greeble-color-accent, #6aa1ff);
+}
+
+/* Status: Completed */
+.greeble-step-progress__step--completed .greeble-step-progress__step-indicator {
+  background: var(--greeble-color-success, #22c55e);
+  border-color: var(--greeble-color-success, #22c55e);
+  color: #fff;
+}
+
+.greeble-step-progress__step--completed .greeble-step-progress__step-time {
+  color: var(--greeble-color-success, #22c55e);
+}
+
+/* Status: Error */
+.greeble-step-progress__step--error {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.greeble-step-progress__step--error .greeble-step-progress__step-indicator {
+  background: var(--greeble-color-danger, #ef4444);
+  border-color: var(--greeble-color-danger, #ef4444);
+  color: #fff;
+}
+
+.greeble-step-progress__step--error .greeble-step-progress__step-title {
+  color: var(--greeble-color-danger, #ef4444);
+}
+
+.greeble-step-progress__step--error .greeble-step-progress__step-time {
+  color: var(--greeble-color-danger, #ef4444);
+}
+
+/* Status: Skipped */
+.greeble-step-progress__step--skipped {
+  opacity: 0.4;
+}
+
+.greeble-step-progress__step--skipped .greeble-step-progress__step-indicator {
+  background: var(--greeble-color-muted, rgba(232, 232, 234, 0.5));
+  border-color: transparent;
+}
+
+/* Total Time */
+.greeble-step-progress__total {
+  display: flex;
+  align-items: center;
+  gap: var(--greeble-spacing-2, 0.5rem);
+  padding-top: var(--greeble-spacing-2, 0.5rem);
+  border-top: 1px solid var(--greeble-color-border, rgba(255, 255, 255, 0.1));
+  font-size: 0.75rem;
+  color: var(--greeble-color-muted, rgba(232, 232, 234, 0.5));
+}
+
+.greeble-step-progress__total[hidden] {
+  display: none;
+}
+
+#step-progress-total-time {
+  font-weight: 600;
+  color: var(--greeble-color-foreground, #e8e8ea);
+}
+
+/* Compact variant */
+.greeble-step-progress--compact .greeble-step-progress__step {
+  padding: var(--greeble-spacing-1, 0.25rem) var(--greeble-spacing-2, 0.5rem);
+}
+
+.greeble-step-progress--compact .greeble-step-progress__step-indicator {
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+}
+
+.greeble-step-progress--compact .greeble-step-progress__step-number {
+  font-size: 0.625rem;
+}
+
+.greeble-step-progress--compact .greeble-step-progress__step-check,
+.greeble-step-progress--compact .greeble-step-progress__step-spinner {
+  inline-size: 0.75rem;
+  block-size: 0.75rem;
+}
+
+/* Horizontal variant */
+.greeble-step-progress--horizontal .greeble-step-progress__steps {
+  flex-direction: row;
+  align-items: center;
+}
+
+.greeble-step-progress--horizontal .greeble-step-progress__step {
+  flex-direction: column;
+  text-align: center;
+  padding: var(--greeble-spacing-2, 0.5rem);
+}
+
+.greeble-step-progress--horizontal .greeble-step-progress__step-content {
+  flex-direction: column;
+}
+
+.greeble-step-progress--horizontal .greeble-step-progress__step::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: -1rem;
+  width: 2rem;
+  height: 2px;
+  background: var(--greeble-color-border, rgba(255, 255, 255, 0.15));
+}
+
+.greeble-step-progress--horizontal .greeble-step-progress__step:last-child::after {
+  display: none;
+}

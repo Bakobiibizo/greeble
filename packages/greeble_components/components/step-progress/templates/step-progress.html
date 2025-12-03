@@ -1,0 +1,48 @@
+<!-- Step Progress (Copy & Paste Ready)
+A progress indicator for multi-step workflows/pipelines.
+Shows step status, timing, and completion state.
+-->
+<div class="greeble-step-progress" id="step-progress" data-greeble-step-progress>
+  <!-- Steps list -->
+  <div class="greeble-step-progress__steps" id="step-progress-steps">
+    <!-- Example steps - replace with dynamic content -->
+    <div class="greeble-step-progress__step greeble-step-progress__step--completed" data-step="1">
+      <div class="greeble-step-progress__step-indicator">
+        <svg class="greeble-step-progress__step-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>
+      <div class="greeble-step-progress__step-content">
+        <span class="greeble-step-progress__step-title">Step 1: File Reader</span>
+        <span class="greeble-step-progress__step-time">245ms</span>
+      </div>
+    </div>
+
+    <div class="greeble-step-progress__step greeble-step-progress__step--active" data-step="2">
+      <div class="greeble-step-progress__step-indicator">
+        <svg class="greeble-step-progress__step-spinner" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="60" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="greeble-step-progress__step-content">
+        <span class="greeble-step-progress__step-title">Step 2: LLM Generator</span>
+        <span class="greeble-step-progress__step-time">Running...</span>
+      </div>
+    </div>
+
+    <div class="greeble-step-progress__step greeble-step-progress__step--pending" data-step="3">
+      <div class="greeble-step-progress__step-indicator">
+        <span class="greeble-step-progress__step-number">3</span>
+      </div>
+      <div class="greeble-step-progress__step-content">
+        <span class="greeble-step-progress__step-title">Step 3: Formatter</span>
+        <span class="greeble-step-progress__step-time">Pending</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Total time -->
+  <div class="greeble-step-progress__total" id="step-progress-total">
+    Total: <span id="step-progress-total-time">245ms</span>
+  </div>
+</div>

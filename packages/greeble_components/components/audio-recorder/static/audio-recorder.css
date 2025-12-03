@@ -1,0 +1,148 @@
+.greeble-audio-recorder {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--greeble-spacing-3, 0.75rem);
+}
+
+.greeble-audio-recorder__button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--greeble-audio-recorder-size, 5rem);
+  block-size: var(--greeble-audio-recorder-size, 5rem);
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+.greeble-audio-recorder__button:focus-visible {
+  outline: none;
+  box-shadow: var(--greeble-focus-ring, 0 0 0 3px rgba(106, 161, 255, 0.5));
+}
+
+.greeble-audio-recorder__button--start {
+  background: var(--greeble-color-danger, #ef4444);
+  color: var(--greeble-color-foreground, #fff);
+}
+
+.greeble-audio-recorder__button--start:hover {
+  background: var(--greeble-color-danger-hover, #dc2626);
+  transform: scale(1.05);
+}
+
+.greeble-audio-recorder__button--stop {
+  background: var(--greeble-color-danger, #ef4444);
+  color: var(--greeble-color-foreground, #fff);
+  animation: greeble-pulse 1.5s ease-in-out infinite;
+}
+
+.greeble-audio-recorder__button--stop:hover {
+  background: var(--greeble-color-danger-hover, #dc2626);
+}
+
+.greeble-audio-recorder__button[hidden] {
+  display: none;
+}
+
+.greeble-audio-recorder__icon {
+  inline-size: 2rem;
+  block-size: 2rem;
+}
+
+.greeble-audio-recorder__status {
+  font-size: 0.875rem;
+  color: var(--greeble-color-muted, rgba(232, 232, 234, 0.72));
+  min-height: 1.25rem;
+}
+
+.greeble-audio-recorder__status--recording {
+  color: var(--greeble-color-danger, #ef4444);
+  font-weight: 500;
+}
+
+.greeble-audio-recorder__preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--greeble-spacing-3, 0.75rem);
+  padding: var(--greeble-spacing-4, 1rem);
+  border-radius: var(--greeble-radius-medium, 12px);
+  background: var(--greeble-color-surface, #151518);
+}
+
+.greeble-audio-recorder__preview[hidden] {
+  display: none;
+}
+
+.greeble-audio-recorder__preview audio {
+  width: 100%;
+  min-width: 250px;
+}
+
+.greeble-audio-recorder__actions {
+  display: flex;
+  gap: var(--greeble-spacing-2, 0.5rem);
+  justify-content: flex-end;
+}
+
+.greeble-audio-recorder__result {
+  display: flex;
+  align-items: center;
+  gap: var(--greeble-spacing-2, 0.5rem);
+  padding: var(--greeble-spacing-3, 0.75rem);
+  border-radius: var(--greeble-radius-small, 8px);
+  font-size: 0.875rem;
+}
+
+.greeble-audio-recorder__result--success {
+  background: rgba(34, 197, 94, 0.12);
+  color: var(--greeble-color-success, #22c55e);
+}
+
+.greeble-audio-recorder__result--error {
+  background: rgba(239, 68, 68, 0.12);
+  color: var(--greeble-color-danger, #ef4444);
+}
+
+.greeble-audio-recorder__result-icon {
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+@keyframes greeble-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 12px rgba(239, 68, 68, 0);
+  }
+}
+
+/* Waveform visualization (optional) */
+.greeble-audio-recorder__waveform {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  height: 2rem;
+}
+
+.greeble-audio-recorder__waveform-bar {
+  width: 4px;
+  background: var(--greeble-color-danger, #ef4444);
+  border-radius: 2px;
+  animation: greeble-waveform 0.5s ease-in-out infinite;
+}
+
+.greeble-audio-recorder__waveform-bar:nth-child(1) { animation-delay: 0s; }
+.greeble-audio-recorder__waveform-bar:nth-child(2) { animation-delay: 0.1s; }
+.greeble-audio-recorder__waveform-bar:nth-child(3) { animation-delay: 0.2s; }
+.greeble-audio-recorder__waveform-bar:nth-child(4) { animation-delay: 0.3s; }
+.greeble-audio-recorder__waveform-bar:nth-child(5) { animation-delay: 0.4s; }
+
+@keyframes greeble-waveform {
+  0%, 100% { height: 8px; }
+  50% { height: 24px; }
+}

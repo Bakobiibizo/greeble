@@ -1,0 +1,243 @@
+/* Draggable Card */
+.greeble-draggable-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--greeble-spacing-1, 0.25rem);
+  padding: var(--greeble-spacing-2, 0.5rem) var(--greeble-spacing-3, 0.75rem);
+  background: var(--greeble-color-surface, #151518);
+  border: 1px solid var(--greeble-color-border, rgba(255, 255, 255, 0.15));
+  border-radius: var(--greeble-radius-small, 8px);
+  cursor: grab;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.greeble-draggable-card:hover {
+  border-color: var(--greeble-color-border-hover, rgba(255, 255, 255, 0.25));
+  background: var(--greeble-color-surface-hover, #1a1a1f);
+}
+
+.greeble-draggable-card:active {
+  cursor: grabbing;
+}
+
+.greeble-draggable-card--dragging {
+  opacity: 0.5;
+  transform: scale(0.98);
+}
+
+.greeble-draggable-card__header {
+  display: flex;
+  align-items: center;
+  gap: var(--greeble-spacing-2, 0.5rem);
+}
+
+.greeble-draggable-card__icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.greeble-draggable-card__title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--greeble-color-foreground, #e8e8ea);
+}
+
+.greeble-draggable-card__types {
+  display: flex;
+  align-items: center;
+  gap: var(--greeble-spacing-1, 0.25rem);
+  font-size: 0.75rem;
+}
+
+.greeble-draggable-card__arrow {
+  color: var(--greeble-color-muted, rgba(232, 232, 234, 0.5));
+}
+
+.greeble-draggable-card__description {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--greeble-color-muted, rgba(232, 232, 234, 0.5));
+  line-height: 1.4;
+}
+
+/* Category Variants */
+.greeble-draggable-card--ingestor {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.greeble-draggable-card--ingestor:hover {
+  border-color: rgba(59, 130, 246, 0.6);
+  background: rgba(59, 130, 246, 0.15);
+}
+
+.greeble-draggable-card--generator {
+  background: rgba(139, 92, 246, 0.1);
+  border-color: rgba(139, 92, 246, 0.3);
+}
+
+.greeble-draggable-card--generator:hover {
+  border-color: rgba(139, 92, 246, 0.6);
+  background: rgba(139, 92, 246, 0.15);
+}
+
+.greeble-draggable-card--formatter {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.greeble-draggable-card--formatter:hover {
+  border-color: rgba(16, 185, 129, 0.6);
+  background: rgba(16, 185, 129, 0.15);
+}
+
+.greeble-draggable-card--processor {
+  background: rgba(236, 72, 153, 0.1);
+  border-color: rgba(236, 72, 153, 0.3);
+}
+
+.greeble-draggable-card--processor:hover {
+  border-color: rgba(236, 72, 153, 0.6);
+  background: rgba(236, 72, 153, 0.15);
+}
+
+.greeble-draggable-card--tool {
+  background: rgba(249, 115, 22, 0.1);
+  border-color: rgba(249, 115, 22, 0.3);
+}
+
+.greeble-draggable-card--tool:hover {
+  border-color: rgba(249, 115, 22, 0.6);
+  background: rgba(249, 115, 22, 0.15);
+}
+
+/* Compatibility states */
+.greeble-draggable-card--compatible {
+  box-shadow: 0 0 0 2px var(--greeble-color-success, #22c55e);
+}
+
+.greeble-draggable-card--incompatible {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* Card Palette */
+.greeble-card-palette {
+  display: flex;
+  flex-direction: column;
+  gap: var(--greeble-spacing-4, 1rem);
+  padding: var(--greeble-spacing-4, 1rem);
+  background: var(--greeble-color-surface, #151518);
+  border-radius: var(--greeble-radius-medium, 12px);
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.greeble-card-palette__category {
+  display: flex;
+  flex-direction: column;
+  gap: var(--greeble-spacing-2, 0.5rem);
+}
+
+.greeble-card-palette__category-title {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--greeble-color-muted, rgba(232, 232, 234, 0.5));
+}
+
+/* Category title colors */
+.greeble-card-palette__category[data-category="ingestor"] .greeble-card-palette__category-title {
+  color: #3B82F6;
+}
+
+.greeble-card-palette__category[data-category="generator"] .greeble-card-palette__category-title {
+  color: #8B5CF6;
+}
+
+.greeble-card-palette__category[data-category="formatter"] .greeble-card-palette__category-title {
+  color: #10B981;
+}
+
+.greeble-card-palette__category[data-category="processor"] .greeble-card-palette__category-title {
+  color: #EC4899;
+}
+
+.greeble-card-palette__category[data-category="tool"] .greeble-card-palette__category-title {
+  color: #F97316;
+}
+
+.greeble-card-palette__cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--greeble-spacing-2, 0.5rem);
+}
+
+/* Type Badges */
+.greeble-type-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.125rem 0.375rem;
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  border-radius: 4px;
+}
+
+.greeble-type-badge--text {
+  background: rgba(5, 150, 105, 0.2);
+  color: #059669;
+}
+
+.greeble-type-badge--docs {
+  background: rgba(234, 88, 12, 0.2);
+  color: #EA580C;
+}
+
+.greeble-type-badge--image {
+  background: rgba(37, 99, 235, 0.2);
+  color: #2563EB;
+}
+
+.greeble-type-badge--audio {
+  background: rgba(8, 145, 178, 0.2);
+  color: #0891B2;
+}
+
+.greeble-type-badge--video {
+  background: rgba(124, 58, 237, 0.2);
+  color: #7C3AED;
+}
+
+.greeble-type-badge--json {
+  background: rgba(217, 119, 6, 0.2);
+  color: #D97706;
+}
+
+.greeble-type-badge--markdown {
+  background: rgba(219, 39, 119, 0.2);
+  color: #DB2777;
+}
+
+.greeble-type-badge--media {
+  background: rgba(13, 148, 136, 0.2);
+  color: #0D9488;
+}
+
+.greeble-type-badge--any {
+  background: rgba(107, 114, 128, 0.2);
+  color: #6B7280;
+}
+
+/* Compact variant */
+.greeble-draggable-card--compact {
+  padding: var(--greeble-spacing-1, 0.25rem) var(--greeble-spacing-2, 0.5rem);
+}
+
+.greeble-draggable-card--compact .greeble-draggable-card__description {
+  display: none;
+}

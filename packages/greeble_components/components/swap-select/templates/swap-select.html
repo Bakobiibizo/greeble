@@ -1,0 +1,50 @@
+<!-- Swap Select (Copy & Paste Ready)
+Two paired select dropdowns with a swap button between them.
+Useful for source/target language selection, unit conversion, etc.
+-->
+<div class="greeble-swap-select" id="swap-select" data-greeble-swap-select>
+  <!-- Left Select -->
+  <div class="greeble-swap-select__field">
+    <label class="greeble-swap-select__label" for="swap-select-left">Source</label>
+    <select
+      id="swap-select-left"
+      name="source"
+      class="greeble-swap-select__select"
+      hx-get="/options/source"
+      hx-trigger="load"
+      hx-target="#swap-select-left"
+      hx-swap="innerHTML"
+    >
+      <option value="">Loading...</option>
+    </select>
+  </div>
+
+  <!-- Swap Button -->
+  <button
+    type="button"
+    class="greeble-swap-select__swap"
+    id="swap-select-button"
+    aria-label="Swap values"
+  >
+    <svg class="greeble-swap-select__swap-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M7 16V4m0 0L3 8m4-4l4 4"/>
+      <path d="M17 8v12m0 0l4-4m-4 4l-4-4"/>
+    </svg>
+  </button>
+
+  <!-- Right Select -->
+  <div class="greeble-swap-select__field">
+    <label class="greeble-swap-select__label" for="swap-select-right">Target</label>
+    <select
+      id="swap-select-right"
+      name="target"
+      class="greeble-swap-select__select"
+      hx-get="/options/target"
+      hx-trigger="load"
+      hx-target="#swap-select-right"
+      hx-swap="innerHTML"
+    >
+      <option value="">Loading...</option>
+    </select>
+  </div>
+</div>

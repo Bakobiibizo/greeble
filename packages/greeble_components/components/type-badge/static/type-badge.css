@@ -1,0 +1,239 @@
+/* Type Badge - Data type indicators */
+.greeble-type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+  padding: 0.125rem 0.375rem;
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+/* Size variants */
+.greeble-type-badge--small {
+  padding: 0.0625rem 0.25rem;
+  font-size: 0.5rem;
+}
+
+.greeble-type-badge--large {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+}
+
+/* With icon */
+.greeble-type-badge--with-icon {
+  padding-left: 0.25rem;
+}
+
+.greeble-type-badge__icon {
+  inline-size: 0.875em;
+  block-size: 0.875em;
+}
+
+/* Type colors */
+.greeble-type-badge--text {
+  background: rgba(5, 150, 105, 0.2);
+  color: #059669;
+}
+
+.greeble-type-badge--json {
+  background: rgba(217, 119, 6, 0.2);
+  color: #D97706;
+}
+
+.greeble-type-badge--docs {
+  background: rgba(234, 88, 12, 0.2);
+  color: #EA580C;
+}
+
+.greeble-type-badge--image {
+  background: rgba(37, 99, 235, 0.2);
+  color: #2563EB;
+}
+
+.greeble-type-badge--audio {
+  background: rgba(8, 145, 178, 0.2);
+  color: #0891B2;
+}
+
+.greeble-type-badge--video {
+  background: rgba(124, 58, 237, 0.2);
+  color: #7C3AED;
+}
+
+.greeble-type-badge--markdown {
+  background: rgba(219, 39, 119, 0.2);
+  color: #DB2777;
+}
+
+.greeble-type-badge--media {
+  background: rgba(13, 148, 136, 0.2);
+  color: #0D9488;
+}
+
+.greeble-type-badge--any {
+  background: rgba(107, 114, 128, 0.2);
+  color: #6B7280;
+}
+
+.greeble-type-badge--file {
+  background: rgba(99, 102, 241, 0.2);
+  color: #6366F1;
+}
+
+.greeble-type-badge--html {
+  background: rgba(239, 68, 68, 0.2);
+  color: #EF4444;
+}
+
+.greeble-type-badge--xml {
+  background: rgba(16, 185, 129, 0.2);
+  color: #10B981;
+}
+
+.greeble-type-badge--csv {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22C55E;
+}
+
+.greeble-type-badge--binary {
+  background: rgba(75, 85, 99, 0.2);
+  color: #4B5563;
+}
+
+/* Outline variant */
+.greeble-type-badge--outline {
+  background: transparent;
+  border: 1px solid currentColor;
+}
+
+/* Type Flow - Shows data transformation */
+.greeble-type-flow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.greeble-type-flow__arrow {
+  color: var(--greeble-color-muted, rgba(232, 232, 234, 0.5));
+  font-size: 0.75rem;
+}
+
+/* Category Badge - For service/card categories */
+.greeble-category-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: 9999px;
+  white-space: nowrap;
+}
+
+.greeble-category-badge--ingestor {
+  background: rgba(59, 130, 246, 0.2);
+  color: #3B82F6;
+}
+
+.greeble-category-badge--generator {
+  background: rgba(139, 92, 246, 0.2);
+  color: #8B5CF6;
+}
+
+.greeble-category-badge--formatter {
+  background: rgba(16, 185, 129, 0.2);
+  color: #10B981;
+}
+
+.greeble-category-badge--processor {
+  background: rgba(236, 72, 153, 0.2);
+  color: #EC4899;
+}
+
+.greeble-category-badge--tool {
+  background: rgba(249, 115, 22, 0.2);
+  color: #F97316;
+}
+
+/* Status Badge - For step/task status */
+.greeble-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.125rem 0.375rem;
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  border-radius: 4px;
+}
+
+.greeble-status-badge--pending {
+  background: rgba(107, 114, 128, 0.2);
+  color: #6B7280;
+}
+
+.greeble-status-badge--active,
+.greeble-status-badge--running {
+  background: rgba(59, 130, 246, 0.2);
+  color: #3B82F6;
+}
+
+.greeble-status-badge--completed,
+.greeble-status-badge--success {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22C55E;
+}
+
+.greeble-status-badge--error,
+.greeble-status-badge--failed {
+  background: rgba(239, 68, 68, 0.2);
+  color: #EF4444;
+}
+
+.greeble-status-badge--warning {
+  background: rgba(245, 158, 11, 0.2);
+  color: #F59E0B;
+}
+
+.greeble-status-badge--skipped {
+  background: rgba(156, 163, 175, 0.2);
+  color: #9CA3AF;
+}
+
+/* Animated status indicator */
+.greeble-status-badge--active::before,
+.greeble-status-badge--running::before {
+  content: '';
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  background: currentColor;
+  border-radius: 50%;
+  animation: greeble-pulse-badge 1.5s ease-in-out infinite;
+}
+
+@keyframes greeble-pulse-badge {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.8);
+  }
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  .greeble-type-badge--text { background: rgba(5, 150, 105, 0.15); }
+  .greeble-type-badge--json { background: rgba(217, 119, 6, 0.15); }
+  .greeble-type-badge--docs { background: rgba(234, 88, 12, 0.15); }
+  .greeble-type-badge--image { background: rgba(37, 99, 235, 0.15); }
+  .greeble-type-badge--audio { background: rgba(8, 145, 178, 0.15); }
+  .greeble-type-badge--video { background: rgba(124, 58, 237, 0.15); }
+  .greeble-type-badge--markdown { background: rgba(219, 39, 119, 0.15); }
+  .greeble-type-badge--media { background: rgba(13, 148, 136, 0.15); }
+}

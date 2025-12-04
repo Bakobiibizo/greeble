@@ -1,0 +1,47 @@
+<!-- Type Badge (Copy & Paste Ready)
+Colored badge for indicating content/data types.
+Use in pipeline builders, file uploads, and data flow visualizations.
+-->
+
+<!-- Basic usage -->
+<span class="greeble-type-badge greeble-type-badge--text">text</span>
+<span class="greeble-type-badge greeble-type-badge--json">json</span>
+<span class="greeble-type-badge greeble-type-badge--docs">docs</span>
+<span class="greeble-type-badge greeble-type-badge--image">image</span>
+<span class="greeble-type-badge greeble-type-badge--audio">audio</span>
+<span class="greeble-type-badge greeble-type-badge--video">video</span>
+<span class="greeble-type-badge greeble-type-badge--markdown">markdown</span>
+<span class="greeble-type-badge greeble-type-badge--media">media</span>
+<span class="greeble-type-badge greeble-type-badge--any">any</span>
+
+<!-- With icon -->
+<span class="greeble-type-badge greeble-type-badge--text greeble-type-badge--with-icon">
+  <svg class="greeble-type-badge__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+    <polyline points="14 2 14 8 20 8"/>
+    <line x1="16" y1="13" x2="8" y2="13"/>
+    <line x1="16" y1="17" x2="8" y2="17"/>
+  </svg>
+  text
+</span>
+
+<!-- Size variants -->
+<span class="greeble-type-badge greeble-type-badge--text greeble-type-badge--small">text</span>
+<span class="greeble-type-badge greeble-type-badge--text">text</span>
+<span class="greeble-type-badge greeble-type-badge--text greeble-type-badge--large">text</span>
+
+<!-- Type flow indicator -->
+<div class="greeble-type-flow">
+  <span class="greeble-type-badge greeble-type-badge--docs">docs</span>
+  <span class="greeble-type-flow__arrow">→</span>
+  <span class="greeble-type-badge greeble-type-badge--text">text</span>
+  <span class="greeble-type-flow__arrow">→</span>
+  <span class="greeble-type-badge greeble-type-badge--json">json</span>
+</div>
+
+<!-- Category badges (for service/card categories) -->
+<span class="greeble-category-badge greeble-category-badge--ingestor">ingestor</span>
+<span class="greeble-category-badge greeble-category-badge--generator">generator</span>
+<span class="greeble-category-badge greeble-category-badge--formatter">formatter</span>
+<span class="greeble-category-badge greeble-category-badge--processor">processor</span>
+<span class="greeble-category-badge greeble-category-badge--tool">tool</span>

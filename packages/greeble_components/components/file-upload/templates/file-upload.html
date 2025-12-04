@@ -1,0 +1,135 @@
+<!-- File Upload (Copy & Paste Ready)
+Multi-type file upload with tabbed interface for different input methods.
+Supports URL, file upload, and paste modes.
+-->
+<div class="greeble-file-upload" id="file-upload" data-greeble-file-upload>
+  <!-- Tab Navigation -->
+  <div class="greeble-file-upload__tabs" role="tablist">
+    <button
+      type="button"
+      class="greeble-file-upload__tab greeble-file-upload__tab--active"
+      role="tab"
+      aria-selected="true"
+      aria-controls="file-upload-panel-file"
+      data-tab="file"
+    >
+      <svg class="greeble-file-upload__tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+      </svg>
+      File
+    </button>
+    <button
+      type="button"
+      class="greeble-file-upload__tab"
+      role="tab"
+      aria-selected="false"
+      aria-controls="file-upload-panel-url"
+      data-tab="url"
+    >
+      <svg class="greeble-file-upload__tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+      </svg>
+      URL
+    </button>
+    <button
+      type="button"
+      class="greeble-file-upload__tab"
+      role="tab"
+      aria-selected="false"
+      aria-controls="file-upload-panel-paste"
+      data-tab="paste"
+    >
+      <svg class="greeble-file-upload__tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+        <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+      </svg>
+      Paste
+    </button>
+  </div>
+
+  <!-- Tab Panels -->
+  <div class="greeble-file-upload__panels">
+    <!-- File Panel -->
+    <div
+      class="greeble-file-upload__panel greeble-file-upload__panel--active"
+      id="file-upload-panel-file"
+      role="tabpanel"
+      data-panel="file"
+    >
+      <div class="greeble-file-upload__droparea" id="file-upload-droparea">
+        <input
+          type="file"
+          id="file-upload-input"
+          class="greeble-file-upload__input"
+          accept="*/*"
+          aria-describedby="file-upload-help"
+        />
+        <svg class="greeble-file-upload__droparea-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/>
+          <line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+        <p class="greeble-file-upload__droparea-text">Drop file here or click to browse</p>
+        <p class="greeble-file-upload__droparea-hint" id="file-upload-help">PDF, DOCX, TXT, images, audio, video</p>
+      </div>
+      <div class="greeble-file-upload__file-info" id="file-upload-file-info" hidden>
+        <div class="greeble-file-upload__file-preview" id="file-upload-preview"></div>
+        <div class="greeble-file-upload__file-meta">
+          <p class="greeble-file-upload__file-name" id="file-upload-filename"></p>
+          <p class="greeble-file-upload__file-size" id="file-upload-filesize"></p>
+        </div>
+        <button type="button" class="greeble-file-upload__file-remove" id="file-upload-remove" aria-label="Remove file">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- URL Panel -->
+    <div
+      class="greeble-file-upload__panel"
+      id="file-upload-panel-url"
+      role="tabpanel"
+      data-panel="url"
+      hidden
+    >
+      <div class="greeble-file-upload__url-input">
+        <input
+          type="url"
+          id="file-upload-url"
+          class="greeble-file-upload__url"
+          placeholder="https://example.com/document.pdf"
+          aria-label="URL to fetch"
+        />
+        <button type="button" class="greeble-file-upload__url-fetch" id="file-upload-fetch">
+          Fetch
+        </button>
+      </div>
+    </div>
+
+    <!-- Paste Panel -->
+    <div
+      class="greeble-file-upload__panel"
+      id="file-upload-panel-paste"
+      role="tabpanel"
+      data-panel="paste"
+      hidden
+    >
+      <textarea
+        id="file-upload-paste"
+        class="greeble-file-upload__textarea"
+        placeholder="Paste content here (text, HTML, markdown, JSON...)"
+        aria-label="Paste content"
+      ></textarea>
+    </div>
+  </div>
+
+  <!-- Type Badge -->
+  <div class="greeble-file-upload__type" id="file-upload-type" hidden>
+    <span class="greeble-type-badge" id="file-upload-type-badge"></span>
+  </div>
+</div>

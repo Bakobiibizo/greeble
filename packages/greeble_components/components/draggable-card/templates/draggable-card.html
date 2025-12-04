@@ -1,0 +1,79 @@
+<!-- Draggable Card (Copy & Paste Ready)
+A draggable card component for drag-and-drop interfaces.
+Use with drop-canvas for building pipeline/workflow UIs.
+-->
+<div
+  class="greeble-draggable-card"
+  draggable="true"
+  data-greeble-draggable
+  data-id="card-1"
+  data-category="default"
+  data-accepts="text"
+  data-produces="text"
+>
+  <div class="greeble-draggable-card__header">
+    <span class="greeble-draggable-card__icon">📦</span>
+    <span class="greeble-draggable-card__title">Card Title</span>
+  </div>
+  <div class="greeble-draggable-card__types">
+    <span class="greeble-type-badge greeble-type-badge--text">text</span>
+    <span class="greeble-draggable-card__arrow">→</span>
+    <span class="greeble-type-badge greeble-type-badge--text">text</span>
+  </div>
+  <p class="greeble-draggable-card__description">Optional description text for the card.</p>
+</div>
+
+<!-- Example: Card Palette with Categories -->
+<div class="greeble-card-palette" data-greeble-card-palette>
+  <!-- Category: Ingestors (Blue) -->
+  <div class="greeble-card-palette__category" data-category="ingestor">
+    <h4 class="greeble-card-palette__category-title">Ingestors</h4>
+    <div class="greeble-card-palette__cards">
+      <div
+        class="greeble-draggable-card greeble-draggable-card--ingestor"
+        draggable="true"
+        data-greeble-draggable
+        data-id="file-reader"
+        data-category="ingestor"
+        data-accepts="file"
+        data-produces="text"
+      >
+        <div class="greeble-draggable-card__header">
+          <span class="greeble-draggable-card__icon">📄</span>
+          <span class="greeble-draggable-card__title">File Reader</span>
+        </div>
+        <div class="greeble-draggable-card__types">
+          <span class="greeble-type-badge greeble-type-badge--docs">file</span>
+          <span class="greeble-draggable-card__arrow">→</span>
+          <span class="greeble-type-badge greeble-type-badge--text">text</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Category: Processors (Pink) -->
+  <div class="greeble-card-palette__category" data-category="processor">
+    <h4 class="greeble-card-palette__category-title">Processors</h4>
+    <div class="greeble-card-palette__cards">
+      <div
+        class="greeble-draggable-card greeble-draggable-card--processor"
+        draggable="true"
+        data-greeble-draggable
+        data-id="text-transform"
+        data-category="processor"
+        data-accepts="text"
+        data-produces="text"
+      >
+        <div class="greeble-draggable-card__header">
+          <span class="greeble-draggable-card__icon">⚙️</span>
+          <span class="greeble-draggable-card__title">Text Transform</span>
+        </div>
+        <div class="greeble-draggable-card__types">
+          <span class="greeble-type-badge greeble-type-badge--text">text</span>
+          <span class="greeble-draggable-card__arrow">→</span>
+          <span class="greeble-type-badge greeble-type-badge--text">text</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

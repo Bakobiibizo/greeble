@@ -21,6 +21,8 @@ from .starter import StarterError, scaffold_baseline_assets, scaffold_starter
 
 __all__ = ["main"]
 
+__all__ = ["main"]
+
 
 def _resolve_project_dirs(
     project_root: Path | None, args: argparse.Namespace

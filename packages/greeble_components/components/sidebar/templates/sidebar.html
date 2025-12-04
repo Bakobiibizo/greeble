@@ -1,0 +1,192 @@
+<!-- Sidebar (Copy & Paste Ready)
+A vertical sidebar for subcategory/section navigation.
+Supports collapsible groups, active states, and responsive behavior.
+-->
+<aside class="greeble-sidebar" id="greeble-sidebar" data-greeble-sidebar>
+  <!-- Sidebar header (optional) -->
+  <div class="greeble-sidebar__header">
+    <span class="greeble-sidebar__title">Components</span>
+  </div>
+
+  <!-- Navigation groups -->
+  <nav class="greeble-sidebar__nav">
+    <!-- Group: Authentication & Forms -->
+    <div class="greeble-sidebar__group" data-group="auth">
+      <button
+        type="button"
+        class="greeble-sidebar__group-toggle"
+        aria-expanded="true"
+        aria-controls="sidebar-group-auth"
+      >
+        <svg class="greeble-sidebar__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+        Auth & Forms
+      </button>
+      <ul class="greeble-sidebar__list" id="sidebar-group-auth">
+        <li class="greeble-sidebar__item">
+          <a href="#sign-in" class="greeble-sidebar__link" data-component="sign-in">Sign In</a>
+        </li>
+        <li class="greeble-sidebar__item">
+          <a href="#request-access-form" class="greeble-sidebar__link" data-component="form-validated">Form Validated</a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Group: Navigation & Selection -->
+    <div class="greeble-sidebar__group" data-group="navigation">
+      <button
+        type="button"
+        class="greeble-sidebar__group-toggle"
+        aria-expanded="true"
+        aria-controls="sidebar-group-navigation"
+      >
+        <svg class="greeble-sidebar__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+        Navigation
+      </button>
+      <ul class="greeble-sidebar__list" id="sidebar-group-navigation">
+        <li class="greeble-sidebar__item">
+          <a href="#product-tabs-section" class="greeble-sidebar__link" data-component="tabs">Tabs</a>
+        </li>
+        <li class="greeble-sidebar__item">
+          <a href="#workspace-actions" class="greeble-sidebar__link" data-component="dropdown">Dropdown</a>
+        </li>
+        <li class="greeble-sidebar__item">
+          <a href="#command-palette-demo" class="greeble-sidebar__link" data-component="palette">Palette</a>
+        </li>
+        <li class="greeble-sidebar__item">
+          <a href="#swap-select-demo" class="greeble-sidebar__link" data-component="swap-select">Swap Select</a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Group: Data Display -->
+    <div class="greeble-sidebar__group" data-group="data">
+      <button
+        type="button"
+        class="greeble-sidebar__group-toggle"
+        aria-expanded="true"
+        aria-controls="sidebar-group-data"
+      >
+        <svg class="greeble-sidebar__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+        Data Display
+      </button>
+      <ul class="greeble-sidebar__list" id="sidebar-group-data">
+        <li class="greeble-sidebar__item">
+          <a href="#featured-data" class="greeble-sidebar__link" data-component="table">Table</a>
+        </li>
+        <li class="greeble-sidebar__item">
+          <a href="#type-badge-demo" class="greeble-sidebar__link" data-component="type-badge">Type Badge</a>
+        </li>
+        <li class="greeble-sidebar__item">
+          <a href="#infinite-updates" class="greeble-sidebar__link" data-component="infinite-list">Infinite List</a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Group: Overlays & Dialogs -->
+    <div class="greeble-sidebar__group" data-group="overlays">
+      <button
+        type="button"
+        class="greeble-sidebar__group-toggle"
+        aria-expanded="true"
+        aria-controls="sidebar-group-overlays"
+      >
+        <svg class="greeble-sidebar__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+        Overlays
+      </button>
+      <ul class="greeble-sidebar__list" id="sidebar-group-overlays">
+        <li class="greeble-sidebar__item">
+          <a href="#promotions" class="greeble-sidebar__link" data-component="drawer">Drawer</a>
+        </li>
+        <li class="greeble-sidebar__item">
+          <a href="#modal-root" class="greeble-sidebar__link" data-component="modal">Modal</a>
+        </li>
+        <li class="greeble-sidebar__item">
+          <a href="#greeble-toasts" class="greeble-sidebar__link" data-component="toast">Toast</a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Group: File & Media -->
+    <div class="greeble-sidebar__group" data-group="media">
+      <button
+        type="button"
+        class="greeble-sidebar__group-toggle"
+        aria-expanded="true"
+        aria-controls="sidebar-group-media"
+      >
+        <svg class="greeble-sidebar__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+        File & Media
+      </button>
+      <ul class="greeble-sidebar__list" id="sidebar-group-media">
+        <li class="greeble-sidebar__item">
+          <a href="#file-upload-demo" class="greeble-sidebar__link" data-component="file-upload">File Upload</a>
+        </li>
+        <li class="greeble-sidebar__item">
+          <a href="#drop-zone-demo" class="greeble-sidebar__link" data-component="drop-zone">Drop Zone</a>
+        </li>
+        <li class="greeble-sidebar__item">
+          <a href="#audio-recorder-demo" class="greeble-sidebar__link" data-component="audio-recorder">Audio Recorder</a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Group: Workflow & Pipelines -->
+    <div class="greeble-sidebar__group" data-group="workflows">
+      <button
+        type="button"
+        class="greeble-sidebar__group-toggle"
+        aria-expanded="true"
+        aria-controls="sidebar-group-workflows"
+      >
+        <svg class="greeble-sidebar__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+        Workflows
+      </button>
+      <ul class="greeble-sidebar__list" id="sidebar-group-workflows">
+        <li class="greeble-sidebar__item">
+          <a href="#launch-stepper" class="greeble-sidebar__link" data-component="stepper">Stepper</a>
+        </li>
+        <li class="greeble-sidebar__item">
+          <a href="#step-progress-demo" class="greeble-sidebar__link" data-component="step-progress">Step Progress</a>
+        </li>
+        <li class="greeble-sidebar__item">
+          <a href="#pipeline-builder" class="greeble-sidebar__link" data-component="draggable-card">Draggable Card</a>
+        </li>
+        <li class="greeble-sidebar__item">
+          <a href="#pipeline-builder" class="greeble-sidebar__link" data-component="drop-canvas">Drop Canvas</a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Group: Live Updates -->
+    <div class="greeble-sidebar__group" data-group="live">
+      <button
+        type="button"
+        class="greeble-sidebar__group-toggle"
+        aria-expanded="true"
+        aria-controls="sidebar-group-live"
+      >
+        <svg class="greeble-sidebar__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+        Live Updates
+      </button>
+      <ul class="greeble-sidebar__list" id="sidebar-group-live">
+        <li class="greeble-sidebar__item">
+          <a href="#live-status" class="greeble-sidebar__link" data-component="sse">SSE Stream</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</aside>

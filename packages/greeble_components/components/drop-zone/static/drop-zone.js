@@ -194,32 +194,56 @@ class GreebleDropZone {
   renderFiles() {
     if (!this.filesContainer) return;
 
-    this.filesContainer.innerHTML = this.files.map((file, index) => `
-      <div class="greeble-drop-zone__file" data-index="${index}">
-        <svg class="greeble-drop-zone__file-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-          <polyline points="14 2 14 8 20 8"/>
-        </svg>
-        <div class="greeble-drop-zone__file-info">
-          <p class="greeble-drop-zone__file-name">${this.escapeHtml(file.name)}</p>
-          <p class="greeble-drop-zone__file-size">${this.formatSize(file.size)}</p>
-        </div>
-        <button type="button" class="greeble-drop-zone__file-remove" data-index="${index}" aria-label="Remove ${this.escapeHtml(file.name)}">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
-            <line x1="18" y1="6" x2="6" y2="18"/>
-            <line x1="6" y1="6" x2="18" y2="18"/>
-          </svg>
-        </button>
-      </div>
-    `).join('');
+    // Clear existing content
+    this.filesContainer.innerHTML = '';
 
-    // Bind remove buttons
-    this.filesContainer.querySelectorAll('.greeble-drop-zone__file-remove').forEach(btn => {
-      btn.addEventListener('click', (e) => {
+    this.files.forEach((file, index) => {
+      const fileEl = document.createElement('div');
+      fileEl.className = 'greeble-drop-zone__file';
+      fileEl.dataset.index = index;
+
+      // File icon (static SVG, safe to use innerHTML)
+      const iconWrapper = document.createElement('div');
+      iconWrapper.className = 'greeble-drop-zone__file-icon-wrapper';
+      iconWrapper.innerHTML = `<svg class="greeble-drop-zone__file-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+      </svg>`;
+      fileEl.appendChild(iconWrapper.firstElementChild);
+
+      // File info
+      const info = document.createElement('div');
+      info.className = 'greeble-drop-zone__file-info';
+
+      const nameEl = document.createElement('p');
+      nameEl.className = 'greeble-drop-zone__file-name';
+      nameEl.textContent = file.name;
+      info.appendChild(nameEl);
+
+      const sizeEl = document.createElement('p');
+      sizeEl.className = 'greeble-drop-zone__file-size';
+      sizeEl.textContent = this.formatSize(file.size);
+      info.appendChild(sizeEl);
+
+      fileEl.appendChild(info);
+
+      // Remove button
+      const removeBtn = document.createElement('button');
+      removeBtn.type = 'button';
+      removeBtn.className = 'greeble-drop-zone__file-remove';
+      removeBtn.dataset.index = index;
+      removeBtn.setAttribute('aria-label', `Remove ${file.name}`);
+      removeBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>`;
+      removeBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        const index = parseInt(btn.dataset.index);
         this.removeFile(index);
       });
+      fileEl.appendChild(removeBtn);
+
+      this.filesContainer.appendChild(fileEl);
     });
   }
 

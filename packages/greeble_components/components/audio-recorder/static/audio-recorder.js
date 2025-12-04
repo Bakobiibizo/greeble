@@ -44,10 +44,10 @@ class GreebleAudioRecorder {
     this.startBtn = this.container.querySelector('#audio-recorder-start');
     this.stopBtn = this.container.querySelector('#audio-recorder-stop');
     this.status = this.container.querySelector('#audio-recorder-status');
-    this.preview = document.querySelector('#audio-recorder-preview');
-    this.playback = document.querySelector('#audio-recorder-playback');
-    this.discardBtn = document.querySelector('#audio-recorder-discard');
-    this.submitBtn = document.querySelector('#audio-recorder-submit');
+    this.preview = this.container.querySelector('#audio-recorder-preview');
+    this.playback = this.container.querySelector('#audio-recorder-playback');
+    this.discardBtn = this.container.querySelector('#audio-recorder-discard');
+    this.submitBtn = this.container.querySelector('#audio-recorder-submit');
 
     if (this.startBtn) {
       this.startBtn.addEventListener('click', () => this.startRecording());

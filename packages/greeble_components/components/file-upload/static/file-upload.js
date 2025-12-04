@@ -34,6 +34,7 @@ class GreebleFileUpload {
     this.currentFile = null;
     this.currentUrl = null;
     this.currentPaste = null;
+    this.currentPasteType = null;
 
     this.init();
   }
@@ -43,25 +44,25 @@ class GreebleFileUpload {
     this.tabs = this.container.querySelectorAll('.greeble-file-upload__tab');
     this.panels = this.container.querySelectorAll('.greeble-file-upload__panel');
 
-    // File elements
-    this.droparea = this.container.querySelector('#file-upload-droparea');
-    this.fileInput = this.container.querySelector('#file-upload-input');
-    this.fileInfo = this.container.querySelector('#file-upload-file-info');
-    this.filePreview = this.container.querySelector('#file-upload-preview');
-    this.fileName = this.container.querySelector('#file-upload-filename');
-    this.fileSize = this.container.querySelector('#file-upload-filesize');
-    this.removeBtn = this.container.querySelector('#file-upload-remove');
+    // File elements - use class selectors for multi-instance support
+    this.droparea = this.container.querySelector('.greeble-file-upload__droparea');
+    this.fileInput = this.container.querySelector('.greeble-file-upload__input');
+    this.fileInfo = this.container.querySelector('.greeble-file-upload__file-info');
+    this.filePreview = this.container.querySelector('.greeble-file-upload__file-preview');
+    this.fileName = this.container.querySelector('.greeble-file-upload__file-name');
+    this.fileSize = this.container.querySelector('.greeble-file-upload__file-size');
+    this.removeBtn = this.container.querySelector('.greeble-file-upload__file-remove');
 
     // URL elements
-    this.urlInput = this.container.querySelector('#file-upload-url');
-    this.fetchBtn = this.container.querySelector('#file-upload-fetch');
+    this.urlInput = this.container.querySelector('.greeble-file-upload__url');
+    this.fetchBtn = this.container.querySelector('.greeble-file-upload__url-fetch');
 
     // Paste elements
-    this.pasteArea = this.container.querySelector('#file-upload-paste');
+    this.pasteArea = this.container.querySelector('.greeble-file-upload__textarea');
 
     // Type badge
-    this.typeBadge = this.container.querySelector('#file-upload-type-badge');
-    this.typeContainer = this.container.querySelector('#file-upload-type');
+    this.typeBadge = this.container.querySelector('.greeble-type-badge');
+    this.typeContainer = this.container.querySelector('.greeble-file-upload__type');
 
     this.bindEvents();
   }
@@ -204,14 +205,21 @@ class GreebleFileUpload {
   showFilePreview(file) {
     if (!this.filePreview) return;
 
+    // Clear existing content
+    this.filePreview.innerHTML = '';
+
     if (file.type.startsWith('image/')) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        this.filePreview.innerHTML = `<img src="${e.target.result}" alt="${file.name}">`;
+        const img = document.createElement('img');
+        img.src = e.target.result;
+        img.alt = file.name;
+        this.filePreview.innerHTML = '';
+        this.filePreview.appendChild(img);
       };
       reader.readAsDataURL(file);
     } else {
-      // Show icon based on type
+      // Show icon based on type - these are static SVG strings, safe to use innerHTML
       const icon = this.getFileIcon(file);
       this.filePreview.innerHTML = icon;
     }
@@ -263,8 +271,10 @@ class GreebleFileUpload {
     if (!url) return;
 
     try {
-      this.fetchBtn.disabled = true;
-      this.fetchBtn.textContent = 'Fetching...';
+      if (this.fetchBtn) {
+        this.fetchBtn.disabled = true;
+        this.fetchBtn.textContent = 'Fetching...';
+      }
 
       // Emit URL input event - actual fetching handled by server
       this.currentUrl = url;
@@ -279,8 +289,10 @@ class GreebleFileUpload {
     } catch (error) {
       this.handleError('Failed to fetch URL');
     } finally {
-      this.fetchBtn.disabled = false;
-      this.fetchBtn.textContent = 'Fetch';
+      if (this.fetchBtn) {
+        this.fetchBtn.disabled = false;
+        this.fetchBtn.textContent = 'Fetch';
+      }
     }
   }
 
@@ -303,6 +315,7 @@ class GreebleFileUpload {
       }
     }
 
+    this.currentPasteType = type;
     this.updateTypeBadge(type);
   }
 
@@ -386,7 +399,7 @@ class GreebleFileUpload {
         return {
           mode: 'paste',
           value: this.currentPaste,
-          type: this.currentPaste ? 'text' : null
+          type: this.currentPaste ? (this.currentPasteType || 'text') : null
         };
       default:
         return { mode: null, value: null, type: null };

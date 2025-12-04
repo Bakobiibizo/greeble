@@ -1,0 +1,24 @@
+line-length = 100
+target-version = "py311"
+
+[lint]
+extend-select = ["I", "UP", "PL", "RUF"]
+ignore = [
+    "E501",
+    "PLR2004",  # Magic value comparisons (common in tests)
+    "PLR0912",  # Too many branches
+    "PLR0913",  # Too many arguments
+    "PLR0915",  # Too many statements
+    "PLR0911",  # Too many return statements
+    "PLC0415",  # Import not at top level (common pattern for optional deps)
+    "RUF001",   # Ambiguous unicode (intentional emoji/symbols)
+    "RUF002",   # Ambiguous unicode in docstrings
+    "RUF003",   # Ambiguous unicode in comments
+    "RUF022",   # __all__ not sorted (not enforced)
+    "PLR0402",  # Use from X import Y instead of alias
+]
+
+[lint.per-file-ignores]
+"tests/**" = ["RUF100"]  # Allow unused noqa in tests
+"tools/**" = ["RUF100"]  # Allow unused noqa in tools
+"examples/**" = ["PLW1508", "PLW0603", "RUF100"]  # Demos have relaxed rules

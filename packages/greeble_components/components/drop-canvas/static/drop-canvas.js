@@ -10,6 +10,14 @@
  *   });
  */
 class GreebleDropCanvas {
+  // Helper to escape HTML for safe attribute values
+  static escapeAttr(str) {
+    if (!str) return '';
+    return String(str).replace(/[&<>"']/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    })[c]);
+  }
+
   constructor(selector, options = {}) {
     this.container = typeof selector === 'string'
       ? document.querySelector(selector)
@@ -190,38 +198,98 @@ class GreebleDropCanvas {
       this.runBtn.disabled = !hasSteps;
     }
 
-    // Render steps
-    this.stepsContainer.innerHTML = this.steps.map((step, index) => {
+    // Render steps using safe DOM methods
+    this.stepsContainer.innerHTML = '';
+    
+    this.steps.forEach((step, index) => {
       const inputType = this.getTypeLabel(step.accepts);
       const outputType = this.getTypeLabel(step.produces);
-      
-      return `
-        <div class="greeble-drop-canvas__step" data-step-id="${step.stepId}" data-step-index="${index}">
-          <div class="greeble-drop-canvas__step-header">
-            <span class="greeble-drop-canvas__step-number">${index + 1}</span>
-            <span class="greeble-drop-canvas__step-title">${step.title || step.id}</span>
-            <div class="greeble-drop-canvas__step-actions">
-              <button type="button" class="greeble-drop-canvas__step-move" data-direction="up" aria-label="Move up" ${index === 0 ? 'disabled' : ''}>↑</button>
-              <button type="button" class="greeble-drop-canvas__step-move" data-direction="down" aria-label="Move down" ${index === this.steps.length - 1 ? 'disabled' : ''}>↓</button>
-              <button type="button" class="greeble-drop-canvas__step-remove" aria-label="Remove step">✕</button>
-            </div>
-          </div>
-          <div class="greeble-drop-canvas__step-types">
-            <span class="greeble-type-badge greeble-type-badge--${inputType}">${inputType}</span>
-            <span class="greeble-drop-canvas__step-arrow">→</span>
-            <span class="greeble-type-badge greeble-type-badge--${outputType}">${outputType}</span>
-          </div>
-        </div>
-        ${index < this.steps.length - 1 ? `
-          <div class="greeble-drop-canvas__connector">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="12" y1="5" x2="12" y2="19"/>
-              <polyline points="19 12 12 19 5 12"/>
-            </svg>
-          </div>
-        ` : ''}
-      `;
-    }).join('');
+      const safeInputType = GreebleDropCanvas.escapeAttr(inputType);
+      const safeOutputType = GreebleDropCanvas.escapeAttr(outputType);
+
+      const stepEl = document.createElement('div');
+      stepEl.className = 'greeble-drop-canvas__step';
+      stepEl.dataset.stepId = step.stepId;
+      stepEl.dataset.stepIndex = index;
+
+      // Header
+      const header = document.createElement('div');
+      header.className = 'greeble-drop-canvas__step-header';
+
+      const stepNumber = document.createElement('span');
+      stepNumber.className = 'greeble-drop-canvas__step-number';
+      stepNumber.textContent = index + 1;
+      header.appendChild(stepNumber);
+
+      const stepTitle = document.createElement('span');
+      stepTitle.className = 'greeble-drop-canvas__step-title';
+      stepTitle.textContent = step.title || step.id;
+      header.appendChild(stepTitle);
+
+      const actions = document.createElement('div');
+      actions.className = 'greeble-drop-canvas__step-actions';
+
+      const upBtn = document.createElement('button');
+      upBtn.type = 'button';
+      upBtn.className = 'greeble-drop-canvas__step-move';
+      upBtn.dataset.direction = 'up';
+      upBtn.setAttribute('aria-label', 'Move up');
+      upBtn.textContent = '↑';
+      if (index === 0) upBtn.disabled = true;
+      actions.appendChild(upBtn);
+
+      const downBtn = document.createElement('button');
+      downBtn.type = 'button';
+      downBtn.className = 'greeble-drop-canvas__step-move';
+      downBtn.dataset.direction = 'down';
+      downBtn.setAttribute('aria-label', 'Move down');
+      downBtn.textContent = '↓';
+      if (index === this.steps.length - 1) downBtn.disabled = true;
+      actions.appendChild(downBtn);
+
+      const removeBtn = document.createElement('button');
+      removeBtn.type = 'button';
+      removeBtn.className = 'greeble-drop-canvas__step-remove';
+      removeBtn.setAttribute('aria-label', 'Remove step');
+      removeBtn.textContent = '✕';
+      actions.appendChild(removeBtn);
+
+      header.appendChild(actions);
+      stepEl.appendChild(header);
+
+      // Types
+      const types = document.createElement('div');
+      types.className = 'greeble-drop-canvas__step-types';
+
+      const inputBadge = document.createElement('span');
+      inputBadge.className = `greeble-type-badge greeble-type-badge--${safeInputType}`;
+      inputBadge.textContent = inputType;
+      types.appendChild(inputBadge);
+
+      const arrow = document.createElement('span');
+      arrow.className = 'greeble-drop-canvas__step-arrow';
+      arrow.textContent = '→';
+      types.appendChild(arrow);
+
+      const outputBadge = document.createElement('span');
+      outputBadge.className = `greeble-type-badge greeble-type-badge--${safeOutputType}`;
+      outputBadge.textContent = outputType;
+      types.appendChild(outputBadge);
+
+      stepEl.appendChild(types);
+      this.stepsContainer.appendChild(stepEl);
+
+      // Add connector between steps
+      if (index < this.steps.length - 1) {
+        const connector = document.createElement('div');
+        connector.className = 'greeble-drop-canvas__connector';
+        connector.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <polyline points="19 12 12 19 5 12"/>
+        </svg>`;
+        this.stepsContainer.appendChild(connector);
+      }
+    });
 
     // Bind step action buttons
     this.stepsContainer.querySelectorAll('.greeble-drop-canvas__step-remove').forEach(btn => {
@@ -295,13 +363,32 @@ class GreebleDropCanvas {
   showTypeError(outputType, inputType, stepName) {
     const error = document.createElement('div');
     error.className = 'greeble-drop-canvas__error';
-    error.innerHTML = `
-      <div class="greeble-drop-canvas__error-title">Type Mismatch</div>
-      <div class="greeble-drop-canvas__error-message">
-        Cannot connect <strong>${outputType}</strong> to <strong>${inputType}</strong>
-        <br>${stepName} expects ${inputType}
-      </div>
-    `;
+
+    const title = document.createElement('div');
+    title.className = 'greeble-drop-canvas__error-title';
+    title.textContent = 'Type Mismatch';
+    error.appendChild(title);
+
+    const message = document.createElement('div');
+    message.className = 'greeble-drop-canvas__error-message';
+    
+    const text1 = document.createTextNode('Cannot connect ');
+    const strong1 = document.createElement('strong');
+    strong1.textContent = outputType;
+    const text2 = document.createTextNode(' to ');
+    const strong2 = document.createElement('strong');
+    strong2.textContent = inputType;
+    const br = document.createElement('br');
+    const text3 = document.createTextNode(`${stepName} expects ${inputType}`);
+    
+    message.appendChild(text1);
+    message.appendChild(strong1);
+    message.appendChild(text2);
+    message.appendChild(strong2);
+    message.appendChild(br);
+    message.appendChild(text3);
+    error.appendChild(message);
+
     document.body.appendChild(error);
 
     if (this.options.onTypeError) {

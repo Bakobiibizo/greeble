@@ -249,7 +249,7 @@ def test_cli_theme_init_force_overwrites(tmp_path: Path) -> None:
     preset_asset = project_root / "tools" / "greeble" / "tailwind" / "preset.cjs"
     preset_asset.write_text("// modified", encoding="utf-8")
 
-    force_args = args + ["--force"]
+    force_args = [*args, "--force"]
     assert main(force_args) == 0
     content = preset_asset.read_text(encoding="utf-8")
     assert "--greeble-color-background" in content, (

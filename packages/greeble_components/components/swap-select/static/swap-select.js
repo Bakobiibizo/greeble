@@ -164,18 +164,24 @@ class GreebleSwapSelect {
 
   // Populate options programmatically
   setOptions(options, side = 'both') {
-    const optionsHtml = options.map(opt => {
-      const value = typeof opt === 'object' ? opt.value : opt;
-      const label = typeof opt === 'object' ? opt.label : opt;
-      const selected = typeof opt === 'object' && opt.selected ? ' selected' : '';
-      return `<option value="${value}"${selected}>${label}</option>`;
-    }).join('');
+    const createOptions = (selectEl) => {
+      selectEl.innerHTML = '';
+      options.forEach(opt => {
+        const optionEl = document.createElement('option');
+        optionEl.value = typeof opt === 'object' ? opt.value : opt;
+        optionEl.textContent = typeof opt === 'object' ? opt.label : opt;
+        if (typeof opt === 'object' && opt.selected) {
+          optionEl.selected = true;
+        }
+        selectEl.appendChild(optionEl);
+      });
+    };
 
     if (side === 'left' || side === 'both') {
-      if (this.leftSelect) this.leftSelect.innerHTML = optionsHtml;
+      if (this.leftSelect) createOptions(this.leftSelect);
     }
     if (side === 'right' || side === 'both') {
-      if (this.rightSelect) this.rightSelect.innerHTML = optionsHtml;
+      if (this.rightSelect) createOptions(this.rightSelect);
     }
   }
 }

@@ -12,6 +12,14 @@
  *   });
  */
 class GreebleStepProgress {
+  // Helper to escape HTML for safe attribute values
+  static escapeAttr(str) {
+    if (!str) return '';
+    return String(str).replace(/[&<>"']/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    })[c]);
+  }
+
   constructor(selector, options = {}) {
     this.container = typeof selector === 'string'
       ? document.querySelector(selector)
@@ -73,21 +81,41 @@ class GreebleStepProgress {
   render() {
     if (!this.stepsContainer) return;
 
-    this.stepsContainer.innerHTML = this.steps.map((step, index) => `
-      <div 
-        class="greeble-step-progress__step greeble-step-progress__step--${step.status}" 
-        data-step="${index + 1}"
-        id="${step.id}"
-      >
-        <div class="greeble-step-progress__step-indicator">
-          ${this.renderIndicator(step, index)}
-        </div>
-        <div class="greeble-step-progress__step-content">
-          <span class="greeble-step-progress__step-title">${step.title}</span>
-          <span class="greeble-step-progress__step-time">${this.getTimeDisplay(step)}</span>
-        </div>
-      </div>
-    `).join('');
+    // Clear existing content
+    this.stepsContainer.innerHTML = '';
+
+    this.steps.forEach((step, index) => {
+      const safeStatus = GreebleStepProgress.escapeAttr(step.status);
+      
+      const stepEl = document.createElement('div');
+      stepEl.className = `greeble-step-progress__step greeble-step-progress__step--${safeStatus}`;
+      stepEl.dataset.step = index + 1;
+      stepEl.id = step.id;
+
+      // Indicator
+      const indicator = document.createElement('div');
+      indicator.className = 'greeble-step-progress__step-indicator';
+      // renderIndicator returns static SVG, safe to use innerHTML
+      indicator.innerHTML = this.renderIndicator(step, index);
+      stepEl.appendChild(indicator);
+
+      // Content
+      const content = document.createElement('div');
+      content.className = 'greeble-step-progress__step-content';
+
+      const titleEl = document.createElement('span');
+      titleEl.className = 'greeble-step-progress__step-title';
+      titleEl.textContent = step.title;
+      content.appendChild(titleEl);
+
+      const timeEl = document.createElement('span');
+      timeEl.className = 'greeble-step-progress__step-time';
+      timeEl.textContent = this.getTimeDisplay(step);
+      content.appendChild(timeEl);
+
+      stepEl.appendChild(content);
+      this.stepsContainer.appendChild(stepEl);
+    });
 
     this.updateTotal();
   }

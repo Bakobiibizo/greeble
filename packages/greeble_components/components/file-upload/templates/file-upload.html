@@ -1,6 +1,15 @@
 <!-- File Upload (Copy & Paste Ready)
 Multi-type file upload with tabbed interface for different input methods.
 Supports URL, file upload, and paste modes.
+
+NOTE: When using multiple file-upload instances on the same page, you should:
+1. Remove or customize the root `id="file-upload"` attribute to avoid ID collisions
+2. The JS component scopes queries to the container, so IDs are optional
+3. For aria-controls references, use unique IDs per instance or remove them
+
+Example for multiple instances:
+  <div class="greeble-file-upload" data-greeble-file-upload data-instance="upload-1">...</div>
+  <div class="greeble-file-upload" data-greeble-file-upload data-instance="upload-2">...</div>
 -->
 <div class="greeble-file-upload" id="file-upload" data-greeble-file-upload>
   <!-- Tab Navigation -->

@@ -84,28 +84,69 @@ class GreebleDraggableCard {
     };
   }
 
+  // Helper to escape HTML for safe attribute values
+  static escapeAttr(str) {
+    if (!str) return '';
+    return String(str).replace(/[&<>"']/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    })[c]);
+  }
+
   // Static method to create card from data
   static createCard(data, options = {}) {
     const card = document.createElement('div');
-    card.className = `greeble-draggable-card greeble-draggable-card--${data.category || 'default'}`;
+    const safeCategory = GreebleDraggableCard.escapeAttr(data.category) || 'default';
+    card.className = `greeble-draggable-card greeble-draggable-card--${safeCategory}`;
     card.draggable = true;
     card.dataset.id = data.id;
     card.dataset.category = data.category || 'default';
     card.dataset.accepts = Array.isArray(data.accepts) ? data.accepts.join(',') : data.accepts;
     card.dataset.produces = data.produces;
 
-    card.innerHTML = `
-      <div class="greeble-draggable-card__header">
-        <span class="greeble-draggable-card__icon">${data.icon || '📦'}</span>
-        <span class="greeble-draggable-card__title">${data.title || data.id}</span>
-      </div>
-      <div class="greeble-draggable-card__types">
-        <span class="greeble-type-badge greeble-type-badge--${data.inputType || 'text'}">${data.inputLabel || data.accepts}</span>
-        <span class="greeble-draggable-card__arrow">→</span>
-        <span class="greeble-type-badge greeble-type-badge--${data.outputType || 'text'}">${data.outputLabel || data.produces}</span>
-      </div>
-      ${data.description ? `<p class="greeble-draggable-card__description">${data.description}</p>` : ''}
-    `;
+    // Build card using safe DOM methods
+    const header = document.createElement('div');
+    header.className = 'greeble-draggable-card__header';
+
+    const icon = document.createElement('span');
+    icon.className = 'greeble-draggable-card__icon';
+    icon.textContent = data.icon || '📦';
+    header.appendChild(icon);
+
+    const title = document.createElement('span');
+    title.className = 'greeble-draggable-card__title';
+    title.textContent = data.title || data.id;
+    header.appendChild(title);
+
+    card.appendChild(header);
+
+    const types = document.createElement('div');
+    types.className = 'greeble-draggable-card__types';
+
+    const inputType = GreebleDraggableCard.escapeAttr(data.inputType) || 'text';
+    const inputBadge = document.createElement('span');
+    inputBadge.className = `greeble-type-badge greeble-type-badge--${inputType}`;
+    inputBadge.textContent = data.inputLabel || data.accepts;
+    types.appendChild(inputBadge);
+
+    const arrow = document.createElement('span');
+    arrow.className = 'greeble-draggable-card__arrow';
+    arrow.textContent = '→';
+    types.appendChild(arrow);
+
+    const outputType = GreebleDraggableCard.escapeAttr(data.outputType) || 'text';
+    const outputBadge = document.createElement('span');
+    outputBadge.className = `greeble-type-badge greeble-type-badge--${outputType}`;
+    outputBadge.textContent = data.outputLabel || data.produces;
+    types.appendChild(outputBadge);
+
+    card.appendChild(types);
+
+    if (data.description) {
+      const desc = document.createElement('p');
+      desc.className = 'greeble-draggable-card__description';
+      desc.textContent = data.description;
+      card.appendChild(desc);
+    }
 
     if (options.container) {
       options.container.appendChild(card);
@@ -185,10 +226,16 @@ class GreebleCardPalette {
         categoryEl = document.createElement('div');
         categoryEl.className = 'greeble-card-palette__category';
         categoryEl.dataset.category = category;
-        categoryEl.innerHTML = `
-          <h4 class="greeble-card-palette__category-title">${this.options.categoryLabels[category] || category}</h4>
-          <div class="greeble-card-palette__cards"></div>
-        `;
+
+        const titleEl = document.createElement('h4');
+        titleEl.className = 'greeble-card-palette__category-title';
+        titleEl.textContent = this.options.categoryLabels[category] || category;
+        categoryEl.appendChild(titleEl);
+
+        const cardsEl = document.createElement('div');
+        cardsEl.className = 'greeble-card-palette__cards';
+        categoryEl.appendChild(cardsEl);
+
         this.container.appendChild(categoryEl);
       }
 
@@ -241,10 +288,16 @@ class GreebleCardPalette {
       categoryEl = document.createElement('div');
       categoryEl.className = 'greeble-card-palette__category';
       categoryEl.dataset.category = category;
-      categoryEl.innerHTML = `
-        <h4 class="greeble-card-palette__category-title">${this.options.categoryLabels[category] || category}</h4>
-        <div class="greeble-card-palette__cards"></div>
-      `;
+
+      const titleEl = document.createElement('h4');
+      titleEl.className = 'greeble-card-palette__category-title';
+      titleEl.textContent = this.options.categoryLabels[category] || category;
+      categoryEl.appendChild(titleEl);
+
+      const cardsEl = document.createElement('div');
+      cardsEl.className = 'greeble-card-palette__cards';
+      categoryEl.appendChild(cardsEl);
+
       this.container.appendChild(categoryEl);
     }
 

@@ -86,6 +86,10 @@ FILE_UPLOAD_TEMPLATE = load_component_template(CPTS, "file-upload", "file-upload
 STEP_PROGRESS_TEMPLATE = load_component_template(CPTS, "step-progress", "step-progress.html")
 SWAP_SELECT_TEMPLATE = load_component_template(CPTS, "swap-select", "swap-select.html")
 TYPE_BADGE_TEMPLATE = load_component_template(CPTS, "type-badge", "type-badge.html")
+NAV_TEMPLATE = load_component_template(CPTS, "nav", "nav.html")
+SIDEBAR_TEMPLATE = load_component_template(CPTS, "sidebar", "sidebar.html")
+FOOTER_TEMPLATE = load_component_template(CPTS, "footer", "footer.html")
+MOBILE_MENU_TEMPLATE = load_component_template(CPTS, "mobile-menu", "mobile-menu.html")
 
 COMPONENT_CSS = load_component_stylesheets(
     CPTS,
@@ -110,6 +114,10 @@ COMPONENT_CSS = load_component_stylesheets(
         ("step-progress", "step-progress.css"),
         ("swap-select", "swap-select.css"),
         ("type-badge", "type-badge.css"),
+        ("nav", "nav.css"),
+        ("sidebar", "sidebar.css"),
+        ("footer", "footer.css"),
+        ("mobile-menu", "mobile-menu.css"),
     ),
 )
 
@@ -544,35 +552,65 @@ def render_page(body_html: str) -> HTMLResponse:
         color: rgba(255, 255, 255, 0.65);
         font-size: 1.05rem;
       }
+      /* App layout with sidebar */
+      .app-layout {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+      .app-layout__body {
+        display: flex;
+        flex: 1;
+      }
+      .app-layout__content {
+        flex: 1;
+        min-width: 0;
+        overflow-x: hidden;
+      }
+      /* Adjust main for sidebar layout */
+      main.landing {
+        padding: clamp(1.5rem, 3vw, 3rem);
+        display: grid;
+        gap: 2.5rem;
+        max-width: 64rem;
+        margin: 0 auto;
+      }
+      /* Mobile menu root */
+      #mobile-menu-root {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 200;
+      }
+      #mobile-menu-root > * {
+        pointer-events: auto;
+      }
+      /* Hide sidebar on mobile */
+      @media (max-width: 1024px) {
+        .greeble-sidebar { display: none; }
+      }
 $component_css
     </style>
     <script src="https://unpkg.com/htmx.org@1.9.12" defer></script>
     <script src="https://unpkg.com/htmx.org/dist/ext/sse.js" defer></script>
   </head>
   <body>
-    <div id="greeble-toasts" aria-live="polite" aria-atomic="false"></div>
-    <div id="modal-root" hx-target="this"></div>
-    <div id="drawer-root" hx-target="this"></div>
-    <header class="site-header">
-      <div>
-        <h1 class="greeble-heading-1">Launch faster with Greeble</h1>
-        <p>
-          Every component wired in a realistic flow so product teams can test
-          behaviors end-to-end.
-        </p>
+    <div class="app-layout">
+      <div id="greeble-toasts" aria-live="polite" aria-atomic="false"></div>
+      <div id="modal-root" hx-target="this"></div>
+      <div id="drawer-root" hx-target="this"></div>
+      <div id="mobile-menu-root"></div>
+      $nav
+      <div class="app-layout__body">
+        $sidebar
+        <div class="app-layout__content">
+          <main class="landing">
+            $body
+          </main>
+        </div>
       </div>
-      <a
-        class="greeble-button greeble-button--primary"
-        href="https://github.com/bakobiibizo/greeble"
-        target="_blank"
-        rel="noreferrer"
-      >
-        View Repo
-      </a>
-    </header>
-    <main class="landing">
-      $body
-    </main>
+      $footer
+    </div>
     <script>
       document.addEventListener('htmx:afterRequest', (event) => {
         const elt = event.detail?.elt;
@@ -591,7 +629,13 @@ $component_css
 </html>
         """
     )
-    return HTMLResponse(layout.substitute(body=body_html, component_css=COMPONENT_CSS))
+    return HTMLResponse(layout.substitute(
+        body=body_html,
+        component_css=COMPONENT_CSS,
+        nav=NAV_TEMPLATE,
+        sidebar=SIDEBAR_TEMPLATE,
+        footer=FOOTER_TEMPLATE,
+    ))
 
 
 def build_sign_in_section() -> str:
@@ -1401,6 +1445,17 @@ async def pipeline_run() -> HTMLResponse:
     )
     headers = {"HX-Trigger": json.dumps({"greeble:pipeline:complete": True})}
     return HTMLResponse(body, headers=headers)
+
+
+# Mobile menu endpoints
+@app.get("/menu/open", response_class=HTMLResponse)
+async def menu_open() -> HTMLResponse:
+    return HTMLResponse(MOBILE_MENU_TEMPLATE)
+
+
+@app.get("/menu/close", response_class=HTMLResponse)
+async def menu_close() -> HTMLResponse:
+    return HTMLResponse("")
 
 
 if __name__ == "__main__":

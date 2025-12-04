@@ -7,6 +7,8 @@ edit_uri: edit/release-candidate/docs/
 
 theme:
   name: material
+  logo: assets/images/logo.svg
+  favicon: assets/images/favicon.ico
   features:
     - navigation.instant
     - navigation.tracking
@@ -38,15 +40,23 @@ nav:
   - Adapters: adapters.md
   - Components:
       - Introduction: components/README.md
+      - Audio Recorder: components/audio-recorder.md
       - Button: components/button.md
+      - Draggable Card: components/draggable-card.md
       - Drawer: components/drawer.md
+      - Drop Canvas: components/drop-canvas.md
+      - Drop Zone: components/drop-zone.md
       - Dropdown: components/dropdown.md
+      - File Upload: components/file-upload.md
       - Form (validated): components/form.md
       - Infinite List: components/infinite-list.md
       - Input: components/input.md
       - Modal: components/modal.md
       - Palette: components/palette.md
+      - Step Progress: components/step-progress.md
       - Stepper: components/stepper.md
+      - Swap Select: components/swap-select.md
       - Table: components/table.md
       - Tabs: components/tabs.md
       - Toast: components/toast.md
+      - Type Badge: components/type-badge.md

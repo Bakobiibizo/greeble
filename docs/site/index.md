@@ -1,4 +1,5 @@
 <div class="landing-hero">
+  <img src="../assets/images/logo-full.svg" alt="Greeble" class="landing-logo" width="280">
   <span class="docs-demo-badge">HTML-first components</span>
   <h1 class="text-gradient">Ship production UI without a SPA</h1>
   <p>Greeble pairs copy-and-paste components with HTMX helpers, design tokens, and framework adapters so you can build responsive dashboards in hours, not weeks.</p>

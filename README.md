@@ -1,4 +1,19 @@
-# Greeble
+<p align="center">
+  <img src="assets/greeble-logo-word-black.svg" alt="Greeble Logo" width="400">
+</p>
+
+<h1 align="center">Greeble</h1>
+
+<p align="center">
+  <strong>HTML-first, HTMX-powered components for Python-first apps</strong>
+</p>
+
+<p align="center">
+  <a href="https://github.com/Bakobiibizo/greeble/actions"><img src="https://github.com/Bakobiibizo/greeble/workflows/CI/badge.svg" alt="CI Status"></a>
+  <a href="https://github.com/Bakobiibizo/greeble/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
+</p>
+
+---
 
 Greeble is an HTML-first component library for server-rendered Python apps. Each component ships
 with copy-and-paste markup, HTMX attributes, and CSS tokens so teams can build rich flows without a

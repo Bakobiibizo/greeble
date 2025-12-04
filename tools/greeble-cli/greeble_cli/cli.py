@@ -1,6 +1,8 @@
-from greeble_cli.cli import *  # noqa: F403
+# Re-export from main package (src/greeble_cli/cli.py)
+# This shim allows the tools package to work standalone
+from greeble_cli.cli import main  # noqa: F401
+
+__all__ = ["main"]
 
 if __name__ == "__main__":
-    from greeble_cli.cli import main
-
     raise SystemExit(main())

@@ -8,6 +8,17 @@ from pathlib import Path
 
 from .manifest import Component, Manifest
 
+__all__ = [
+    "CopyPlan",
+    "ScaffoldError",
+    "backup_existing_files",
+    "build_copy_plan",
+    "component_sources",
+    "ensure_within_project",
+    "execute_plan",
+    "remove_files",
+]
+
 
 @dataclass(frozen=True)
 class CopyPlan:

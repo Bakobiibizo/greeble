@@ -152,3 +152,7 @@
 
 - Describe the notable changes here.
 
+## 2025-12-04 - v0.2.1
+
+- Describe the notable changes here.
+

@@ -367,3 +367,100 @@ components:
       listens: []
     accessibility:
       notes: ["color supplemented with text labels"]
+
+  # SEO Audit Components
+  - key: score-gauge
+    title: "Score Gauge"
+    summary: "Radial SVG gauge for displaying scores 0-100 with grade labels"
+    files:
+      - templates/greeble/score-gauge.html
+      - templates/greeble/score-gauge.partial.html
+      - static/greeble/score-gauge.css
+      - docs/components/score-gauge.md
+    endpoints: []
+    events:
+      emits: []
+      listens: []
+    accessibility:
+      notes: ["score value as text", "grade provides semantic context"]
+
+  - key: forecast-chart
+    title: "Forecast Chart"
+    summary: "Server-rendered SVG area chart with min/expected/max bands"
+    files:
+      - templates/greeble/forecast-chart.html
+      - templates/greeble/forecast-chart.partial.html
+      - static/greeble/forecast-chart.css
+      - docs/components/forecast-chart.md
+    endpoints: []
+    events:
+      emits: []
+      listens: []
+    accessibility:
+      notes: ["supplement with data table for screen readers", "legend uses text labels"]
+
+  - key: factor-breakdown
+    title: "Factor Breakdown"
+    summary: "Weighted scoring factors as cards with progress bars"
+    files:
+      - templates/greeble/factor-breakdown.html
+      - templates/greeble/factor-breakdown.partial.html
+      - static/greeble/factor-breakdown.css
+      - docs/components/factor-breakdown.md
+    endpoints: []
+    events:
+      emits: []
+      listens: []
+    accessibility:
+      notes: ["progress bars visual only", "percentage values as text"]
+
+  - key: metric-grid
+    title: "Metric Grid"
+    summary: "Grid of key-value metric cards for diagnostic data"
+    files:
+      - templates/greeble/metric-grid.html
+      - templates/greeble/metric-grid.partial.html
+      - static/greeble/metric-grid.css
+      - docs/components/metric-grid.md
+    endpoints: []
+    events:
+      emits: []
+      listens: []
+    accessibility:
+      notes: ["values as plain text", "color supplemented with value"]
+
+  - key: citation-list
+    title: "Citation List"
+    summary: "Scrollable list of citation cards with NAP data"
+    files:
+      - templates/greeble/citation-list.html
+      - templates/greeble/citation-list.partial.html
+      - static/greeble/citation-list.css
+      - docs/components/citation-list.md
+    endpoints:
+      - method: GET
+        path: "/citations"
+        description: "Accepts cursor parameter for infinite scroll"
+    events:
+      emits: []
+      listens: []
+    accessibility:
+      notes: ["links open in new tabs", "scrollable region has visible scrollbar"]
+
+  - key: audit-dashboard
+    title: "Audit Dashboard"
+    summary: "Composite dashboard for Local SEO audits"
+    files:
+      - templates/greeble/audit-dashboard.html
+      - templates/greeble/audit-dashboard.partial.html
+      - static/greeble/audit-dashboard.css
+      - docs/components/audit-dashboard.md
+    endpoints:
+      - method: POST
+        path: "/api/audit"
+        description: "Run audit and return results partial"
+    events:
+      emits: ["htmx:beforeRequest", "htmx:afterSwap"]
+      listens: []
+    accessibility:
+      notes: ["form has labeled input", "semantic heading hierarchy"]

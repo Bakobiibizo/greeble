@@ -1,0 +1,135 @@
+<!-- Forecast Chart Partial (Jinja2)
+Server-rendered SVG area chart with min/expected/max bands.
+
+Variables:
+  - title: str (optional, default "12-Month Forecast")
+  - forecast: list of dicts with keys: month, min, expected, max
+  - y_min: int (optional, auto-calculated)
+  - y_max: int (optional, auto-calculated)
+-->
+{% set title = title | default("12-Month Forecast") %}
+{% set data = forecast | default([]) %}
+
+{# Calculate Y-axis bounds #}
+{% set all_values = [] %}
+{% for point in data %}
+  {% set _ = all_values.append(point.min) %}
+  {% set _ = all_values.append(point.max) %}
+{% endfor %}
+{% set y_min_val = y_min | default(all_values | min | default(0) * 0.9) | int %}
+{% set y_max_val = y_max | default(all_values | max | default(200) * 1.1) | int %}
+{% set y_range = y_max_val - y_min_val %}
+
+{# Chart dimensions #}
+{% set chart_left = 40 %}
+{% set chart_right = 580 %}
+{% set chart_top = 20 %}
+{% set chart_bottom = 175 %}
+{% set chart_width = chart_right - chart_left %}
+{% set chart_height = chart_bottom - chart_top %}
+
+{# Helper to convert value to Y coordinate #}
+{% macro to_y(value) %}{{ chart_bottom - ((value - y_min_val) / y_range * chart_height) | int }}{% endmacro %}
+
+{# Helper to convert index to X coordinate #}
+{% macro to_x(index, total) %}{{ chart_left + (index / (total - 1) * chart_width) | int }}{% endmacro %}
+
+{# Build path strings #}
+{% set min_points = [] %}
+{% set expected_points = [] %}
+{% set max_points = [] %}
+{% for point in data %}
+  {% set x = to_x(loop.index0, data | length) %}
+  {% set _ = min_points.append(x ~ "," ~ to_y(point.min)) %}
+  {% set _ = expected_points.append(x ~ "," ~ to_y(point.expected)) %}
+  {% set _ = max_points.append(x ~ "," ~ to_y(point.max)) %}
+{% endfor %}
+
+<div class="greeble-forecast-chart" data-greeble-forecast-chart>
+  <header class="greeble-forecast-chart__header">
+    <h3 class="greeble-heading-3">{{ title }}</h3>
+    <div class="greeble-forecast-chart__legend">
+      <span class="greeble-forecast-chart__legend-item greeble-forecast-chart__legend-item--min">
+        <span class="greeble-forecast-chart__legend-dot"></span>
+        Min
+      </span>
+      <span class="greeble-forecast-chart__legend-item greeble-forecast-chart__legend-item--expected">
+        <span class="greeble-forecast-chart__legend-dot"></span>
+        Expected
+      </span>
+      <span class="greeble-forecast-chart__legend-item greeble-forecast-chart__legend-item--max">
+        <span class="greeble-forecast-chart__legend-dot"></span>
+        Max
+      </span>
+    </div>
+  </header>
+
+  <div class="greeble-forecast-chart__container">
+    <svg viewBox="0 0 600 200" class="greeble-forecast-chart__svg" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <linearGradient id="forecast-min-gradient" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ef4444" stop-opacity="0.25"/>
+          <stop offset="100%" stop-color="#ef4444" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="forecast-expected-gradient" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#22c55e" stop-opacity="0.4"/>
+          <stop offset="100%" stop-color="#22c55e" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="forecast-max-gradient" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#f97316" stop-opacity="0.25"/>
+          <stop offset="100%" stop-color="#f97316" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Grid lines -->
+      <g class="greeble-forecast-chart__grid">
+        {% for i in range(4) %}
+        <line x1="{{ chart_left }}" y1="{{ chart_top + (i * chart_height / 3) | int }}" 
+              x2="{{ chart_right }}" y2="{{ chart_top + (i * chart_height / 3) | int }}" 
+              stroke="rgba(255,255,255,0.06)"/>
+        {% endfor %}
+      </g>
+
+      <!-- Y-axis labels -->
+      <g class="greeble-forecast-chart__y-labels" fill="rgba(232,232,234,0.5)" font-size="10">
+        {% for i in range(4) %}
+        {% set label_val = y_max_val - (i * y_range / 3) | int %}
+        <text x="{{ chart_left - 5 }}" y="{{ chart_top + (i * chart_height / 3) | int + 4 }}" text-anchor="end">{{ label_val }}</text>
+        {% endfor %}
+      </g>
+
+      {% if data %}
+      <!-- Area fills -->
+      <path class="greeble-forecast-chart__area greeble-forecast-chart__area--min"
+        d="M{{ min_points | join(' L') }} L{{ chart_right }},{{ chart_bottom }} L{{ chart_left }},{{ chart_bottom }} Z"
+        fill="url(#forecast-min-gradient)"/>
+      <path class="greeble-forecast-chart__area greeble-forecast-chart__area--expected"
+        d="M{{ expected_points | join(' L') }} L{{ chart_right }},{{ chart_bottom }} L{{ chart_left }},{{ chart_bottom }} Z"
+        fill="url(#forecast-expected-gradient)"/>
+      <path class="greeble-forecast-chart__area greeble-forecast-chart__area--max"
+        d="M{{ max_points | join(' L') }} L{{ chart_right }},{{ chart_bottom }} L{{ chart_left }},{{ chart_bottom }} Z"
+        fill="url(#forecast-max-gradient)"/>
+
+      <!-- Lines -->
+      <polyline class="greeble-forecast-chart__line greeble-forecast-chart__line--min"
+        points="{{ min_points | join(' ') }}"
+        fill="none" stroke="#ef4444" stroke-width="1.5"/>
+      <polyline class="greeble-forecast-chart__line greeble-forecast-chart__line--expected"
+        points="{{ expected_points | join(' ') }}"
+        fill="none" stroke="#22c55e" stroke-width="2.5"/>
+      <polyline class="greeble-forecast-chart__line greeble-forecast-chart__line--max"
+        points="{{ max_points | join(' ') }}"
+        fill="none" stroke="#f97316" stroke-width="1.5"/>
+      {% endif %}
+
+      <!-- X-axis labels -->
+      <g class="greeble-forecast-chart__x-labels" fill="rgba(232,232,234,0.5)" font-size="10">
+        {% for point in data %}
+        {% if loop.index0 % 2 == 0 or loop.last %}
+        <text x="{{ to_x(loop.index0, data | length) }}" y="195" text-anchor="middle">{{ point.month }}</text>
+        {% endif %}
+        {% endfor %}
+      </g>
+    </svg>
+  </div>
+</div>

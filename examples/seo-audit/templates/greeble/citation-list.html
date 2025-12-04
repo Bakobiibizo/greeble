@@ -1,0 +1,64 @@
+<!-- Citation List (Copy & Paste Ready)
+A scrollable list of citation cards showing business NAP data from various sources.
+Supports HTMX-powered infinite scroll for large datasets.
+-->
+<div class="greeble-citation-list" data-greeble-citation-list>
+  <header class="greeble-citation-list__header">
+    <h3 class="greeble-heading-3">Citations</h3>
+    <span class="greeble-citation-list__count">3 sources</span>
+  </header>
+
+  <div class="greeble-citation-list__scroll" id="citation-list-scroll">
+    <!-- Citation card -->
+    <article class="greeble-citation-list__card">
+      <div class="greeble-citation-list__card-header">
+        <span class="greeble-citation-list__name">Acme Restaurant</span>
+        <span class="greeble-citation-list__badge greeble-citation-list__badge--jsonld">JSON-LD</span>
+      </div>
+      <a href="https://yelp.com/biz/acme-restaurant" class="greeble-citation-list__url" target="_blank" rel="noopener">
+        yelp.com/biz/acme-restaurant
+      </a>
+      <div class="greeble-citation-list__meta">
+        <span class="greeble-citation-list__host">yelp.com</span>
+        <span class="greeble-citation-list__phone">+1 555-123-4567</span>
+      </div>
+      <div class="greeble-citation-list__address">123 Main St, San Francisco, CA 94102</div>
+    </article>
+
+    <article class="greeble-citation-list__card">
+      <div class="greeble-citation-list__card-header">
+        <span class="greeble-citation-list__name">Acme Restaurant</span>
+      </div>
+      <a href="https://tripadvisor.com/Restaurant_Review-acme" class="greeble-citation-list__url" target="_blank" rel="noopener">
+        tripadvisor.com/Restaurant_Review-acme
+      </a>
+      <div class="greeble-citation-list__meta">
+        <span class="greeble-citation-list__host">tripadvisor.com</span>
+        <span class="greeble-citation-list__phone">+1 555-123-4567</span>
+      </div>
+      <div class="greeble-citation-list__address">123 Main Street, San Francisco, California</div>
+    </article>
+
+    <article class="greeble-citation-list__card greeble-citation-list__card--mismatch">
+      <div class="greeble-citation-list__card-header">
+        <span class="greeble-citation-list__name">Acme Cafe</span>
+        <span class="greeble-citation-list__badge greeble-citation-list__badge--warning">NAP Mismatch</span>
+      </div>
+      <a href="https://yellowpages.com/acme-cafe" class="greeble-citation-list__url" target="_blank" rel="noopener">
+        yellowpages.com/acme-cafe
+      </a>
+      <div class="greeble-citation-list__meta">
+        <span class="greeble-citation-list__host">yellowpages.com</span>
+        <span class="greeble-citation-list__phone">+1 555-999-0000</span>
+      </div>
+      <div class="greeble-citation-list__address">456 Oak Ave, San Francisco, CA</div>
+    </article>
+  </div>
+
+  <!-- Optional: Load more trigger for HTMX infinite scroll -->
+  <!-- 
+  <div hx-get="/citations?cursor=xyz" hx-trigger="revealed" hx-target="#citation-list-scroll" hx-swap="beforeend">
+    <span class="greeble-citation-list__loading">Loading more...</span>
+  </div>
+  -->
+</div>

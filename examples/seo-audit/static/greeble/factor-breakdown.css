@@ -1,0 +1,126 @@
+/* Factor Breakdown Component */
+.greeble-factor-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: var(--greeble-spacing-3, 0.75rem);
+}
+
+.greeble-factor-breakdown__header {
+  margin-bottom: var(--greeble-spacing-1, 0.25rem);
+}
+
+.greeble-factor-breakdown__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--greeble-spacing-3, 0.75rem);
+}
+
+.greeble-factor-breakdown__card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--greeble-spacing-2, 0.5rem);
+  padding: var(--greeble-spacing-3, 0.75rem);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--greeble-radius-medium, 12px);
+}
+
+.greeble-factor-breakdown__card-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--greeble-spacing-1, 0.25rem);
+}
+
+.greeble-factor-breakdown__label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--greeble-color-foreground, #e8e8ea);
+}
+
+.greeble-factor-breakdown__weight {
+  font-size: 0.75rem;
+  color: var(--greeble-color-muted, rgba(232, 232, 234, 0.5));
+}
+
+.greeble-factor-breakdown__bar {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.greeble-factor-breakdown__bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.4s ease-out;
+}
+
+.greeble-factor-breakdown__bar-fill--success {
+  background: var(--greeble-color-success, #22c55e);
+}
+
+.greeble-factor-breakdown__bar-fill--warning {
+  background: var(--greeble-color-warning, #eab308);
+}
+
+.greeble-factor-breakdown__bar-fill--danger {
+  background: var(--greeble-color-danger, #ef4444);
+}
+
+.greeble-factor-breakdown__value {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--greeble-color-foreground, #e8e8ea);
+}
+
+.greeble-factor-breakdown__empty {
+  grid-column: 1 / -1;
+  padding: var(--greeble-spacing-4, 1rem);
+  text-align: center;
+  color: var(--greeble-color-muted, rgba(232, 232, 234, 0.5));
+  font-size: 0.875rem;
+}
+
+/* Compact variant - horizontal layout */
+.greeble-factor-breakdown--compact .greeble-factor-breakdown__grid {
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
+
+.greeble-factor-breakdown--compact .greeble-factor-breakdown__card {
+  padding: var(--greeble-spacing-2, 0.5rem);
+}
+
+.greeble-factor-breakdown--compact .greeble-factor-breakdown__value {
+  font-size: 1rem;
+}
+
+/* List variant - single column */
+.greeble-factor-breakdown--list .greeble-factor-breakdown__grid {
+  grid-template-columns: 1fr;
+}
+
+.greeble-factor-breakdown--list .greeble-factor-breakdown__card {
+  flex-direction: row;
+  align-items: center;
+  gap: var(--greeble-spacing-3, 0.75rem);
+}
+
+.greeble-factor-breakdown--list .greeble-factor-breakdown__card-header {
+  flex: 0 0 140px;
+}
+
+.greeble-factor-breakdown--list .greeble-factor-breakdown__bar {
+  flex: 1;
+}
+
+.greeble-factor-breakdown--list .greeble-factor-breakdown__value {
+  flex: 0 0 60px;
+  text-align: right;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .greeble-factor-breakdown__grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Local SEO Audit Dashboard</title>
+  <link rel="stylesheet" href="/static/greeble/greeble-core.css">
+  <link rel="stylesheet" href="/static/greeble/score-gauge.css">
+  <link rel="stylesheet" href="/static/greeble/forecast-chart.css">
+  <link rel="stylesheet" href="/static/greeble/factor-breakdown.css">
+  <link rel="stylesheet" href="/static/greeble/metric-grid.css">
+  <link rel="stylesheet" href="/static/greeble/citation-list.css">
+  <link rel="stylesheet" href="/static/greeble/audit-dashboard.css">
+  <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+    }
+  </style>
+</head>
+<body>
+  <div class="greeble-audit-dashboard" data-greeble-audit-dashboard>
+    <!-- Header with search -->
+    <header class="greeble-audit-dashboard__header">
+      <h1 class="greeble-heading-2">Local SEO Intelligence</h1>
+      <form class="greeble-audit-dashboard__search" 
+            hx-post="/api/audit" 
+            hx-target="#audit-results" 
+            hx-swap="innerHTML"
+            hx-indicator="#audit-loading">
+        <input type="text" 
+               name="q" 
+               class="greeble-input" 
+               placeholder="Brand or location (e.g., Acme Restaurant in SF)" 
+               aria-label="Search brand or location"
+               style="min-width: 320px;">
+        <button type="submit" class="greeble-button greeble-button--primary">
+          Run Audit
+        </button>
+      </form>
+    </header>
+
+    <!-- Loading indicator -->
+    <div id="audit-loading" class="greeble-audit-dashboard__loading htmx-indicator">
+      <svg class="greeble-audit-dashboard__spinner" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="60" stroke-linecap="round"/>
+      </svg>
+      <span>Running audit...</span>
+    </div>
+
+    <!-- Results container -->
+    <div id="audit-results" class="greeble-audit-dashboard__results">
+      <!-- Empty state -->
+      <div class="greeble-audit-dashboard__empty">
+        <p>Enter a brand or location above to run an audit.</p>
+        <p class="greeble-audit-dashboard__hint">Try: "Acme Restaurant in San Francisco" or just "Acme"</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

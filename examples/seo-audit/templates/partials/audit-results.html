@@ -1,0 +1,86 @@
+{# Audit Results Partial - Returned by /api/audit endpoint #}
+{% set location = audit.location | default({}) %}
+{% set score = audit.score | default({}) %}
+{% set forecast = audit.forecast | default([]) %}
+{% set diagnostics = audit.diagnostics | default({}) %}
+{% set citations = audit.citations | default([]) %}
+{% set insight = audit.insight | default('') %}
+{% set factors = score.factors | default([]) %}
+{% set recommendations = score.recommendations | default([]) %}
+
+<div class="greeble-audit-dashboard__content">
+  <!-- Location header -->
+  <div class="greeble-audit-dashboard__location">
+    <h2 class="greeble-heading-2">{{ location.brand | default('Unknown') }}</h2>
+    <p class="greeble-audit-dashboard__location-meta">
+      {{ location.location | default('') }}
+      {% if location.domain %}
+      <span class="greeble-audit-dashboard__domain">{{ location.domain }}</span>
+      {% endif %}
+    </p>
+  </div>
+
+  <!-- Top row: Score + Forecast -->
+  <div class="greeble-audit-dashboard__row greeble-audit-dashboard__row--top">
+    <!-- Score gauge card -->
+    <div class="greeble-audit-dashboard__card greeble-audit-dashboard__card--score">
+      <header class="greeble-audit-dashboard__card-header">
+        <h3 class="greeble-heading-3">Health Score</h3>
+      </header>
+      <div class="greeble-audit-dashboard__card-body">
+        {% include "greeble/score-gauge.partial.html" %}
+        {% if recommendations %}
+        <ul class="greeble-audit-dashboard__recommendations">
+          {% for rec in recommendations[:3] %}
+          <li>{{ rec }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Forecast chart card -->
+    <div class="greeble-audit-dashboard__card greeble-audit-dashboard__card--forecast">
+      {% include "greeble/forecast-chart.partial.html" %}
+    </div>
+  </div>
+
+  <!-- Middle row: Insight + Factors -->
+  <div class="greeble-audit-dashboard__row">
+    <!-- AI Insight card -->
+    <div class="greeble-audit-dashboard__card greeble-audit-dashboard__card--insight">
+      <header class="greeble-audit-dashboard__card-header">
+        <h3 class="greeble-heading-3">AI Insight</h3>
+      </header>
+      <div class="greeble-audit-dashboard__card-body">
+        <p class="greeble-audit-dashboard__insight-text">{{ insight }}</p>
+        {% set title = '' %}
+        {% include "greeble/factor-breakdown.partial.html" %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom row: Diagnostics + Citations -->
+  <div class="greeble-audit-dashboard__row greeble-audit-dashboard__row--bottom">
+    <!-- Diagnostics card -->
+    <div class="greeble-audit-dashboard__card greeble-audit-dashboard__card--diagnostics">
+      {% set metrics = [
+        {"key": "checked", "label": "Checked", "value": diagnostics.checked_count | default(0)},
+        {"key": "matched", "label": "Matched", "value": diagnostics.matched_count | default(0)},
+        {"key": "hosts", "label": "Distinct Hosts", "value": diagnostics.distinct_hosts | default(0)},
+        {"key": "jsonld", "label": "JSON-LD Pages", "value": diagnostics.jsonld_count | default(0)},
+        {"key": "nap", "label": "NAP Consistency", "value": diagnostics.nap_consistency | default(0), "format": "percent"},
+        {"key": "coverage", "label": "Citation Coverage", "value": diagnostics.citation_coverage | default(0), "format": "percent"},
+      ] %}
+      {% set title = "Diagnostics" %}
+      {% include "greeble/metric-grid.partial.html" %}
+    </div>
+
+    <!-- Citations card -->
+    <div class="greeble-audit-dashboard__card greeble-audit-dashboard__card--citations">
+      {% set title = "Citations" %}
+      {% set max_height = "16rem" %}
+      {% include "greeble/citation-list.partial.html" %}
+    </div>
+  </div>
+</div>

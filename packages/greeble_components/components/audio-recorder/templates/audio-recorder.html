@@ -1,0 +1,54 @@
+<!-- Audio Recorder Trigger (Copy & Paste Ready)
+A microphone button that records audio using MediaRecorder API.
+Configure the endpoint and target via hx-* attributes.
+-->
+<div class="greeble-audio-recorder" id="audio-recorder">
+  <button
+    type="button"
+    class="greeble-audio-recorder__button greeble-audio-recorder__button--start"
+    id="audio-recorder-start"
+    aria-label="Start recording"
+  >
+    <svg class="greeble-audio-recorder__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+      <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+      <line x1="12" y1="19" x2="12" y2="23"/>
+      <line x1="8" y1="23" x2="16" y2="23"/>
+    </svg>
+  </button>
+  <button
+    type="button"
+    class="greeble-audio-recorder__button greeble-audio-recorder__button--stop"
+    id="audio-recorder-stop"
+    aria-label="Stop recording"
+    hidden
+  >
+    <svg class="greeble-audio-recorder__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <rect x="6" y="6" width="12" height="12" rx="2"/>
+    </svg>
+  </button>
+  <div class="greeble-audio-recorder__status" id="audio-recorder-status" aria-live="polite"></div>
+</div>
+
+<!-- Audio preview (shown after recording) -->
+<div class="greeble-audio-recorder__preview" id="audio-recorder-preview" hidden>
+  <audio id="audio-recorder-playback" controls></audio>
+  <div class="greeble-audio-recorder__actions">
+    <button type="button" class="greeble-button greeble-button--secondary" id="audio-recorder-discard">
+      Discard
+    </button>
+    <button
+      type="button"
+      class="greeble-button greeble-button--primary"
+      id="audio-recorder-submit"
+      hx-post="/audio/upload"
+      hx-target="#audio-recorder-result"
+      hx-swap="innerHTML"
+      hx-encoding="multipart/form-data"
+    >
+      Submit
+    </button>
+  </div>
+</div>
+
+<div id="audio-recorder-result" aria-live="polite"></div>

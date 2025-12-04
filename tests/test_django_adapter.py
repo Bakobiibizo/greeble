@@ -56,7 +56,7 @@ def test_template_response_and_headers(monkeypatch: pytest.MonkeyPatch) -> None:
     # Fake django.http.HttpResponse
     fake_http = types.ModuleType("django.http")
 
-    def HttpResponse(content: str, status: int, content_type: str) -> SimpleHttpResponse:  # noqa: N802
+    def HttpResponse(content: str, status: int, content_type: str) -> SimpleHttpResponse:
         return SimpleHttpResponse(content, status, content_type)
 
     fake_http.HttpResponse = HttpResponse  # type: ignore[attr-defined]

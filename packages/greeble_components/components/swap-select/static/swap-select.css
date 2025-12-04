@@ -1,0 +1,130 @@
+.greeble-swap-select {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--greeble-spacing-2, 0.5rem);
+  flex-wrap: wrap;
+}
+
+.greeble-swap-select__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--greeble-spacing-1, 0.25rem);
+  flex: 1;
+  min-width: 120px;
+}
+
+.greeble-swap-select__label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--greeble-color-foreground, #e8e8ea);
+}
+
+.greeble-swap-select__select {
+  appearance: none;
+  padding: var(--greeble-spacing-2, 0.5rem) var(--greeble-spacing-3, 0.75rem);
+  padding-right: var(--greeble-spacing-8, 2rem);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--greeble-color-foreground, #e8e8ea);
+  background-color: var(--greeble-color-surface, #151518);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.5rem center;
+  background-size: 1rem;
+  border: 1px solid var(--greeble-color-border, rgba(255, 255, 255, 0.15));
+  border-radius: var(--greeble-radius-small, 8px);
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.greeble-swap-select__select:hover {
+  border-color: var(--greeble-color-border-hover, rgba(255, 255, 255, 0.25));
+}
+
+.greeble-swap-select__select:focus {
+  outline: none;
+  border-color: var(--greeble-color-accent, #6aa1ff);
+  box-shadow: var(--greeble-focus-ring, 0 0 0 3px rgba(106, 161, 255, 0.5));
+}
+
+.greeble-swap-select__select option {
+  background: var(--greeble-color-surface, #151518);
+  color: var(--greeble-color-foreground, #e8e8ea);
+}
+
+.greeble-swap-select__swap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 2.5rem;
+  block-size: 2.5rem;
+  padding: 0;
+  background: var(--greeble-color-surface, #151518);
+  border: 1px solid var(--greeble-color-border, rgba(255, 255, 255, 0.15));
+  border-radius: var(--greeble-radius-small, 8px);
+  color: var(--greeble-color-muted, rgba(232, 232, 234, 0.72));
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.greeble-swap-select__swap:hover {
+  background: var(--greeble-color-surface-hover, #1a1a1f);
+  border-color: var(--greeble-color-accent, #6aa1ff);
+  color: var(--greeble-color-accent, #6aa1ff);
+}
+
+.greeble-swap-select__swap:focus-visible {
+  outline: none;
+  box-shadow: var(--greeble-focus-ring, 0 0 0 3px rgba(106, 161, 255, 0.5));
+}
+
+.greeble-swap-select__swap:active .greeble-swap-select__swap-icon {
+  transform: rotate(180deg);
+}
+
+.greeble-swap-select__swap-icon {
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  transition: transform 0.3s ease;
+}
+
+.greeble-swap-select__swap--swapped .greeble-swap-select__swap-icon {
+  transform: rotate(180deg);
+}
+
+/* Vertical variant */
+.greeble-swap-select--vertical {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.greeble-swap-select--vertical .greeble-swap-select__swap {
+  align-self: center;
+  transform: rotate(90deg);
+}
+
+.greeble-swap-select--vertical .greeble-swap-select__swap:active .greeble-swap-select__swap-icon {
+  transform: rotate(90deg);
+}
+
+/* Compact variant */
+.greeble-swap-select--compact .greeble-swap-select__label {
+  display: none;
+}
+
+.greeble-swap-select--compact .greeble-swap-select__swap {
+  inline-size: 2rem;
+  block-size: 2rem;
+}
+
+.greeble-swap-select--compact .greeble-swap-select__swap-icon {
+  inline-size: 1rem;
+  block-size: 1rem;
+}
+
+/* With icons in options */
+.greeble-swap-select__option-icon {
+  display: inline-flex;
+  margin-right: var(--greeble-spacing-2, 0.5rem);
+}

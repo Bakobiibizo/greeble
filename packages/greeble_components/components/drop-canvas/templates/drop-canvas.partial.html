@@ -1,0 +1,27 @@
+<!-- Drop Canvas Step Template
+This is rendered for each step in the pipeline.
+-->
+<div class="greeble-drop-canvas__step" data-step-id="{{ step_id }}" data-step-index="{{ index }}">
+  <div class="greeble-drop-canvas__step-header">
+    <span class="greeble-drop-canvas__step-number">{{ index + 1 }}</span>
+    <span class="greeble-drop-canvas__step-title">{{ title }}</span>
+    <div class="greeble-drop-canvas__step-actions">
+      <button type="button" class="greeble-drop-canvas__step-move" data-direction="up" aria-label="Move up">↑</button>
+      <button type="button" class="greeble-drop-canvas__step-move" data-direction="down" aria-label="Move down">↓</button>
+      <button type="button" class="greeble-drop-canvas__step-remove" aria-label="Remove step">✕</button>
+    </div>
+  </div>
+  <div class="greeble-drop-canvas__step-types">
+    <span class="greeble-type-badge greeble-type-badge--{{ input_type }}">{{ input_label }}</span>
+    <span class="greeble-drop-canvas__step-arrow">→</span>
+    <span class="greeble-type-badge greeble-type-badge--{{ output_type }}">{{ output_label }}</span>
+  </div>
+</div>
+
+<!-- Connector between steps -->
+<div class="greeble-drop-canvas__connector">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <line x1="12" y1="5" x2="12" y2="19"/>
+    <polyline points="19 12 12 19 5 12"/>
+  </svg>
+</div>

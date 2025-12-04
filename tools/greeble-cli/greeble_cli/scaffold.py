@@ -1,1 +1,1 @@
-from greeble_cli.scaffold import *  # noqa: F401,F403
+from greeble_cli.scaffold import *  # noqa: F403

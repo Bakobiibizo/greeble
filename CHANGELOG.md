@@ -148,3 +148,7 @@
 
 
 
+## 2025-12-04 - v0.2.0
+
+- Describe the notable changes here.
+

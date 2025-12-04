@@ -228,3 +228,142 @@ components:
       listens: []
     accessibility:
       notes: ["associate errors with fields via aria-describedby"]
+
+  - key: audio-recorder
+    title: "Audio Recorder"
+    summary: "Microphone recording with MediaRecorder API and upload support"
+    files:
+      - templates/greeble/audio-recorder.html
+      - templates/greeble/audio-recorder.partial.html
+      - static/greeble/audio-recorder.css
+      - static/greeble/audio-recorder.js
+      - docs/components/audio-recorder.md
+    endpoints:
+      - method: POST
+        path: "/audio/upload"
+        description: "Upload recorded audio blob"
+    events:
+      emits: ["greeble:audio:start", "greeble:audio:stop", "greeble:audio:complete", "greeble:audio:submit", "greeble:audio:discard", "greeble:audio:error"]
+      listens: []
+    accessibility:
+      notes: ["aria-label on buttons", "aria-live on status region"]
+
+  - key: drop-zone
+    title: "Drop Zone"
+    summary: "Drag-and-drop file upload with validation and preview"
+    files:
+      - templates/greeble/drop-zone.html
+      - templates/greeble/drop-zone.partial.html
+      - static/greeble/drop-zone.css
+      - static/greeble/drop-zone.js
+      - docs/components/drop-zone.md
+    endpoints:
+      - method: POST
+        path: "/files/upload"
+        description: "Upload dropped files"
+    events:
+      emits: ["greeble:dropzone:files", "greeble:dropzone:remove", "greeble:dropzone:clear", "greeble:dropzone:upload", "greeble:dropzone:error"]
+      listens: []
+    accessibility:
+      notes: ["aria-describedby for help text", "keyboard accessible via file input"]
+
+  - key: swap-select
+    title: "Swap Select"
+    summary: "Paired select dropdowns with swap button for source/target selection"
+    files:
+      - templates/greeble/swap-select.html
+      - templates/greeble/swap-select.partial.html
+      - static/greeble/swap-select.css
+      - static/greeble/swap-select.js
+      - docs/components/swap-select.md
+    endpoints:
+      - method: GET
+        path: "/options/source"
+        description: "Load source options"
+      - method: GET
+        path: "/options/target"
+        description: "Load target options"
+    events:
+      emits: ["greeble:swap:swapped", "greeble:swap:change"]
+      listens: []
+    accessibility:
+      notes: ["labels for selects", "keyboard shortcut Ctrl+Shift+S to swap"]
+
+  - key: file-upload
+    title: "File Upload"
+    summary: "Multi-mode file input with tabs for file, URL, and paste"
+    files:
+      - templates/greeble/file-upload.html
+      - static/greeble/file-upload.css
+      - static/greeble/file-upload.js
+      - docs/components/file-upload.md
+    endpoints: []
+    events:
+      emits: ["greeble:fileupload:input", "greeble:fileupload:tab", "greeble:fileupload:fetch", "greeble:fileupload:error"]
+      listens: []
+    accessibility:
+      notes: ["ARIA tabs pattern", "keyboard navigation", "labeled inputs"]
+
+  - key: draggable-card
+    title: "Draggable Card"
+    summary: "Draggable card for pipeline/workflow builders with type badges"
+    files:
+      - templates/greeble/draggable-card.html
+      - static/greeble/draggable-card.css
+      - static/greeble/draggable-card.js
+      - docs/components/draggable-card.md
+    endpoints: []
+    events:
+      emits: ["greeble:card:dragstart", "greeble:card:dragend"]
+      listens: []
+    accessibility:
+      notes: ["native draggable attribute", "keyboard support via browser"]
+
+  - key: drop-canvas
+    title: "Drop Canvas"
+    summary: "Drop target for building pipelines with type validation"
+    files:
+      - templates/greeble/drop-canvas.html
+      - templates/greeble/drop-canvas.partial.html
+      - static/greeble/drop-canvas.css
+      - static/greeble/drop-canvas.js
+      - docs/components/drop-canvas.md
+    endpoints:
+      - method: POST
+        path: "/pipeline/run"
+        description: "Execute the pipeline"
+    events:
+      emits: ["greeble:canvas:stepadded", "greeble:canvas:stepremoved", "greeble:canvas:stepschanged", "greeble:canvas:cleared", "greeble:canvas:run"]
+      listens: ["greeble:card:dragstart", "greeble:card:dragend"]
+    accessibility:
+      notes: ["keyboard accessible step controls", "ARIA live regions"]
+
+  - key: step-progress
+    title: "Step Progress"
+    summary: "Progress indicator for multi-step workflows with timing"
+    files:
+      - templates/greeble/step-progress.html
+      - templates/greeble/step-progress.partial.html
+      - static/greeble/step-progress.css
+      - static/greeble/step-progress.js
+      - docs/components/step-progress.md
+    endpoints: []
+    events:
+      emits: ["greeble:progress:stepstart", "greeble:progress:stepcomplete", "greeble:progress:steperror", "greeble:progress:complete"]
+      listens: []
+    accessibility:
+      notes: ["semantic list structure", "status conveyed via text"]
+
+  - key: type-badge
+    title: "Type Badge"
+    summary: "Colored badges for data types, categories, and statuses"
+    files:
+      - templates/greeble/type-badge.html
+      - static/greeble/type-badge.css
+      - docs/components/type-badge.md
+    endpoints: []
+    events:
+      emits: []
+      listens: []
+    accessibility:
+      notes: ["color supplemented with text labels"]

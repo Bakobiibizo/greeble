@@ -1,0 +1,294 @@
+.greeble-file-upload {
+  display: flex;
+  flex-direction: column;
+  gap: var(--greeble-spacing-3, 0.75rem);
+  background: var(--greeble-color-surface, #151518);
+  border-radius: var(--greeble-radius-medium, 12px);
+  padding: var(--greeble-spacing-4, 1rem);
+}
+
+/* Tabs */
+.greeble-file-upload__tabs {
+  display: flex;
+  gap: var(--greeble-spacing-1, 0.25rem);
+  border-bottom: 1px solid var(--greeble-color-border, rgba(255, 255, 255, 0.15));
+  padding-bottom: var(--greeble-spacing-2, 0.5rem);
+}
+
+.greeble-file-upload__tab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--greeble-spacing-1, 0.25rem);
+  padding: var(--greeble-spacing-2, 0.5rem) var(--greeble-spacing-3, 0.75rem);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--greeble-color-muted, rgba(232, 232, 234, 0.5));
+  background: transparent;
+  border: none;
+  border-radius: var(--greeble-radius-small, 8px);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.greeble-file-upload__tab:hover {
+  color: var(--greeble-color-foreground, #e8e8ea);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.greeble-file-upload__tab--active {
+  color: var(--greeble-color-accent, #6aa1ff);
+  background: rgba(106, 161, 255, 0.1);
+}
+
+.greeble-file-upload__tab:focus-visible {
+  outline: none;
+  box-shadow: var(--greeble-focus-ring, 0 0 0 3px rgba(106, 161, 255, 0.5));
+}
+
+.greeble-file-upload__tab-icon {
+  inline-size: 1rem;
+  block-size: 1rem;
+}
+
+/* Panels */
+.greeble-file-upload__panels {
+  min-height: 8rem;
+}
+
+.greeble-file-upload__panel {
+  display: none;
+}
+
+.greeble-file-upload__panel--active,
+.greeble-file-upload__panel:not([hidden]) {
+  display: block;
+}
+
+/* File Drop Area */
+.greeble-file-upload__droparea {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--greeble-spacing-2, 0.5rem);
+  padding: var(--greeble-spacing-6, 1.5rem);
+  min-height: 8rem;
+  border: 2px dashed var(--greeble-color-border, rgba(255, 255, 255, 0.15));
+  border-radius: var(--greeble-radius-small, 8px);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.greeble-file-upload__droparea:hover,
+.greeble-file-upload__droparea--dragover {
+  border-color: var(--greeble-color-accent, #6aa1ff);
+  background: rgba(106, 161, 255, 0.05);
+}
+
+.greeble-file-upload__input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.greeble-file-upload__droparea-icon {
+  inline-size: 2.5rem;
+  block-size: 2.5rem;
+  color: var(--greeble-color-muted, rgba(232, 232, 234, 0.5));
+  transition: all 0.2s ease;
+}
+
+.greeble-file-upload__droparea:hover .greeble-file-upload__droparea-icon {
+  color: var(--greeble-color-accent, #6aa1ff);
+  transform: translateY(-4px);
+}
+
+.greeble-file-upload__droparea-text {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--greeble-color-foreground, #e8e8ea);
+}
+
+.greeble-file-upload__droparea-hint {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--greeble-color-muted, rgba(232, 232, 234, 0.5));
+}
+
+/* File Info */
+.greeble-file-upload__file-info {
+  display: flex;
+  align-items: center;
+  gap: var(--greeble-spacing-3, 0.75rem);
+  padding: var(--greeble-spacing-3, 0.75rem);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--greeble-radius-small, 8px);
+  border: 1px solid var(--greeble-color-success, #22c55e);
+}
+
+.greeble-file-upload__file-info[hidden] {
+  display: none;
+}
+
+.greeble-file-upload__file-preview {
+  inline-size: 3rem;
+  block-size: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--greeble-radius-small, 8px);
+  overflow: hidden;
+}
+
+.greeble-file-upload__file-preview img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+}
+
+.greeble-file-upload__file-preview svg {
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+  color: var(--greeble-color-accent, #6aa1ff);
+}
+
+.greeble-file-upload__file-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.greeble-file-upload__file-name {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--greeble-color-foreground, #e8e8ea);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.greeble-file-upload__file-size {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--greeble-color-muted, rgba(232, 232, 234, 0.5));
+}
+
+.greeble-file-upload__file-remove {
+  padding: var(--greeble-spacing-2, 0.5rem);
+  background: transparent;
+  border: none;
+  border-radius: var(--greeble-radius-small, 8px);
+  color: var(--greeble-color-muted, rgba(232, 232, 234, 0.5));
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.greeble-file-upload__file-remove:hover {
+  color: var(--greeble-color-danger, #ef4444);
+  background: rgba(239, 68, 68, 0.1);
+}
+
+/* URL Input */
+.greeble-file-upload__url-input {
+  display: flex;
+  gap: var(--greeble-spacing-2, 0.5rem);
+}
+
+.greeble-file-upload__url {
+  flex: 1;
+  padding: var(--greeble-spacing-2, 0.5rem) var(--greeble-spacing-3, 0.75rem);
+  font-size: 0.875rem;
+  color: var(--greeble-color-foreground, #e8e8ea);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--greeble-color-border, rgba(255, 255, 255, 0.15));
+  border-radius: var(--greeble-radius-small, 8px);
+  transition: all 0.15s ease;
+}
+
+.greeble-file-upload__url:focus {
+  outline: none;
+  border-color: var(--greeble-color-accent, #6aa1ff);
+  box-shadow: var(--greeble-focus-ring, 0 0 0 3px rgba(106, 161, 255, 0.5));
+}
+
+.greeble-file-upload__url::placeholder {
+  color: var(--greeble-color-muted, rgba(232, 232, 234, 0.5));
+}
+
+.greeble-file-upload__url-fetch {
+  padding: var(--greeble-spacing-2, 0.5rem) var(--greeble-spacing-4, 1rem);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--greeble-color-foreground, #e8e8ea);
+  background: var(--greeble-color-accent, #6aa1ff);
+  border: none;
+  border-radius: var(--greeble-radius-small, 8px);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.greeble-file-upload__url-fetch:hover {
+  background: var(--greeble-color-accent-hover, #5a91e6);
+}
+
+.greeble-file-upload__url-fetch:focus-visible {
+  outline: none;
+  box-shadow: var(--greeble-focus-ring, 0 0 0 3px rgba(106, 161, 255, 0.5));
+}
+
+/* Textarea */
+.greeble-file-upload__textarea {
+  width: 100%;
+  min-height: 8rem;
+  padding: var(--greeble-spacing-3, 0.75rem);
+  font-size: 0.875rem;
+  font-family: inherit;
+  color: var(--greeble-color-foreground, #e8e8ea);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--greeble-color-border, rgba(255, 255, 255, 0.15));
+  border-radius: var(--greeble-radius-small, 8px);
+  resize: vertical;
+  transition: all 0.15s ease;
+}
+
+.greeble-file-upload__textarea:focus {
+  outline: none;
+  border-color: var(--greeble-color-accent, #6aa1ff);
+  box-shadow: var(--greeble-focus-ring, 0 0 0 3px rgba(106, 161, 255, 0.5));
+}
+
+.greeble-file-upload__textarea::placeholder {
+  color: var(--greeble-color-muted, rgba(232, 232, 234, 0.5));
+}
+
+/* Type Badge */
+.greeble-file-upload__type {
+  display: flex;
+  align-items: center;
+  gap: var(--greeble-spacing-2, 0.5rem);
+}
+
+.greeble-file-upload__type[hidden] {
+  display: none;
+}
+
+/* Variants for different file types */
+.greeble-file-upload--docs .greeble-file-upload__droparea {
+  border-color: var(--greeble-color-docs, #EA580C);
+}
+
+.greeble-file-upload--image .greeble-file-upload__droparea {
+  border-color: var(--greeble-color-image, #2563EB);
+}
+
+.greeble-file-upload--audio .greeble-file-upload__droparea {
+  border-color: var(--greeble-color-audio, #0891B2);
+}
+
+.greeble-file-upload--video .greeble-file-upload__droparea {
+  border-color: var(--greeble-color-video, #7C3AED);
+}

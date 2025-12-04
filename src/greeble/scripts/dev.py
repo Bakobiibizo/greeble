@@ -256,7 +256,7 @@ def handle_protect_main() -> int:
             raise RuntimeError("gh api command failed")
         print("Branch protection for main configured via gh CLI.")
         return 0
-    except Exception as e:  # noqa: BLE001 - we want a friendly message
+    except Exception as e:
         print(
             (
                 "Could not configure branch protection automatically.\n"
@@ -649,7 +649,7 @@ def bump_version(version: str, part: VersionPart) -> str:
     try:
         major_s, minor_s, patch_s = version.split(".")
         major, minor, patch = int(major_s), int(minor_s), int(patch_s)
-    except Exception as e:  # noqa: BLE001
+    except Exception as e:
         raise ValueError(f"invalid version: {version}") from e
     if part == "major":
         return f"{major + 1}.0.0"

@@ -97,6 +97,8 @@ COMPONENT_CSS = load_component_stylesheets(
     ),
 )
 
+SITE_STATIC = Path(__file__).parent / "static"
+
 app = FastAPI(title="Greeble Landing Demo")
 app.mount(
     "/static/greeble",
@@ -107,6 +109,12 @@ app.mount(
     "/static/images",
     StaticFiles(directory=str(ROOT / "public" / "images")),
     name="example-images",
+)
+# Serve site-specific assets (favicon, icons)
+app.mount(
+    "/static",
+    StaticFiles(directory=str(SITE_STATIC)),
+    name="site-static",
 )
 
 
@@ -309,8 +317,9 @@ def render_page(body_html: str) -> HTMLResponse:
     <title>Greeble Demo</title>
     <link rel="stylesheet" href="/static/greeble/greeble-core.css" />
     <link rel="stylesheet" href="/static/greeble/greeble-landing.css" />
-    <link rel="icon" href="/static/images/greeble-icon-black.svg" type="image/svg+xml" media="(prefers-color-scheme: light)" />
-    <link rel="icon" href="/static/images/greeble-icon-alpha-white.png" sizes="any" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" href="/static/favicon.ico" sizes="any" />
+    <link rel="icon" href="/static/greeble-icon-black.svg" type="image/svg+xml" media="(prefers-color-scheme: light)" />
+    <link rel="icon" href="/static/greeble-icon-white.svg" type="image/svg+xml" media="(prefers-color-scheme: dark)" />
     <style>
       :root {
         color-scheme: light dark;

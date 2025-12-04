@@ -6,6 +6,14 @@ from pathlib import Path
 
 import yaml
 
+__all__ = [
+    "Component",
+    "Manifest",
+    "ManifestError",
+    "default_manifest_path",
+    "load_manifest",
+]
+
 
 @dataclass(frozen=True)
 class Component:

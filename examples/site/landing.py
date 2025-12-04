@@ -78,6 +78,14 @@ DROPDOWN_TEMPLATE = load_component_template(CPTS, "dropdown", "dropdown.html")
 STEPPER_TEMPLATE = load_component_template(CPTS, "stepper", "stepper.html")
 FORM_TEMPLATE = load_component_template(CPTS, "form-validated", "form.html")
 FORM_INVALID_PARTIAL = load_component_template(CPTS, "form-validated", "form.partial.html")
+AUDIO_RECORDER_TEMPLATE = load_component_template(CPTS, "audio-recorder", "audio-recorder.html")
+DRAGGABLE_CARD_TEMPLATE = load_component_template(CPTS, "draggable-card", "draggable-card.html")
+DROP_CANVAS_TEMPLATE = load_component_template(CPTS, "drop-canvas", "drop-canvas.html")
+DROP_ZONE_TEMPLATE = load_component_template(CPTS, "drop-zone", "drop-zone.html")
+FILE_UPLOAD_TEMPLATE = load_component_template(CPTS, "file-upload", "file-upload.html")
+STEP_PROGRESS_TEMPLATE = load_component_template(CPTS, "step-progress", "step-progress.html")
+SWAP_SELECT_TEMPLATE = load_component_template(CPTS, "swap-select", "swap-select.html")
+TYPE_BADGE_TEMPLATE = load_component_template(CPTS, "type-badge", "type-badge.html")
 
 COMPONENT_CSS = load_component_stylesheets(
     CPTS,
@@ -94,6 +102,14 @@ COMPONENT_CSS = load_component_stylesheets(
         ("infinite-list", "infinite-list.css"),
         ("form-validated", "form.css"),
         ("tabs", "tabs.css"),
+        ("audio-recorder", "audio-recorder.css"),
+        ("draggable-card", "draggable-card.css"),
+        ("drop-canvas", "drop-canvas.css"),
+        ("drop-zone", "drop-zone.css"),
+        ("file-upload", "file-upload.css"),
+        ("step-progress", "step-progress.css"),
+        ("swap-select", "swap-select.css"),
+        ("type-badge", "type-badge.css"),
     ),
 )
 
@@ -501,6 +517,33 @@ def render_page(body_html: str) -> HTMLResponse:
         align-items: center;
         gap: 1rem;
       }
+      /* Demo group styling */
+      .demo-group {
+        display: grid;
+        gap: 1.5rem;
+        padding: 2rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .demo-group:last-child {
+        border-bottom: none;
+      }
+      .demo-group__header {
+        display: grid;
+        gap: 0.5rem;
+        padding-bottom: 1rem;
+      }
+      .demo-group__header h2 {
+        margin: 0;
+        background: linear-gradient(135deg, #93c5fd 0%, #c4b5fd 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .demo-group__description {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.65);
+        font-size: 1.05rem;
+      }
 $component_css
     </style>
     <script src="https://unpkg.com/htmx.org@1.9.12" defer></script>
@@ -679,22 +722,178 @@ def build_sse_section() -> str:
     """
 
 
+# --- New Component Section Builders ---
+
+
+def build_audio_recorder_section() -> str:
+    return f"""
+<section class="demo" id="audio-recorder-demo">
+  <header>
+    <h2 class="greeble-heading-2">Audio Recorder</h2>
+    <p>Record audio clips with MediaRecorder API and submit via HTMX.</p>
+  </header>
+  {AUDIO_RECORDER_TEMPLATE}
+</section>
+    """
+
+
+def build_file_upload_section() -> str:
+    return f"""
+<section class="demo" id="file-upload-demo">
+  <header>
+    <h2 class="greeble-heading-2">File Upload</h2>
+    <p>Multi-mode file input with tabs for file, URL, and paste.</p>
+  </header>
+  {FILE_UPLOAD_TEMPLATE}
+</section>
+    """
+
+
+def build_drop_zone_section() -> str:
+    return f"""
+<section class="demo" id="drop-zone-demo">
+  <header>
+    <h2 class="greeble-heading-2">Drop Zone</h2>
+    <p>Drag-and-drop file upload area with HTMX integration.</p>
+  </header>
+  {DROP_ZONE_TEMPLATE}
+</section>
+    """
+
+
+def build_swap_select_section() -> str:
+    return f"""
+<section class="demo" id="swap-select-demo">
+  <header>
+    <h2 class="greeble-heading-2">Swap Select</h2>
+    <p>Paired dropdowns with a swap button for source/target selection.</p>
+  </header>
+  {SWAP_SELECT_TEMPLATE}
+</section>
+    """
+
+
+def build_type_badge_section() -> str:
+    return f"""
+<section class="demo" id="type-badge-demo">
+  <header>
+    <h2 class="greeble-heading-2">Type Badges</h2>
+    <p>Colored badges for indicating content and data types in pipelines.</p>
+  </header>
+  <div class="cluster">
+    {TYPE_BADGE_TEMPLATE}
+  </div>
+</section>
+    """
+
+
+def build_step_progress_section() -> str:
+    return f"""
+<section class="demo" id="step-progress-demo">
+  <header>
+    <h2 class="greeble-heading-2">Step Progress</h2>
+    <p>Progress indicator for multi-step workflows with timing info.</p>
+  </header>
+  {STEP_PROGRESS_TEMPLATE}
+</section>
+    """
+
+
+def build_pipeline_builder_section() -> str:
+    """Combined draggable cards + drop canvas for a pipeline builder demo."""
+    return f"""
+<section class="demo" id="pipeline-builder">
+  <header>
+    <h2 class="greeble-heading-2">Pipeline Builder</h2>
+    <p>Drag cards from the palette onto the canvas to build a workflow.</p>
+  </header>
+  <div class="grid-two">
+    <aside>
+      <h3 class="greeble-heading-3">Components</h3>
+      {DRAGGABLE_CARD_TEMPLATE}
+    </aside>
+    <article>
+      {DROP_CANVAS_TEMPLATE}
+    </article>
+  </div>
+</section>
+    """
+
+
+# --- Grouped Section Builders ---
+
+
+def build_section_group(title: str, description: str, sections: list[str]) -> str:
+    """Wrap multiple demo sections in a labeled group."""
+    inner = "\n".join(sections)
+    return f"""
+<div class="demo-group" id="{title.lower().replace(' ', '-')}-group">
+  <header class="demo-group__header">
+    <h2 class="greeble-heading-1">{title}</h2>
+    <p class="demo-group__description">{description}</p>
+  </header>
+  {inner}
+</div>
+    """
+
+
 @app.get("/", response_class=HTMLResponse)
 async def landing() -> HTMLResponse:
-    sections = "".join(
+    # Group 1: Authentication & Forms
+    auth_forms = build_section_group(
+        "Authentication & Forms",
+        "Sign-in flows, validated inputs, and form handling patterns.",
+        [build_sign_in_section(), build_validated_form_section()],
+    )
+
+    # Group 2: Navigation & Selection
+    navigation = build_section_group(
+        "Navigation & Selection",
+        "Tabs, dropdowns, command palettes, and swap selects for user choices.",
         [
-            build_sign_in_section(),
+            build_tabs_section(),
             build_dropdown_section(),
             build_palette_section(),
-            build_validated_form_section(),
-            build_table_section(),
-            build_tabs_section(),
-            build_drawer_section(),
-            build_stepper_section(),
-            build_infinite_list_section(),
-            build_sse_section(),
-        ]
+            build_swap_select_section(),
+        ],
     )
+
+    # Group 3: Data Display
+    data_display = build_section_group(
+        "Data Display",
+        "Tables, badges, and infinite lists for presenting information.",
+        [build_table_section(), build_type_badge_section(), build_infinite_list_section()],
+    )
+
+    # Group 4: Overlays & Dialogs
+    overlays = build_section_group(
+        "Overlays & Dialogs",
+        "Modals, drawers, and toasts for contextual interactions.",
+        [build_drawer_section()],
+    )
+
+    # Group 5: File & Media
+    file_media = build_section_group(
+        "File & Media",
+        "Upload files, record audio, and handle media inputs.",
+        [build_file_upload_section(), build_drop_zone_section(), build_audio_recorder_section()],
+    )
+
+    # Group 6: Workflow & Pipelines
+    workflows = build_section_group(
+        "Workflow & Pipelines",
+        "Steppers, progress indicators, and drag-and-drop pipeline builders.",
+        [build_stepper_section(), build_step_progress_section(), build_pipeline_builder_section()],
+    )
+
+    # Group 7: Live Updates
+    live = build_section_group(
+        "Live Updates",
+        "Server-Sent Events for real-time status and notifications.",
+        [build_sse_section()],
+    )
+
+    sections = "\n".join([auth_forms, navigation, data_display, overlays, file_media, workflows, live])
     return render_page(sections)
 
 
@@ -1146,6 +1345,62 @@ async def sse_stream(request: Request) -> StreamingResponse:
             "Connection": "keep-alive",
         },
     )
+
+
+# --- New Component Endpoints ---
+
+
+# Swap Select options
+SWAP_OPTIONS = {
+    "languages": [
+        ("en", "English"),
+        ("es", "Spanish"),
+        ("fr", "French"),
+        ("de", "German"),
+        ("ja", "Japanese"),
+        ("zh", "Chinese"),
+    ],
+}
+
+
+@app.get("/options/source", response_class=HTMLResponse)
+@app.get("/options/target", response_class=HTMLResponse)
+async def swap_select_options() -> HTMLResponse:
+    options = "\n".join(
+        f'<option value="{code}">{name}</option>' for code, name in SWAP_OPTIONS["languages"]
+    )
+    return HTMLResponse(options)
+
+
+@app.post("/audio/upload", response_class=HTMLResponse)
+async def audio_upload() -> HTMLResponse:
+    toast = toast_fragment("success", "Audio received", "Your recording has been uploaded.")
+    body = (
+        '<div id="audio-recorder-result">Audio uploaded successfully!</div>'
+        f'<div id="greeble-toasts" hx-swap-oob="true">{toast}</div>'
+    )
+    return HTMLResponse(body)
+
+
+@app.post("/files/upload", response_class=HTMLResponse)
+async def files_upload() -> HTMLResponse:
+    toast = toast_fragment("success", "Files uploaded", "Your files have been processed.")
+    body = (
+        '<div id="drop-zone-result">Files uploaded successfully!</div>'
+        f'<div id="greeble-toasts" hx-swap-oob="true">{toast}</div>'
+    )
+    return HTMLResponse(body)
+
+
+@app.post("/pipeline/run", response_class=HTMLResponse)
+async def pipeline_run() -> HTMLResponse:
+    toast = toast_fragment("info", "Pipeline started", "Processing your workflow...")
+    body = (
+        '<div id="drop-canvas-output" class="greeble-card">Pipeline executed! Results would appear here.</div>'
+        f'<div id="greeble-toasts" hx-swap-oob="true">{toast}</div>'
+    )
+    headers = {"HX-Trigger": json.dumps({"greeble:pipeline:complete": True})}
+    return HTMLResponse(body, headers=headers)
 
 
 if __name__ == "__main__":

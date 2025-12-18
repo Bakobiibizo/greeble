@@ -17,7 +17,6 @@ class GreebleDropCanvas {
       '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
     })[c]);
   }
-
   constructor(selector, options = {}) {
     this.container = typeof selector === 'string'
       ? document.querySelector(selector)
@@ -388,7 +387,6 @@ class GreebleDropCanvas {
     message.appendChild(br);
     message.appendChild(text3);
     error.appendChild(message);
-
     document.body.appendChild(error);
 
     if (this.options.onTypeError) {

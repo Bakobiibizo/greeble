@@ -186,6 +186,7 @@ class GreebleCardPalette {
     };
 
     this.cardInstances = [];
+    this.currentFilter = null;
     this.init();
   }
 
@@ -267,19 +268,56 @@ class GreebleCardPalette {
     });
   }
 
+  /**
+   * Checks if an output type is compatible with accepted input types.
+   * 
+   * Compatibility rules:
+   * - 'any' or '*' wildcards accept everything
+   * - Exact type matches are always compatible
+   * - JSON <-> text: JSON can be serialized to text (JSON.stringify), 
+   *   and text can often be parsed as JSON. This allows flexible data 
+   *   handling in pipelines where format conversion is implicit.
+   * 
+   * @param {string} outputType - The type being produced
+   * @param {string[]} acceptTypes - Array of types being accepted
+   * @returns {boolean} Whether the types are compatible
+   */
   isTypeCompatible(outputType, acceptTypes) {
     if (acceptTypes.includes('any') || acceptTypes.includes('*')) return true;
     if (acceptTypes.includes(outputType)) return true;
     
-    // JSON is compatible with text
+    // JSON <-> text compatibility:
+    // JSON can be serialized to text (JSON.stringify), and text can often be parsed as JSON.
+    // This allows flexible data handling in pipelines where format conversion is implicit.
     if (outputType === 'json' && acceptTypes.includes('text')) return true;
     if (outputType === 'text' && acceptTypes.includes('json')) return true;
     
     return false;
   }
 
-  // Add cards dynamically
+  /**
+   * Add a card dynamically to the palette.
+   * @param {Object} cardData - Card configuration
+   * @param {string} cardData.id - Unique identifier for the card (required)
+   * @param {string} [cardData.category='default'] - Category for grouping
+   * @param {string} [cardData.title] - Display title (defaults to id)
+   * @param {string|string[]} [cardData.accepts] - Input types accepted
+   * @param {string} [cardData.produces] - Output type produced
+   * @param {string} [cardData.icon] - Emoji or icon
+   * @param {string} [cardData.description] - Optional description
+   * @returns {HTMLElement|null} The created card element, or null if validation fails
+   */
   addCard(cardData) {
+    // Validate required fields
+    if (!cardData || typeof cardData !== 'object') {
+      console.error('GreebleCardPalette.addCard: cardData must be an object');
+      return null;
+    }
+    if (!cardData.id) {
+      console.error('GreebleCardPalette.addCard: cardData.id is required');
+      return null;
+    }
+
     const category = cardData.category || 'default';
     let categoryEl = this.container.querySelector(`[data-category="${category}"]`);
     
@@ -310,8 +348,17 @@ class GreebleCardPalette {
     return card;
   }
 
-  // Filter cards by search term
+  /**
+   * Filter cards by search term.
+   * Searches title and description fields.
+   * @param {string} searchTerm - Text to search for
+   */
   filter(searchTerm) {
+    if (typeof searchTerm !== 'string') {
+      console.error('GreebleCardPalette.filter: searchTerm must be a string');
+      return;
+    }
+    this.currentFilter = searchTerm || null;
     const term = searchTerm.toLowerCase();
     
     this.container.querySelectorAll('.greeble-draggable-card').forEach(card => {
@@ -328,6 +375,9 @@ class GreebleCardPalette {
     });
   }
 
+  /**
+   * Clear any active filter and show all cards.
+   */
   clearFilter() {
     this.container.querySelectorAll('.greeble-draggable-card').forEach(card => {
       card.style.display = '';
@@ -335,6 +385,15 @@ class GreebleCardPalette {
     this.container.querySelectorAll('.greeble-card-palette__category').forEach(category => {
       category.style.display = '';
     });
+    this.currentFilter = null;
+  }
+
+  /**
+   * Get the current filter term.
+   * @returns {string|null} Current filter term or null if not filtering
+   */
+  getCurrentFilter() {
+    return this.currentFilter || null;
   }
 }
 

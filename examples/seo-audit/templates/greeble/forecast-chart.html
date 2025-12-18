@@ -1,0 +1,91 @@
+<!-- Forecast Chart (Copy & Paste Ready)
+A server-rendered SVG area chart showing min/expected/max forecast bands.
+Ideal for 12-month projections with confidence intervals.
+-->
+<div class="greeble-forecast-chart" data-greeble-forecast-chart>
+  <header class="greeble-forecast-chart__header">
+    <h3 class="greeble-heading-3">12-Month Forecast</h3>
+    <div class="greeble-forecast-chart__legend">
+      <span class="greeble-forecast-chart__legend-item greeble-forecast-chart__legend-item--min">
+        <span class="greeble-forecast-chart__legend-dot"></span>
+        Min
+      </span>
+      <span class="greeble-forecast-chart__legend-item greeble-forecast-chart__legend-item--expected">
+        <span class="greeble-forecast-chart__legend-dot"></span>
+        Expected
+      </span>
+      <span class="greeble-forecast-chart__legend-item greeble-forecast-chart__legend-item--max">
+        <span class="greeble-forecast-chart__legend-dot"></span>
+        Max
+      </span>
+    </div>
+  </header>
+
+  <div class="greeble-forecast-chart__container">
+    <svg viewBox="0 0 600 200" class="greeble-forecast-chart__svg" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <linearGradient id="forecast-min-gradient" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ef4444" stop-opacity="0.25"/>
+          <stop offset="100%" stop-color="#ef4444" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="forecast-expected-gradient" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#22c55e" stop-opacity="0.4"/>
+          <stop offset="100%" stop-color="#22c55e" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="forecast-max-gradient" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#f97316" stop-opacity="0.25"/>
+          <stop offset="100%" stop-color="#f97316" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Grid lines -->
+      <g class="greeble-forecast-chart__grid">
+        <line x1="40" y1="20" x2="580" y2="20" stroke="rgba(255,255,255,0.06)"/>
+        <line x1="40" y1="65" x2="580" y2="65" stroke="rgba(255,255,255,0.06)"/>
+        <line x1="40" y1="110" x2="580" y2="110" stroke="rgba(255,255,255,0.06)"/>
+        <line x1="40" y1="155" x2="580" y2="155" stroke="rgba(255,255,255,0.06)"/>
+      </g>
+
+      <!-- Y-axis labels -->
+      <g class="greeble-forecast-chart__y-labels" fill="rgba(232,232,234,0.5)" font-size="10">
+        <text x="35" y="24" text-anchor="end">200</text>
+        <text x="35" y="69" text-anchor="end">150</text>
+        <text x="35" y="114" text-anchor="end">100</text>
+        <text x="35" y="159" text-anchor="end">50</text>
+      </g>
+
+      <!-- Area fills (rendered behind lines) -->
+      <path class="greeble-forecast-chart__area greeble-forecast-chart__area--min"
+        d="M40,140 L85,135 L130,128 L175,120 L220,112 L265,105 L310,98 L355,92 L400,85 L445,78 L490,72 L535,65 L580,58 L580,180 L40,180 Z"
+        fill="url(#forecast-min-gradient)"/>
+      <path class="greeble-forecast-chart__area greeble-forecast-chart__area--expected"
+        d="M40,120 L85,112 L130,105 L175,98 L220,90 L265,82 L310,75 L355,68 L400,60 L445,52 L490,45 L535,38 L580,30 L580,180 L40,180 Z"
+        fill="url(#forecast-expected-gradient)"/>
+      <path class="greeble-forecast-chart__area greeble-forecast-chart__area--max"
+        d="M40,100 L85,92 L130,85 L175,78 L220,70 L265,62 L310,55 L355,48 L400,40 L445,32 L490,25 L535,18 L580,10 L580,180 L40,180 Z"
+        fill="url(#forecast-max-gradient)"/>
+
+      <!-- Lines -->
+      <polyline class="greeble-forecast-chart__line greeble-forecast-chart__line--min"
+        points="40,140 85,135 130,128 175,120 220,112 265,105 310,98 355,92 400,85 445,78 490,72 535,65 580,58"
+        fill="none" stroke="#ef4444" stroke-width="1.5"/>
+      <polyline class="greeble-forecast-chart__line greeble-forecast-chart__line--expected"
+        points="40,120 85,112 130,105 175,98 220,90 265,82 310,75 355,68 400,60 445,52 490,45 535,38 580,30"
+        fill="none" stroke="#22c55e" stroke-width="2.5"/>
+      <polyline class="greeble-forecast-chart__line greeble-forecast-chart__line--max"
+        points="40,100 85,92 130,85 175,78 220,70 265,62 310,55 355,48 400,40 445,32 490,25 535,18 580,10"
+        fill="none" stroke="#f97316" stroke-width="1.5"/>
+
+      <!-- X-axis labels -->
+      <g class="greeble-forecast-chart__x-labels" fill="rgba(232,232,234,0.5)" font-size="10">
+        <text x="40" y="195" text-anchor="middle">M1</text>
+        <text x="130" y="195" text-anchor="middle">M3</text>
+        <text x="220" y="195" text-anchor="middle">M5</text>
+        <text x="310" y="195" text-anchor="middle">M7</text>
+        <text x="400" y="195" text-anchor="middle">M9</text>
+        <text x="490" y="195" text-anchor="middle">M11</text>
+        <text x="580" y="195" text-anchor="middle">M12</text>
+      </g>
+    </svg>
+  </div>
+</div>

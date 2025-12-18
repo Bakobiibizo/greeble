@@ -1,0 +1,48 @@
+{# Targets Grid Partial #}
+{% if targets %}
+  {% for target in targets %}
+  <div class="target-card" onclick="selectTarget(this)" data-target-id="{{ target.id }}">
+    <div class="target-card__name">{{ target.name }}</div>
+    <div class="target-card__url">{{ target.url }}</div>
+    <div class="target-card__meta">
+      {% if target.has_audit %}
+      <span class="target-card__status target-card__status--ready">Audit Ready</span>
+      {% else %}
+      <span class="target-card__status target-card__status--pending">Pending</span>
+      {% endif %}
+      <div class="target-card__actions">
+        {% if target.has_audit %}
+        <button type="button" 
+                class="target-card__btn"
+                hx-get="/api/audit/{{ target.id }}"
+                hx-target="#audit-results"
+                hx-swap="innerHTML"
+                hx-indicator="#audit-loading">
+          View
+        </button>
+        {% endif %}
+        <button type="button" 
+                class="target-card__btn target-card__btn--primary"
+                hx-post="/api/audit/{{ target.id }}/run"
+                hx-target="#audit-results"
+                hx-swap="innerHTML"
+                hx-indicator="#audit-loading">
+          Run Audit
+        </button>
+        <button type="button"
+                class="target-card__btn"
+                hx-delete="/api/targets/{{ target.id }}"
+                hx-target="#targets-grid"
+                hx-swap="innerHTML"
+                hx-confirm="Delete {{ target.name }}?">
+          ✕
+        </button>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+{% else %}
+<div class="targets-empty">
+  No targets yet. Add a business name and URL above to get started.
+</div>
+{% endif %}

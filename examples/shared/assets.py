@@ -10,7 +10,7 @@ from flask import Flask
 from markupsafe import Markup
 from werkzeug.middleware.shared_data import SharedDataMiddleware
 
-REPO_ROOT = Path(__file__).resolve().parents[1]
+REPO_ROOT = Path(__file__).resolve().parents[2]
 CORE_ASSETS = REPO_ROOT / "packages" / "greeble_core" / "assets" / "css"
 HYPERSCRIPT_ASSETS = REPO_ROOT / "packages" / "greeble_hyperscript" / "assets"
 PUBLIC_IMAGES = REPO_ROOT / "public" / "images"

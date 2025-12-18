@@ -1,0 +1,50 @@
+<!-- Metric Grid Partial (Jinja2)
+Renders a grid of key-value metric cards.
+
+Variables:
+  - title: str (optional, default "Diagnostics")
+  - metrics: list of dicts with keys:
+    - key: str (unique identifier)
+    - label: str (display name)
+    - value: str|int|float (display value)
+    - format: str (optional: 'number', 'percent', 'currency')
+    - color: str (optional: 'success', 'warning', 'danger', 'muted')
+  - columns: int (optional, default 2)
+-->
+{% set title = title | default("Diagnostics") %}
+{% set metrics = metrics | default([]) %}
+{% set columns = columns | default(2) %}
+
+<div class="greeble-metric-grid" data-greeble-metric-grid>
+  {% if title %}
+  <header class="greeble-metric-grid__header">
+    <h3 class="greeble-heading-3">{{ title }}</h3>
+  </header>
+  {% endif %}
+
+  <div class="greeble-metric-grid__grid" style="--metric-columns: {{ columns }};">
+    {% for metric in metrics %}
+    {% set display_value = metric.value %}
+    {% if metric.format == 'percent' %}
+      {% set display_value = (metric.value * 100) | round | int ~ '%' if metric.value <= 1 else metric.value | round | int ~ '%' %}
+    {% elif metric.format == 'number' %}
+      {% set display_value = metric.value | int %}
+    {% endif %}
+    
+    {% set color_class = '' %}
+    {% if metric.color %}
+      {% set color_class = 'greeble-metric-grid__value--' ~ metric.color %}
+    {% elif metric.format == 'percent' %}
+      {% set pct = (metric.value * 100) | int if metric.value <= 1 else metric.value | int %}
+      {% set color_class = 'greeble-metric-grid__value--success' if pct >= 70 else 'greeble-metric-grid__value--warning' if pct >= 50 else 'greeble-metric-grid__value--danger' %}
+    {% endif %}
+    
+    <div class="greeble-metric-grid__card" data-metric="{{ metric.key }}">
+      <span class="greeble-metric-grid__label">{{ metric.label }}</span>
+      <span class="greeble-metric-grid__value {{ color_class }}">{{ display_value }}</span>
+    </div>
+    {% else %}
+    <div class="greeble-metric-grid__empty">No metrics available</div>
+    {% endfor %}
+  </div>
+</div>

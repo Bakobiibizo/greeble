@@ -17,7 +17,7 @@ from .scaffold import (
     execute_plan,
     remove_files,
 )
-from .starter import StarterError, scaffold_starter
+from .starter import StarterError, scaffold_baseline_assets, scaffold_starter
 
 __all__ = ["main"]
 
@@ -262,6 +262,17 @@ def cmd_add(args: argparse.Namespace, manifest: Manifest) -> int:
     static_dir = Path(args.static)
     docs_dir: Path | None = args.docs
 
+    if getattr(args, "init", False):
+        try:
+            scaffold_baseline_assets(
+                project_root=project_root,
+                force=args.force,
+                dry_run=args.dry_run,
+            )
+        except StarterError as exc:
+            print(f"error: {exc}", file=sys.stderr)
+            return 2
+
     try:
         written = _copy_component(
             manifest=manifest,
@@ -362,6 +373,17 @@ def cmd_sync(args: argparse.Namespace, manifest: Manifest) -> int:
     templates_dir = Path(args.templates)
     static_dir = Path(args.static)
     docs_dir: Path | None = args.docs
+
+    if getattr(args, "init", False):
+        try:
+            scaffold_baseline_assets(
+                project_root=project_root,
+                force=True,
+                dry_run=args.dry_run,
+            )
+        except StarterError as exc:
+            print(f"error: {exc}", file=sys.stderr)
+            return 2
     try:
         plans = build_copy_plan(
             manifest=manifest,
@@ -512,6 +534,27 @@ def build_parser() -> argparse.ArgumentParser:
     sub_list.set_defaults(func=cmd_list)
     sub_list.add_argument("--json", action="store_true", help="Output JSON payload of components")
 
+    sub_init = sub.add_parser(
+        "init", help="Scaffold baseline Greeble assets into an existing project"
+    )
+    sub_init.add_argument(
+        "--project",
+        default=Path.cwd(),
+        type=Path,
+        help="Destination project root (default: current directory)",
+    )
+    sub_init.add_argument(
+        "--force",
+        action="store_true",
+        help="Overwrite existing baseline asset files",
+    )
+    sub_init.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Preview the files that would be created",
+    )
+    sub_init.set_defaults(func=cmd_init)
+
     sub_new = sub.add_parser("new", help="Scaffold a new Greeble starter project")
     sub_new.add_argument(
         "project",
@@ -578,6 +621,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="Overwrite existing files",
     )
     sub_add.add_argument(
+        "--init",
+        action="store_true",
+        help="Scaffold baseline Greeble assets into the project before copying the component",
+    )
+    sub_add.add_argument(
         "--dry-run",
         action="store_true",
         help="Show the files that would be copied without writing them",
@@ -624,6 +672,11 @@ def build_parser() -> argparse.ArgumentParser:
         "--dry-run",
         action="store_true",
         help="Preview without writing",
+    )
+    sub_sync.add_argument(
+        "--init",
+        action="store_true",
+        help="Scaffold baseline Greeble assets into the project before syncing the component",
     )
     sub_sync.set_defaults(func=cmd_sync)
 
@@ -862,6 +915,33 @@ def cmd_theme_init(args: argparse.Namespace, manifest: Manifest) -> int:
         print(f"  - {verb} preset asset: {rel}")
     verb_cfg = "Would write" if dry_run else "Wrote"
     print(f"  - {verb_cfg} config:     {rel_config}")
+    return 0
+
+
+def cmd_init(args: argparse.Namespace, manifest: Manifest) -> int:
+    project_root = Path(args.project).resolve()
+    dry_run = bool(args.dry_run)
+    try:
+        written = scaffold_baseline_assets(
+            project_root=project_root,
+            force=bool(args.force),
+            dry_run=dry_run,
+        )
+    except StarterError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
+
+    if dry_run:
+        print("Baseline assets that would be created:\n")
+        for path in written:
+            rel = path.relative_to(project_root)
+            print(f"  - {rel}")
+        return 0
+
+    print(f"Baseline assets ensured in {project_root}")
+    print(f"  + {len(written)} file(s)")
+    for path in written:
+        print(f"  - {path.relative_to(project_root)}")
     return 0
 
 

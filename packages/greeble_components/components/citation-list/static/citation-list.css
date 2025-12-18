@@ -1,0 +1,162 @@
+/* Citation List Component */
+.greeble-citation-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--greeble-spacing-3, 0.75rem);
+}
+
+.greeble-citation-list__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--greeble-spacing-2, 0.5rem);
+}
+
+.greeble-citation-list__count {
+  font-size: 0.75rem;
+  color: var(--greeble-color-muted, rgba(232, 232, 234, 0.5));
+  background: rgba(255, 255, 255, 0.06);
+  padding: var(--greeble-spacing-1, 0.25rem) var(--greeble-spacing-2, 0.5rem);
+  border-radius: 999px;
+}
+
+.greeble-citation-list__scroll {
+  display: flex;
+  flex-direction: column;
+  gap: var(--greeble-spacing-2, 0.5rem);
+  max-height: 24rem;
+  overflow-y: auto;
+  padding-right: var(--greeble-spacing-1, 0.25rem);
+}
+
+/* Custom scrollbar */
+.greeble-citation-list__scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.greeble-citation-list__scroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 3px;
+}
+
+.greeble-citation-list__scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+}
+
+.greeble-citation-list__scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Citation card */
+.greeble-citation-list__card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--greeble-spacing-1, 0.25rem);
+  padding: var(--greeble-spacing-3, 0.75rem);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--greeble-radius-medium, 12px);
+}
+
+.greeble-citation-list__card--mismatch {
+  border-color: rgba(234, 179, 8, 0.3);
+  background: rgba(234, 179, 8, 0.05);
+}
+
+.greeble-citation-list__card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--greeble-spacing-2, 0.5rem);
+}
+
+.greeble-citation-list__name {
+  font-weight: 500;
+  color: var(--greeble-color-foreground, #e8e8ea);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.greeble-citation-list__badge {
+  flex-shrink: 0;
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.125rem 0.375rem;
+  border-radius: 4px;
+}
+
+.greeble-citation-list__badge--jsonld {
+  background: rgba(34, 197, 94, 0.2);
+  color: #4ade80;
+}
+
+.greeble-citation-list__badge--warning {
+  background: rgba(234, 179, 8, 0.2);
+  color: #facc15;
+}
+
+.greeble-citation-list__url {
+  font-size: 0.75rem;
+  color: var(--greeble-color-accent, #6aa1ff);
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.greeble-citation-list__url:hover {
+  text-decoration: underline;
+}
+
+.greeble-citation-list__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--greeble-spacing-3, 0.75rem);
+  font-size: 0.75rem;
+  color: var(--greeble-color-muted, rgba(232, 232, 234, 0.5));
+}
+
+.greeble-citation-list__host::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: currentColor;
+  border-radius: 50%;
+  margin-right: 0.375rem;
+  opacity: 0.5;
+}
+
+.greeble-citation-list__address {
+  font-size: 0.75rem;
+  color: var(--greeble-color-muted, rgba(232, 232, 234, 0.6));
+  line-height: 1.4;
+}
+
+.greeble-citation-list__empty {
+  padding: var(--greeble-spacing-4, 1rem);
+  text-align: center;
+  color: var(--greeble-color-muted, rgba(232, 232, 234, 0.5));
+  font-size: 0.875rem;
+}
+
+.greeble-citation-list__loading {
+  display: block;
+  padding: var(--greeble-spacing-3, 0.75rem);
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--greeble-color-muted, rgba(232, 232, 234, 0.5));
+}
+
+/* Compact variant */
+.greeble-citation-list--compact .greeble-citation-list__scroll {
+  max-height: 16rem;
+}
+
+.greeble-citation-list--compact .greeble-citation-list__card {
+  padding: var(--greeble-spacing-2, 0.5rem);
+}

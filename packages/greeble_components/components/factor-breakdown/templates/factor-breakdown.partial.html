@@ -1,0 +1,41 @@
+<!-- Factor Breakdown Partial (Jinja2)
+Displays weighted scoring factors as cards with progress bars.
+
+Variables:
+  - title: str (optional, default "Score Breakdown")
+  - factors: list of dicts with keys: key, label, weight, value
+    - key: str (unique identifier)
+    - label: str (display name)
+    - weight: float (0-1, e.g., 0.4 for 40%)
+    - value: float (0-1, e.g., 0.85 for 85%)
+-->
+{% set title = title | default("Score Breakdown") %}
+{% set factors = factors | default([]) %}
+
+<div class="greeble-factor-breakdown" data-greeble-factor-breakdown>
+  {% if title %}
+  <header class="greeble-factor-breakdown__header">
+    <h3 class="greeble-heading-3">{{ title }}</h3>
+  </header>
+  {% endif %}
+
+  <div class="greeble-factor-breakdown__grid">
+    {% for factor in factors %}
+    {% set pct = (factor.value * 100) | round | int %}
+    {% set color_class = 'success' if pct >= 70 else 'warning' if pct >= 50 else 'danger' %}
+    <div class="greeble-factor-breakdown__card" data-factor="{{ factor.key }}">
+      <div class="greeble-factor-breakdown__card-header">
+        <span class="greeble-factor-breakdown__label">{{ factor.label }}</span>
+        <span class="greeble-factor-breakdown__weight">Weight {{ (factor.weight * 100) | round | int }}%</span>
+      </div>
+      <div class="greeble-factor-breakdown__bar">
+        <div class="greeble-factor-breakdown__bar-fill greeble-factor-breakdown__bar-fill--{{ color_class }}" 
+             style="width: {{ pct }}%;"></div>
+      </div>
+      <div class="greeble-factor-breakdown__value">{{ pct }}%</div>
+    </div>
+    {% else %}
+    <div class="greeble-factor-breakdown__empty">No factors available</div>
+    {% endfor %}
+  </div>
+</div>

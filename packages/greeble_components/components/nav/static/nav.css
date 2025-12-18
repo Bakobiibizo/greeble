@@ -1,0 +1,223 @@
+/* Nav Component
+ * Responsive top navigation bar with category links
+ */
+
+.greeble-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem clamp(1rem, 3vw, 2rem);
+  background: rgba(13, 13, 23, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+/* Brand / Logo */
+.greeble-nav__brand {
+  flex-shrink: 0;
+}
+
+.greeble-nav__logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: inherit;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.greeble-nav__logo:hover {
+  color: var(--greeble-accent, #93c5fd);
+}
+
+.greeble-nav__logo-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.greeble-nav__logo-text {
+  background: linear-gradient(135deg, #93c5fd 0%, #c4b5fd 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Mobile toggle */
+.greeble-nav__toggle {
+  display: none;
+  background: none;
+  border: 0;
+  color: inherit;
+  padding: 0.5rem;
+  cursor: pointer;
+  border-radius: 0.375rem;
+}
+
+.greeble-nav__toggle:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.greeble-nav__toggle:focus-visible {
+  outline: 2px solid var(--greeble-accent, #93c5fd);
+  outline-offset: 2px;
+}
+
+.greeble-nav__toggle-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+/* Navigation menu */
+.greeble-nav__menu {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.greeble-nav__list {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.greeble-nav__item {
+  position: relative;
+}
+
+.greeble-nav__link {
+  display: block;
+  padding: 0.5rem 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 0.375rem;
+  transition: color 0.15s ease, background 0.15s ease;
+  white-space: nowrap;
+}
+
+.greeble-nav__link:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.greeble-nav__link:focus-visible {
+  outline: 2px solid var(--greeble-accent, #93c5fd);
+  outline-offset: 2px;
+}
+
+/* Active state */
+.greeble-nav__link[aria-current="page"],
+.greeble-nav__link[data-active="true"],
+.greeble-nav__link.is-active {
+  color: #fff;
+  background: rgba(147, 197, 253, 0.15);
+}
+
+.greeble-nav__link[aria-current="page"]::after,
+.greeble-nav__link[data-active="true"]::after,
+.greeble-nav__link.is-active::after {
+  content: "";
+  position: absolute;
+  bottom: -0.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1.5rem;
+  height: 2px;
+  background: linear-gradient(90deg, #93c5fd, #c4b5fd);
+  border-radius: 1px;
+}
+
+/* Actions */
+.greeble-nav__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.greeble-nav__action-icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Responsive: Mobile */
+@media (max-width: 768px) {
+  .greeble-nav__toggle {
+    display: flex;
+  }
+
+  .greeble-nav__menu {
+    display: none;
+  }
+
+  .greeble-nav__actions {
+    display: none;
+  }
+
+  /* When menu is open (controlled via JS or HTMX) */
+  .greeble-nav[data-open="true"] .greeble-nav__menu {
+    display: flex;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(13, 13, 23, 0.98);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 1rem;
+  }
+
+  .greeble-nav[data-open="true"] .greeble-nav__list {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.25rem;
+  }
+
+  .greeble-nav[data-open="true"] .greeble-nav__item {
+    width: 100%;
+  }
+
+  .greeble-nav[data-open="true"] .greeble-nav__link {
+    padding: 0.75rem 1rem;
+    width: 100%;
+  }
+
+  .greeble-nav[data-open="true"] .greeble-nav__link[aria-current="page"]::after,
+  .greeble-nav[data-open="true"] .greeble-nav__link[data-active="true"]::after,
+  .greeble-nav[data-open="true"] .greeble-nav__link.is-active::after {
+    display: none;
+  }
+}
+
+/* Sticky variant */
+.greeble-nav--sticky {
+  position: sticky;
+  top: 0;
+}
+
+/* Fixed variant */
+.greeble-nav--fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+/* Transparent variant (for hero sections) */
+.greeble-nav--transparent {
+  background: transparent;
+  border-bottom-color: transparent;
+}
+
+.greeble-nav--transparent:hover {
+  background: rgba(13, 13, 23, 0.85);
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}

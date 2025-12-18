@@ -1,0 +1,146 @@
+{
+  "location": {
+    "brand": "Taco Time",
+    "location": "",
+    "domain": "tacotimecanada.com"
+  },
+  "score": {
+    "value": 64,
+    "grade": "C+",
+    "factors": [
+      {
+        "key": "nap_consistency",
+        "label": "NAP Consistency",
+        "weight": 0.4,
+        "value": 1.0
+      },
+      {
+        "key": "listing_completeness",
+        "label": "Listing Completeness",
+        "weight": 0.25,
+        "value": 0.5
+      },
+      {
+        "key": "citation_coverage",
+        "label": "Citation Coverage",
+        "weight": 0.25,
+        "value": 0.25
+      },
+      {
+        "key": "visibility_hint",
+        "label": "Visibility Hint",
+        "weight": 0.1,
+        "value": 0.5
+      }
+    ],
+    "recommendations": [
+      "Build citations on missing high-value directories."
+    ]
+  },
+  "forecast": [
+    {
+      "month": "M1",
+      "min": 119,
+      "expected": 121,
+      "max": 122
+    },
+    {
+      "month": "M2",
+      "min": 123,
+      "expected": 125,
+      "max": 127
+    },
+    {
+      "month": "M3",
+      "min": 134,
+      "expected": 138,
+      "max": 142
+    },
+    {
+      "month": "M4",
+      "min": 134,
+      "expected": 138,
+      "max": 142
+    },
+    {
+      "month": "M5",
+      "min": 151,
+      "expected": 158,
+      "max": 165
+    },
+    {
+      "month": "M6",
+      "min": 151,
+      "expected": 158,
+      "max": 165
+    },
+    {
+      "month": "M7",
+      "min": 157,
+      "expected": 165,
+      "max": 173
+    },
+    {
+      "month": "M8",
+      "min": 162,
+      "expected": 171,
+      "max": 180
+    },
+    {
+      "month": "M9",
+      "min": 177,
+      "expected": 188,
+      "max": 200
+    },
+    {
+      "month": "M10",
+      "min": 175,
+      "expected": 187,
+      "max": 198
+    },
+    {
+      "month": "M11",
+      "min": 201,
+      "expected": 217,
+      "max": 233
+    },
+    {
+      "month": "M12",
+      "min": 176,
+      "expected": 187,
+      "max": 199
+    }
+  ],
+  "competitors": [],
+  "citations": [
+    {
+      "name": "TacoTime Canada",
+      "telephone": null,
+      "address": {},
+      "url": "https://tacotimecanada.com",
+      "_jsonld": true,
+      "_host": "tacotimecanada.com",
+      "_url": "https://tacotimecanada.com/"
+    },
+    {
+      "name": "Search results for Taco Time | Search | Better Business Bureau",
+      "telephone": null,
+      "address": {},
+      "url": "",
+      "_jsonld": false,
+      "_host": "bbb.org",
+      "_url": "https://www.bbb.org/search?find_text=Taco+Time",
+      "_directory": true
+    }
+  ],
+  "diagnostics": {
+    "checked_count": 2,
+    "matched_count": 2,
+    "distinct_hosts": 2,
+    "jsonld_count": 1,
+    "nap_consistency": 1.0,
+    "citation_coverage": 0.25
+  },
+  "insight": "## Taco Time Local SEO Health - Executive Summary\n\nTaco Time's local SEO is currently weak (64/100) due to extremely limited citation coverage (25%), despite 100% NAP consistency across those few citations. The biggest opportunity is building citations on key local directories (Yelp, Google My Business, etc.) to improve visibility \u2013 aim to increase citation coverage to at least 75% within the next quarter.",
+  "local_rank": null
+}

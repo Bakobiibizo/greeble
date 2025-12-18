@@ -1,0 +1,51 @@
+<!-- Score Gauge Partial (Jinja2)
+Use this partial to render the gauge with dynamic data.
+
+Variables:
+  - score: int (0-100)
+  - grade: str (e.g., "A", "B+", "C")
+  - label: str (optional, e.g., "Health Score")
+-->
+{% set circumference = 326.7 %}
+{% set offset = circumference * (1 - (score | default(0)) / 100) %}
+{% set color = '#22c55e' if score >= 70 else '#eab308' if score >= 50 else '#ef4444' %}
+
+<div class="greeble-score-gauge" data-greeble-score-gauge data-score="{{ score | default(0) }}">
+  {% if label %}
+  <div class="greeble-score-gauge__label">{{ label }}</div>
+  {% endif %}
+  
+  <div class="greeble-score-gauge__ring">
+    <svg viewBox="0 0 120 120" class="greeble-score-gauge__svg">
+      <!-- Background track -->
+      <circle
+        cx="60"
+        cy="60"
+        r="52"
+        fill="none"
+        stroke="rgba(0, 0, 0, 0.1)"
+        stroke-width="12"
+        stroke-linecap="round"
+      />
+      <!-- Score arc -->
+      <circle
+        cx="60"
+        cy="60"
+        r="52"
+        fill="none"
+        stroke="{{ color }}"
+        stroke-width="12"
+        stroke-linecap="round"
+        stroke-dasharray="{{ circumference }}"
+        stroke-dashoffset="{{ offset }}"
+        transform="rotate(-90 60 60)"
+        class="greeble-score-gauge__arc"
+        style="--gauge-color: {{ color }};"
+      />
+    </svg>
+    <div class="greeble-score-gauge__center">
+      <span class="greeble-score-gauge__value">{{ score | default(0) }}</span>
+      <span class="greeble-score-gauge__grade">Grade {{ grade | default('-') }}</span>
+    </div>
+  </div>
+</div>

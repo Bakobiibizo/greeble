@@ -188,6 +188,23 @@ def test_cli_new_dry_run(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> 
     assert "templates/greeble/modal.html" in captured.out
 
 
+def test_cli_init_baseline_assets(tmp_path: Path) -> None:
+    project_root = tmp_path / "existing"
+    exit_code = main(["init", "--project", str(project_root)])
+    assert exit_code == 0
+    assert (project_root / "static" / "greeble" / "greeble-core.css").exists()
+    assert (project_root / "static" / "greeble" / "greeble-landing.css").exists()
+    assert (project_root / "static" / "greeble" / "hyperscript" / "greeble.hyperscript").exists()
+
+
+def test_cli_add_with_init_scaffolds_baseline(tmp_path: Path) -> None:
+    project_root = tmp_path / "app_init"
+    exit_code = main(["add", "modal", "--project", str(project_root), "--init"])
+    assert exit_code == 0
+    assert (project_root / "templates" / "greeble" / "modal.html").exists()
+    assert (project_root / "static" / "greeble" / "greeble-core.css").exists()
+
+
 def test_cli_theme_init_scaffolds_tailwind_config(tmp_path: Path) -> None:
     project_root = tmp_path / "tw_project"
     exit_code = main(

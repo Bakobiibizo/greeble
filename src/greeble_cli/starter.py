@@ -66,6 +66,48 @@ HYPERSCRIPT_REPO_PATH = (
 LOGO_SOURCE = TEMPLATES_DIR / "logo.svg"
 
 
+def scaffold_baseline_assets(
+    *,
+    project_root: Path,
+    force: bool,
+    dry_run: bool,
+) -> list[Path]:
+    project_root = project_root.resolve()
+
+    written: list[Path] = []
+
+    core_css_dest = project_root / "static" / "greeble" / "greeble-core.css"
+    if not dry_run:
+        core_css_dest.parent.mkdir(parents=True, exist_ok=True)
+    core_css_src_repo = (
+        REPO_ROOT / "packages" / "greeble_core" / "assets" / "css" / "greeble-core.css"
+    )
+    core_css_src: Path | None = None
+    with contextlib.suppress(ModuleNotFoundError, FileNotFoundError):
+        traversable = resources.files("greeble_core").joinpath("assets", "css", "greeble-core.css")
+        with resources.as_file(traversable) as path:
+            core_css_src = Path(path)
+    if core_css_src is None:
+        core_css_src = core_css_src_repo
+    if not core_css_src.exists():
+        raise StarterError("Core tokens stylesheet could not be located in greeble_core assets")
+    if core_css_dest.exists() and not force and not dry_run:
+        raise StarterError(f"Core tokens stylesheet already exists: {core_css_dest}")
+    if not dry_run:
+        shutil.copy2(core_css_src, core_css_dest)
+    written.append(core_css_dest)
+
+    landing_dest = project_root / LANDING_STYLES_DEST
+    _copy_landing_styles(landing_dest, dry_run=dry_run, force=force)
+    written.append(landing_dest)
+
+    hyperscript_dest = project_root / HYPERSCRIPT_DEST
+    _copy_hyperscript_bundle(hyperscript_dest, dry_run=dry_run, force=force)
+    written.append(hyperscript_dest)
+
+    return written
+
+
 def _write_file(destination: Path, template_name: str, *, dry_run: bool) -> None:
     source = TEMPLATES_DIR / template_name
     if not source.exists():  # pragma: no cover - defensive
@@ -177,13 +219,10 @@ def scaffold_starter(
         _write_file(dest, template_name, dry_run=dry_run)
         project_files.append(dest)
 
-    landing_dest = project_root / LANDING_STYLES_DEST
-    _copy_landing_styles(landing_dest, dry_run=dry_run, force=force)
-    project_files.append(landing_dest)
-
-    hyperscript_dest = project_root / HYPERSCRIPT_DEST
-    _copy_hyperscript_bundle(hyperscript_dest, dry_run=dry_run, force=force)
-    project_files.append(hyperscript_dest)
+    baseline_files = scaffold_baseline_assets(
+        project_root=project_root, force=force, dry_run=dry_run
+    )
+    project_files.extend(baseline_files)
 
     index_dest = project_root / "templates/index.html"
     _write_file(index_dest, "index.html", dry_run=dry_run)

@@ -11,10 +11,10 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, Form, Request
 from fastapi.responses import HTMLResponse, Response, StreamingResponse
 from fastapi.templating import Jinja2Templates
+from greeble.loaders import load_component_stylesheets, load_component_template
 
 from examples.shared.assets import apply_fastapi_assets, head_markup
 from greeble.adapters.fastapi import template_response
-from greeble.loaders import load_component_template, load_component_stylesheets
 
 from .data import INFINITE_ITEMS, STEP_CONTENT
 from .renderers import render_palette_results, render_table
@@ -194,15 +194,17 @@ def render_page(title: str, body_html: str) -> HTMLResponse:
             """
         )
     )
-    return HTMLResponse(html_tpl.substitute(
-        title=title,
-        body_html=body_html,
-        assets=head_markup(),
-        component_css=COMPONENT_CSS,
-        nav=NAV_TEMPLATE,
-        sidebar=SIDEBAR_TEMPLATE,
-        footer=FOOTER_TEMPLATE,
-    ))
+    return HTMLResponse(
+        html_tpl.substitute(
+            title=title,
+            body_html=body_html,
+            assets=head_markup(),
+            component_css=COMPONENT_CSS,
+            nav=NAV_TEMPLATE,
+            sidebar=SIDEBAR_TEMPLATE,
+            footer=FOOTER_TEMPLATE,
+        )
+    )
 
 
 @app.get("/", response_class=HTMLResponse)

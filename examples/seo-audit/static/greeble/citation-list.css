@@ -15,7 +15,7 @@
 .greeble-citation-list__count {
   font-size: 0.75rem;
   color: var(--greeble-color-muted, rgba(232, 232, 234, 0.5));
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--greeble-color-surface);
   padding: var(--greeble-spacing-1, 0.25rem) var(--greeble-spacing-2, 0.5rem);
   border-radius: 999px;
 }
@@ -35,17 +35,17 @@
 }
 
 .greeble-citation-list__scroll::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--greeble-color-border);
   border-radius: 3px;
 }
 
 .greeble-citation-list__scroll::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
+  background: var(--greeble-color-muted);
   border-radius: 3px;
 }
 
 .greeble-citation-list__scroll::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.25);
+  background: var(--greeble-color-accent);
 }
 
 /* Citation card */
@@ -54,8 +54,8 @@
   flex-direction: column;
   gap: var(--greeble-spacing-1, 0.25rem);
   padding: var(--greeble-spacing-3, 0.75rem);
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--greeble-color-background);
+  border: 1px solid var(--greeble-color-border);
   border-radius: var(--greeble-radius-medium, 12px);
 }
 

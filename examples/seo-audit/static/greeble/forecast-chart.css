@@ -49,9 +49,9 @@
   position: relative;
   aspect-ratio: 3 / 1;
   min-height: 180px;
-  background: rgba(18, 18, 27, 0.45);
+  background: var(--greeble-color-background);
   border-radius: var(--greeble-radius-medium, 12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--greeble-color-border);
   overflow: hidden;
 }
 
@@ -96,4 +96,15 @@
 
 .greeble-forecast-chart--compact .greeble-forecast-chart__header {
   display: none;
+}
+
+/* Axis labels - use appropriate colors for light and dark modes */
+.greeble-forecast-chart__x-labels,
+.greeble-forecast-chart__y-labels {
+  fill: var(--greeble-color-muted, #5a5a5a);
+}
+
+html.dark .greeble-forecast-chart__x-labels,
+html.dark .greeble-forecast-chart__y-labels {
+  fill: rgba(232, 232, 234, 0.7);
 }

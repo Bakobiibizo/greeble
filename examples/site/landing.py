@@ -629,13 +629,15 @@ $component_css
 </html>
         """
     )
-    return HTMLResponse(layout.substitute(
-        body=body_html,
-        component_css=COMPONENT_CSS,
-        nav=NAV_TEMPLATE,
-        sidebar=SIDEBAR_TEMPLATE,
-        footer=FOOTER_TEMPLATE,
-    ))
+    return HTMLResponse(
+        layout.substitute(
+            body=body_html,
+            component_css=COMPONENT_CSS,
+            nav=NAV_TEMPLATE,
+            sidebar=SIDEBAR_TEMPLATE,
+            footer=FOOTER_TEMPLATE,
+        )
+    )
 
 
 def build_sign_in_section() -> str:
@@ -871,7 +873,7 @@ def build_section_group(title: str, description: str, sections: list[str]) -> st
     """Wrap multiple demo sections in a labeled group."""
     inner = "\n".join(sections)
     return f"""
-<div class="demo-group" id="{title.lower().replace(' ', '-')}-group">
+<div class="demo-group" id="{title.lower().replace(" ", "-")}-group">
   <header class="demo-group__header">
     <h2 class="greeble-heading-1">{title}</h2>
     <p class="demo-group__description">{description}</p>
@@ -937,7 +939,9 @@ async def landing() -> HTMLResponse:
         [build_sse_section()],
     )
 
-    sections = "\n".join([auth_forms, navigation, data_display, overlays, file_media, workflows, live])
+    sections = "\n".join(
+        [auth_forms, navigation, data_display, overlays, file_media, workflows, live]
+    )
     return render_page(sections)
 
 

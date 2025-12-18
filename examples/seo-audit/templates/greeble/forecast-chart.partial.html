@@ -91,7 +91,7 @@ Variables:
       </g>
 
       <!-- Y-axis labels -->
-      <g class="greeble-forecast-chart__y-labels" fill="rgba(232,232,234,0.5)" font-size="10">
+      <g class="greeble-forecast-chart__y-labels" font-size="10">
         {% for i in range(4) %}
         {% set label_val = y_max_val - (i * y_range / 3) | int %}
         <text x="{{ chart_left - 5 }}" y="{{ chart_top + (i * chart_height / 3) | int + 4 }}" text-anchor="end">{{ label_val }}</text>
@@ -123,7 +123,7 @@ Variables:
       {% endif %}
 
       <!-- X-axis labels -->
-      <g class="greeble-forecast-chart__x-labels" fill="rgba(232,232,234,0.5)" font-size="10">
+      <g class="greeble-forecast-chart__x-labels" font-size="10">
         {% for point in data %}
         {% if loop.index0 % 2 == 0 or loop.last %}
         <text x="{{ to_x(loop.index0, data | length) }}" y="195" text-anchor="middle">{{ point.month }}</text>

@@ -1,12 +1,14 @@
 {# Audit Results Partial - Returned by /api/audit endpoint #}
 {% set location = audit.location | default({}) %}
-{% set score = audit.score | default({}) %}
+{% set score_block = audit.score | default({}) %}
 {% set forecast = audit.forecast | default([]) %}
 {% set diagnostics = audit.diagnostics | default({}) %}
 {% set citations = audit.citations | default([]) %}
 {% set insight = audit.insight | default('') %}
-{% set factors = score.factors | default([]) %}
-{% set recommendations = score.recommendations | default([]) %}
+{% set factors = score_block.factors | default([]) %}
+{% set recommendations = score_block.recommendations | default([]) %}
+{% set score = score_block.value | default(0) %}
+{% set grade = score_block.grade | default('-') %}
 
 <div class="greeble-audit-dashboard__content">
   <!-- Location header -->
@@ -53,7 +55,7 @@
         <h3 class="greeble-heading-3">AI Insight</h3>
       </header>
       <div class="greeble-audit-dashboard__card-body">
-        <p class="greeble-audit-dashboard__insight-text">{{ insight }}</p>
+        <div class="greeble-audit-dashboard__insight-text prose">{{ insight | markdown | safe }}</div>
         {% set title = '' %}
         {% include "greeble/factor-breakdown.partial.html" %}
       </div>

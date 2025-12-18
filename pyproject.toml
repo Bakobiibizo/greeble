@@ -45,7 +45,7 @@ build-backend = "hatchling.build"
 default-groups = ["dev"]
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/greeble", "src/greeble_cli]
+packages = ["src/greeble", "src/greeble_cli"]
 
 [tool.ruff]
 target-version = "py312"

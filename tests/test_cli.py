@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from importlib import metadata
 from pathlib import Path
 
 import pytest
@@ -24,6 +25,30 @@ def test_manifest_load() -> None:
     manifest = load_manifest(default_manifest_path())
     assert manifest.version >= 1
     assert "button" in manifest.components
+
+
+def test_manifest_default_path_uses_packaged_distribution(monkeypatch: pytest.MonkeyPatch) -> None:
+    class _FakeFile:
+        def __init__(self, name: str, located: Path) -> None:
+            self._name = name
+            self._located = located
+
+        def __str__(self) -> str:
+            return self._name
+
+        def locate(self) -> Path:
+            return self._located
+
+    packaged_manifest = Path("/tmp/greeble.manifest.yaml")
+
+    def _files(_: str):
+        return [
+            _FakeFile("foo.txt", Path("/tmp/foo.txt")),
+            _FakeFile("greeble.manifest.yaml", packaged_manifest),
+        ]
+
+    monkeypatch.setattr(metadata, "files", _files)
+    assert default_manifest_path() == packaged_manifest
 
 
 def test_cli_list(capsys: pytest.CaptureFixture[str]) -> None:

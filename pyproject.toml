@@ -46,6 +46,7 @@ default-groups = ["dev"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/greeble", "src/greeble_cli"]
+include = ["greeble.manifest.yaml"]
 
 [tool.ruff]
 target-version = "py312"

@@ -235,7 +235,6 @@ class GreebleCardPalette {
         const cardsEl = document.createElement('div');
         cardsEl.className = 'greeble-card-palette__cards';
         categoryEl.appendChild(cardsEl);
-
         this.container.appendChild(categoryEl);
       }
 
@@ -297,7 +296,6 @@ class GreebleCardPalette {
       const cardsEl = document.createElement('div');
       cardsEl.className = 'greeble-card-palette__cards';
       categoryEl.appendChild(cardsEl);
-
       this.container.appendChild(categoryEl);
     }
 

@@ -19,7 +19,6 @@ class GreebleStepProgress {
       '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
     })[c]);
   }
-
   constructor(selector, options = {}) {
     this.container = typeof selector === 'string'
       ? document.querySelector(selector)

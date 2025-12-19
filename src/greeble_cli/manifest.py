@@ -175,12 +175,11 @@ def default_manifest_path() -> Path:
         packaged = None
     else:
         try:
-            packaged_path = Path(packaged)
-        except TypeError:
-            packaged_path = None
-        else:
-            if packaged_path.exists():
-                return packaged_path
+            with resources.as_file(packaged) as packaged_path:
+                if packaged_path.exists():
+                    return packaged_path
+        except Exception:
+            pass
 
     try:
         dist = metadata.distribution("greeble")

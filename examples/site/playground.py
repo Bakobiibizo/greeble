@@ -5,6 +5,7 @@ An interactive theme customizer that lets developers configure and preview
 Greeble's design tokens in real-time. Inspired by modern component library
 playgrounds but designed for Python developers.
 """
+
 from __future__ import annotations
 
 import json
@@ -188,22 +189,22 @@ def build_sidebar_html() -> str:
     categories_html = []
     for category, components in COMPONENT_CATEGORIES.items():
         items = "\n".join(
-            f'''<button class="sidebar-item" data-component="{c['id']}" type="button">
-                <span class="sidebar-item__icon">{c['icon']}</span>
-                <span class="sidebar-item__name">{c['name']}</span>
+            f'''<button class="sidebar-item" data-component="{c["id"]}" type="button">
+                <span class="sidebar-item__icon">{c["icon"]}</span>
+                <span class="sidebar-item__name">{c["name"]}</span>
             </button>'''
             for c in components
         )
-        categories_html.append(f'''
+        categories_html.append(f"""
         <div class="sidebar-category">
             <h3 class="sidebar-category__title">{category}</h3>
             <div class="sidebar-category__items">
                 {items}
             </div>
         </div>
-        ''')
+        """)
 
-    return f'''
+    return f"""
     <aside class="playground-sidebar playground-sidebar--left">
         <div class="sidebar-header">
             <div class="sidebar-logo">
@@ -227,7 +228,7 @@ def build_sidebar_html() -> str:
             </a>
         </div>
     </aside>
-    '''
+    """
 
 
 def build_palette_options_html() -> str:
@@ -235,9 +236,9 @@ def build_palette_options_html() -> str:
     options = []
     for key, palette in COLOR_PALETTES.items():
         options.append(f'''
-        <button class="palette-option" data-palette="{key}" type="button" title="{palette['description']}">
-            <span class="palette-option__swatch" style="background: {palette['background']}; border: 2px solid {palette['accent']};"></span>
-            <span class="palette-option__name">{palette['name']}</span>
+        <button class="palette-option" data-palette="{key}" type="button" title="{palette["description"]}">
+            <span class="palette-option__swatch" style="background: {palette["background"]}; border: 2px solid {palette["accent"]};"></span>
+            <span class="palette-option__name">{palette["name"]}</span>
         </button>
         ''')
     return "\n".join(options)
@@ -249,8 +250,8 @@ def build_radius_options_html() -> str:
     for key, preset in RADIUS_PRESETS.items():
         options.append(f'''
         <button class="radius-option" data-radius="{key}" type="button">
-            <span class="radius-option__preview" style="border-radius: {preset['value']};"></span>
-            <span class="radius-option__name">{preset['name']}</span>
+            <span class="radius-option__preview" style="border-radius: {preset["value"]};"></span>
+            <span class="radius-option__name">{preset["name"]}</span>
         </button>
         ''')
     return "\n".join(options)
@@ -262,7 +263,7 @@ def build_shadow_options_html() -> str:
     for key, preset in SHADOW_PRESETS.items():
         options.append(f'''
         <button class="shadow-option" data-shadow="{key}" type="button">
-            <span class="shadow-option__name">{preset['name']}</span>
+            <span class="shadow-option__name">{preset["name"]}</span>
         </button>
         ''')
     return "\n".join(options)
@@ -274,7 +275,7 @@ def build_font_options_html() -> str:
     for key, preset in FONT_PRESETS.items():
         options.append(f'''
         <button class="font-option" data-font="{key}" type="button">
-            <span class="font-option__name">{preset['name']}</span>
+            <span class="font-option__name">{preset["name"]}</span>
         </button>
         ''')
     return "\n".join(options)
@@ -282,7 +283,7 @@ def build_font_options_html() -> str:
 
 def build_customizer_html() -> str:
     """Build the right sidebar with theme controls."""
-    return f'''
+    return f"""
     <aside class="playground-sidebar playground-sidebar--right">
         <div class="customizer-header">
             <h2 class="customizer-title">Theme</h2>
@@ -353,12 +354,12 @@ def build_customizer_html() -> str:
             </button>
         </div>
     </aside>
-    '''
+    """
 
 
 def build_preview_blocks_html() -> str:
     """Build the center preview area with component blocks."""
-    return '''
+    return """
     <main class="playground-main">
         <div class="preview-header">
             <h1 class="preview-title">Theme Playground</h1>
@@ -609,7 +610,7 @@ def build_preview_blocks_html() -> str:
             </div>
         </div>
     </div>
-    '''
+    """
 
 
 def build_javascript() -> str:
@@ -620,7 +621,7 @@ def build_javascript() -> str:
     font_json = json.dumps(FONT_PRESETS)
 
     # Use string.Template to avoid f-string issues with JavaScript template literals
-    js_template = Template(r'''
+    js_template = Template(r"""
     <script>
     (function() {
         const PALETTES = $palettes_json;
@@ -935,7 +936,7 @@ def build_javascript() -> str:
         });
     })();
     </script>
-    ''')
+    """)
 
     return js_template.substitute(
         palettes_json=palettes_json,
@@ -947,7 +948,7 @@ def build_javascript() -> str:
 
 def build_styles() -> str:
     """Build the custom styles for the playground."""
-    return '''
+    return """
     <style>
     /* Playground Layout */
     * { box-sizing: border-box; }
@@ -1876,13 +1877,13 @@ def build_styles() -> str:
         transform: translateX(-50%) translateY(0);
     }
     </style>
-    '''
+    """
 
 
 @app.get("/", response_class=HTMLResponse)
 async def playground() -> HTMLResponse:
     """Render the theme playground."""
-    html = Template('''
+    html = Template("""
     <!doctype html>
     <html lang="en">
     <head>
@@ -1904,7 +1905,7 @@ async def playground() -> HTMLResponse:
         $javascript
     </body>
     </html>
-    ''').substitute(
+    """).substitute(
         styles=build_styles(),
         sidebar=build_sidebar_html(),
         preview=build_preview_blocks_html(),
@@ -1916,4 +1917,5 @@ async def playground() -> HTMLResponse:
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run("examples.site.playground:app", host=str(HOST), port=int(PORT), reload=True)

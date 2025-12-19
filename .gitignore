@@ -218,4 +218,4 @@ __marimo__/
 .windsurf
 
 # UV
-uv.lock
+uv.lock\nAGENTS.md

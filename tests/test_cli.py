@@ -41,12 +41,21 @@ def test_manifest_default_path_uses_packaged_distribution(monkeypatch: pytest.Mo
 
     packaged_manifest = Path("/tmp/greeble.manifest.yaml")
 
+    repo_manifest = Path(__file__).resolve().parents[1] / "greeble.manifest.yaml"
+    original_exists = Path.exists
+
+    def _exists(path: Path) -> bool:
+        if path == repo_manifest:
+            return False
+        return original_exists(path)
+
     def _files(_: str):
         return [
             _FakeFile("foo.txt", Path("/tmp/foo.txt")),
             _FakeFile("greeble.manifest.yaml", packaged_manifest),
         ]
 
+    monkeypatch.setattr(Path, "exists", _exists)
     monkeypatch.setattr(metadata, "files", _files)
     assert default_manifest_path() == packaged_manifest
 

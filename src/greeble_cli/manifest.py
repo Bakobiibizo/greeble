@@ -169,6 +169,10 @@ def load_manifest(path: Path) -> Manifest:
 def default_manifest_path() -> Path:
     manifest_name = "greeble.manifest.yaml"
 
+    repo_manifest = Path(__file__).resolve().parents[2] / manifest_name
+    if repo_manifest.exists():
+        return repo_manifest
+
     try:
         packaged = resources.files("greeble_cli").joinpath(manifest_name)
     except Exception:
@@ -208,10 +212,17 @@ def default_manifest_path() -> Path:
                 except Exception:
                     break
 
-    resolved = Path(__file__).resolve()
-    for parent in resolved.parents:
-        candidate = parent / manifest_name
-        if candidate.exists():
-            return candidate
+    try:
+        dist = metadata.distribution("greeble")
+    except metadata.PackageNotFoundError:
+        dist = None
 
-    return resolved.parents[2] / manifest_name
+    if dist is not None:
+        try:
+            candidate = Path(str(dist.locate_file(manifest_name)))
+            if candidate.exists():
+                return candidate
+        except Exception:
+            pass
+
+    return repo_manifest

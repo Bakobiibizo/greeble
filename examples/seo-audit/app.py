@@ -67,10 +67,15 @@ try:
         if not text:
             return ""
         return markdown.markdown(str(text), extensions=["nl2br"])
-
-    templates.env.filters["markdown"] = md_filter
 except ImportError:
-    pass
+
+    def md_filter(text: str) -> str:
+        if not text:
+            return ""
+        return str(text)
+
+
+templates.env.filters["markdown"] = md_filter
 
 
 # =============================================================================

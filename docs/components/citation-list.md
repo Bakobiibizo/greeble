@@ -82,7 +82,7 @@ Add a load-more trigger at the end of the list:
 
 ## Accessibility
 
-- Links open in new tabs with `rel="noopener"`
+- Links that open in new tabs use `target="_blank"` with `rel="noopener"` for security
 - Card structure provides semantic grouping
 - Scrollable region has visible scrollbar
 

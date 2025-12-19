@@ -871,9 +871,10 @@ def build_pipeline_builder_section() -> str:
 
 def build_section_group(title: str, description: str, sections: list[str]) -> str:
     """Wrap multiple demo sections in a labeled group."""
+    slug = title.lower().replace(" ", "-")
     inner = "\n".join(sections)
     return f"""
-<div class="demo-group" id="{title.lower().replace(" ", "-")}-group">
+<div class="demo-group" id="{slug}-group">
   <header class="demo-group__header">
     <h2 class="greeble-heading-1">{title}</h2>
     <p class="demo-group__description">{description}</p>

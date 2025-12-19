@@ -12,7 +12,7 @@ import os
 from pathlib import Path
 from string import Template
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
@@ -20,7 +20,6 @@ HOST = os.getenv("HOST", "127.0.0.1")
 PORT = int(os.getenv("PORT", 8046))
 
 ROOT = Path(__file__).resolve().parents[2]
-CPTS = ROOT / "packages" / "greeble_components" / "components"
 CORE_ASSETS = ROOT / "packages" / "greeble_core" / "assets" / "css"
 SITE_STATIC = Path(__file__).parent / "static"
 
@@ -141,7 +140,6 @@ RADIUS_PRESETS = {
     "md": {"name": "Medium", "value": "8px"},
     "lg": {"name": "Large", "value": "12px"},
     "xl": {"name": "Extra Large", "value": "16px"},
-    "full": {"name": "Full", "value": "9999px"},
 }
 
 # Shadow presets
@@ -890,6 +888,48 @@ def build_javascript() -> str:
                 });
             });
 
+            // Sidebar component navigation
+            const componentBlockMap = {
+                'button': 'buttons',
+                'input': 'inputs',
+                'form-validated': 'form',
+                'file-upload': 'form',
+                'toast': 'toast',
+                'modal': 'modal',
+                'drawer': 'modal',
+                'tabs': 'tabs',
+                'dropdown': 'buttons',
+                'palette': 'form',
+                'stepper': 'tabs',
+                'table': 'table',
+                'infinite-list': 'table',
+                'draggable-card': 'card',
+                'drop-zone': 'card'
+            };
+
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const componentId = item.dataset.component;
+                    const blockId = componentBlockMap[componentId] || 'card';
+                    const block = document.querySelector(`[data-block="${blockId}"]`);
+
+                    // Remove active from all items, add to clicked
+                    document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+
+                    if (block) {
+                        block.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        // Brief highlight effect
+                        block.style.outline = '2px solid var(--greeble-color-accent)';
+                        block.style.outlineOffset = '4px';
+                        setTimeout(() => {
+                            block.style.outline = '';
+                            block.style.outlineOffset = '';
+                        }, 1500);
+                    }
+                });
+            });
+
             // Initialize
             updateCSSVariables();
         });
@@ -1051,7 +1091,7 @@ def build_styles() -> str:
     }
 
     .sidebar-item.active {
-        background: rgba(var(--greeble-color-accent), 0.1);
+        background: color-mix(in srgb, var(--greeble-color-accent) 15%, transparent);
         color: var(--greeble-color-accent);
     }
 
@@ -1339,21 +1379,22 @@ def build_styles() -> str:
 
     /* Main Preview Area */
     .playground-main {
-        padding: 2rem;
+        padding: 1.5rem;
         overflow-y: auto;
     }
 
     .preview-header {
-        margin-bottom: 2rem;
+        margin-bottom: 1.5rem;
     }
 
     .preview-title {
-        font-size: 2rem;
+        font-size: 1.5rem;
         font-weight: 700;
-        margin: 0 0 0.5rem 0;
+        margin: 0 0 0.35rem 0;
     }
 
     .preview-subtitle {
+        font-size: 0.85rem;
         color: var(--greeble-color-muted);
         margin: 0;
     }
@@ -1361,9 +1402,9 @@ def build_styles() -> str:
     /* Preview Grid */
     .preview-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-        gap: 1.5rem;
-        margin-bottom: 2rem;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.2rem;
+        margin-bottom: 1.5rem;
     }
 
     .preview-block {
@@ -1376,11 +1417,11 @@ def build_styles() -> str:
 
     .preview-block__label {
         position: absolute;
-        top: -0.6rem;
-        left: 1rem;
+        top: -0.5rem;
+        left: 0.75rem;
         background: var(--greeble-color-background);
-        padding: 0 0.4rem;
-        font-size: 0.7rem;
+        padding: 0 0.35rem;
+        font-size: 0.65rem;
         color: var(--greeble-color-muted);
         text-transform: uppercase;
         letter-spacing: 0.05em;
@@ -1391,7 +1432,7 @@ def build_styles() -> str:
         background: rgba(255, 255, 255, 0.03);
         border: 1px solid rgba(255, 255, 255, 0.08);
         border-radius: var(--greeble-radius-medium, 12px);
-        padding: 1.25rem;
+        padding: 1rem;
         box-shadow: var(--greeble-shadow-2);
     }
 
@@ -1399,18 +1440,18 @@ def build_styles() -> str:
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
-        margin-bottom: 0.75rem;
+        margin-bottom: 0.5rem;
     }
 
     .preview-card__description {
         color: var(--greeble-color-muted);
-        font-size: 0.9rem;
-        margin: 0 0 1.25rem 0;
+        font-size: 0.8rem;
+        margin: 0 0 1rem 0;
     }
 
     .preview-card__stats {
         display: flex;
-        gap: 1.5rem;
+        gap: 1.2rem;
     }
 
     .preview-stat {
@@ -1419,36 +1460,36 @@ def build_styles() -> str:
     }
 
     .preview-stat__value {
-        font-size: 1.5rem;
+        font-size: 1.2rem;
         font-weight: 700;
     }
 
     .preview-stat__label {
-        font-size: 0.75rem;
+        font-size: 0.65rem;
         color: var(--greeble-color-muted);
     }
 
     /* Form Styles */
     .preview-form__description {
         color: var(--greeble-color-muted);
-        font-size: 0.9rem;
-        margin: 0 0 1.25rem 0;
+        font-size: 0.8rem;
+        margin: 0 0 1rem 0;
     }
 
     .preview-form__fields {
         display: flex;
         flex-direction: column;
-        gap: 1rem;
+        gap: 0.75rem;
     }
 
     .form-group {
         display: flex;
         flex-direction: column;
-        gap: 0.4rem;
+        gap: 0.3rem;
     }
 
     .form-label {
-        font-size: 0.85rem;
+        font-size: 0.75rem;
         font-weight: 500;
     }
 
@@ -1463,33 +1504,33 @@ def build_styles() -> str:
         background: rgba(255, 255, 255, 0.05);
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: var(--greeble-radius-medium, 8px);
-        padding: 0.6rem 0.75rem;
+        padding: 0.4rem 0.6rem;
         color: var(--greeble-color-foreground);
         font-family: inherit;
-        font-size: 0.9rem;
+        font-size: 0.8rem;
     }
 
     .greeble-textarea {
         resize: vertical;
-        min-height: 80px;
+        min-height: 60px;
     }
 
     /* Button Styles */
     .preview-buttons__title {
-        font-size: 0.8rem;
+        font-size: 0.7rem;
         font-weight: 500;
         color: var(--greeble-color-muted);
-        margin: 0 0 0.6rem 0;
+        margin: 0 0 0.5rem 0;
     }
 
     .preview-buttons__title:not(:first-child) {
-        margin-top: 1rem;
+        margin-top: 0.75rem;
     }
 
     .button-row {
         display: flex;
         flex-wrap: wrap;
-        gap: 0.5rem;
+        gap: 0.4rem;
     }
 
     .greeble-button--secondary {
@@ -1545,14 +1586,14 @@ def build_styles() -> str:
     .preview-toasts {
         display: flex;
         flex-direction: column;
-        gap: 0.75rem;
+        gap: 0.5rem;
     }
 
     .greeble-toast {
         display: flex;
         align-items: flex-start;
-        gap: 0.75rem;
-        padding: 0.85rem 1rem;
+        gap: 0.5rem;
+        padding: 0.6rem 0.75rem;
         background: rgba(255, 255, 255, 0.08);
         border-radius: var(--greeble-radius-medium, 8px);
         border-left: 3px solid var(--greeble-color-accent);
@@ -1571,7 +1612,7 @@ def build_styles() -> str:
     }
 
     .greeble-toast__icon {
-        font-size: 1rem;
+        font-size: 0.85rem;
         line-height: 1;
     }
 
@@ -1582,12 +1623,12 @@ def build_styles() -> str:
     .greeble-toast__title {
         display: block;
         font-weight: 500;
-        font-size: 0.9rem;
-        margin-bottom: 0.2rem;
+        font-size: 0.8rem;
+        margin-bottom: 0.15rem;
     }
 
     .greeble-toast__message {
-        font-size: 0.8rem;
+        font-size: 0.7rem;
         color: var(--greeble-color-muted);
         margin: 0;
     }
@@ -1601,13 +1642,14 @@ def build_styles() -> str:
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 1rem;
+        margin-bottom: 0.75rem;
     }
 
     .greeble-input--search {
-        width: 200px;
+        width: 160px;
         background: rgba(255, 255, 255, 0.05);
-        padding: 0.4rem 0.75rem;
+        padding: 0.3rem 0.6rem;
+        font-size: 0.8rem;
     }
 
     .greeble-table {
@@ -1617,13 +1659,14 @@ def build_styles() -> str:
 
     .greeble-table th,
     .greeble-table td {
-        padding: 0.75rem;
+        padding: 0.5rem;
         text-align: left;
         border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        font-size: 0.8rem;
     }
 
     .greeble-table th {
-        font-size: 0.75rem;
+        font-size: 0.65rem;
         font-weight: 500;
         color: var(--greeble-color-muted);
         text-transform: uppercase;
@@ -1632,16 +1675,16 @@ def build_styles() -> str:
 
     .greeble-table code {
         background: rgba(255, 255, 255, 0.06);
-        padding: 0.15rem 0.4rem;
+        padding: 0.1rem 0.3rem;
         border-radius: 4px;
-        font-size: 0.85rem;
+        font-size: 0.75rem;
     }
 
     .status-badge {
         display: inline-block;
-        padding: 0.2rem 0.5rem;
+        padding: 0.15rem 0.4rem;
         border-radius: 4px;
-        font-size: 0.75rem;
+        font-size: 0.65rem;
         font-weight: 500;
     }
 
@@ -1658,18 +1701,18 @@ def build_styles() -> str:
     /* Tabs Styles */
     .greeble-tabs__list {
         display: flex;
-        gap: 0.25rem;
+        gap: 0.2rem;
         border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        margin-bottom: 1rem;
+        margin-bottom: 0.75rem;
     }
 
     .greeble-tabs__tab {
-        padding: 0.6rem 1rem;
+        padding: 0.4rem 0.75rem;
         background: none;
         border: none;
         color: var(--greeble-color-muted);
         cursor: pointer;
-        font-size: 0.875rem;
+        font-size: 0.75rem;
         border-bottom: 2px solid transparent;
         margin-bottom: -1px;
         transition: color 0.15s, border-color 0.15s;
@@ -1685,7 +1728,7 @@ def build_styles() -> str:
     }
 
     .greeble-tabs__panel {
-        font-size: 0.9rem;
+        font-size: 0.8rem;
         color: var(--greeble-color-muted);
     }
 

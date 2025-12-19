@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections.abc import Iterable
 from dataclasses import dataclass
 from importlib import metadata
+from importlib import resources
 from pathlib import Path
 
 import yaml
@@ -169,6 +170,32 @@ def default_manifest_path() -> Path:
     manifest_name = "greeble.manifest.yaml"
 
     try:
+        packaged = resources.files("greeble_cli").joinpath(manifest_name)
+    except Exception:
+        packaged = None
+    else:
+        try:
+            with resources.as_file(packaged) as packaged_path:
+                if packaged_path.exists():
+                    return packaged_path
+        except Exception:
+            pass
+
+    try:
+        dist = metadata.distribution("greeble")
+    except metadata.PackageNotFoundError:
+        dist = None
+
+    if dist is not None:
+        try:
+            candidate = Path(dist.locate_file(manifest_name))
+        except Exception:
+            candidate = None
+        else:
+            if candidate.exists():
+                return candidate
+
+    try:
         files = metadata.files("greeble")
     except metadata.PackageNotFoundError:
         files = None
@@ -181,4 +208,10 @@ def default_manifest_path() -> Path:
                 except Exception:
                     break
 
-    return Path(__file__).resolve().parents[2] / manifest_name
+    resolved = Path(__file__).resolve()
+    for parent in resolved.parents:
+        candidate = parent / manifest_name
+        if candidate.exists():
+            return candidate
+
+    return resolved.parents[2] / manifest_name

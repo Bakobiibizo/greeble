@@ -46,7 +46,7 @@ default-groups = ["dev"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/greeble", "src/greeble_cli"]
-include = ["greeble.manifest.yaml"]
+include = ["greeble.manifest.yaml", "packages/**"]
 force-include = {"greeble.manifest.yaml" = "greeble.manifest.yaml"}
 
 [tool.ruff]

@@ -1,0 +1,179 @@
+/* Audit Dashboard Component */
+.greeble-audit-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--greeble-spacing-4, 1rem);
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--greeble-spacing-4, 1rem);
+}
+
+.greeble-audit-dashboard__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--greeble-spacing-3, 0.75rem);
+}
+
+.greeble-audit-dashboard__search {
+  display: flex;
+  gap: var(--greeble-spacing-2, 0.5rem);
+}
+
+.greeble-audit-dashboard__search .greeble-input {
+  min-width: 240px;
+}
+
+/* Loading indicator */
+.greeble-audit-dashboard__loading {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: var(--greeble-spacing-2, 0.5rem);
+  padding: var(--greeble-spacing-4, 1rem);
+  color: var(--greeble-color-muted, rgba(232, 232, 234, 0.6));
+}
+
+.greeble-audit-dashboard__loading.htmx-request {
+  display: flex;
+}
+
+.greeble-audit-dashboard__spinner {
+  width: 1.5rem;
+  height: 1.5rem;
+  animation: greeble-spin 1s linear infinite;
+}
+
+@keyframes greeble-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Results container */
+.greeble-audit-dashboard__results {
+  min-height: 200px;
+}
+
+.greeble-audit-dashboard__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--greeble-spacing-4, 1rem) * 3;
+  text-align: center;
+  color: var(--greeble-color-muted, rgba(232, 232, 234, 0.6));
+}
+
+.greeble-audit-dashboard__hint {
+  font-size: 0.875rem;
+  opacity: 0.7;
+}
+
+/* Content layout */
+.greeble-audit-dashboard__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--greeble-spacing-4, 1rem);
+}
+
+.greeble-audit-dashboard__location {
+  padding-bottom: var(--greeble-spacing-3, 0.75rem);
+  border-bottom: 1px solid var(--greeble-color-border, rgba(0, 0, 0, 0.12));
+}
+
+.greeble-audit-dashboard__location-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--greeble-spacing-2, 0.5rem);
+  margin-top: var(--greeble-spacing-1, 0.25rem);
+  font-size: 0.875rem;
+  color: var(--greeble-color-muted, rgba(232, 232, 234, 0.6));
+}
+
+.greeble-audit-dashboard__domain {
+  padding: 0.125rem 0.5rem;
+  background: var(--greeble-color-surface, #f5edc8);
+  border-radius: 4px;
+  font-size: 0.75rem;
+}
+
+/* Row layout */
+.greeble-audit-dashboard__row {
+  display: grid;
+  gap: var(--greeble-spacing-4, 1rem);
+}
+
+.greeble-audit-dashboard__row--top {
+  grid-template-columns: 1fr 2fr;
+}
+
+.greeble-audit-dashboard__row--bottom {
+  grid-template-columns: 1fr 1fr;
+}
+
+/* Cards */
+.greeble-audit-dashboard__card {
+  background: var(--greeble-color-surface, #f5edc8);
+  border: 1px solid var(--greeble-color-border, rgba(0, 0, 0, 0.12));
+  border-radius: var(--greeble-radius-medium, 12px);
+  padding: var(--greeble-spacing-4, 1rem);
+}
+
+.greeble-audit-dashboard__card-header {
+  margin-bottom: var(--greeble-spacing-3, 0.75rem);
+}
+
+.greeble-audit-dashboard__card-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--greeble-spacing-3, 0.75rem);
+}
+
+.greeble-audit-dashboard__card--score .greeble-audit-dashboard__card-body {
+  align-items: center;
+}
+
+/* Recommendations list */
+.greeble-audit-dashboard__recommendations {
+  list-style: disc;
+  padding-left: var(--greeble-spacing-4, 1rem);
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--greeble-color-muted, rgba(232, 232, 234, 0.7));
+}
+
+.greeble-audit-dashboard__recommendations li {
+  margin-bottom: var(--greeble-spacing-1, 0.25rem);
+}
+
+/* Insight text */
+.greeble-audit-dashboard__insight-text {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--greeble-color-foreground, #e8e8ea);
+  margin: 0 0 var(--greeble-spacing-3, 0.75rem);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .greeble-audit-dashboard__row--top,
+  .greeble-audit-dashboard__row--bottom {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .greeble-audit-dashboard__header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .greeble-audit-dashboard__search {
+    flex-direction: column;
+  }
+
+  .greeble-audit-dashboard__search .greeble-input {
+    min-width: 100%;
+  }
+}

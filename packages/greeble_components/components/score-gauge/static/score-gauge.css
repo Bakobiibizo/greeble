@@ -1,0 +1,104 @@
+/* Score Gauge Component */
+.greeble-score-gauge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--greeble-spacing-2, 0.5rem);
+}
+
+.greeble-score-gauge__label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--greeble-color-muted, rgba(232, 232, 234, 0.7));
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.greeble-score-gauge__ring {
+  position: relative;
+  inline-size: 12rem;
+  block-size: 12rem;
+}
+
+.greeble-score-gauge__svg {
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.greeble-score-gauge__arc {
+  transition: stroke-dashoffset 0.6s ease-out, stroke 0.3s ease;
+}
+
+.greeble-score-gauge__center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.greeble-score-gauge__value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--greeble-color-foreground, #e8e8ea);
+}
+
+.greeble-score-gauge__grade {
+  font-size: 0.875rem;
+  color: var(--greeble-color-muted, rgba(232, 232, 234, 0.6));
+  margin-top: var(--greeble-spacing-1, 0.25rem);
+}
+
+/* Size variants */
+.greeble-score-gauge--small .greeble-score-gauge__ring {
+  inline-size: 8rem;
+  block-size: 8rem;
+}
+
+.greeble-score-gauge--small .greeble-score-gauge__value {
+  font-size: 1.75rem;
+}
+
+.greeble-score-gauge--small .greeble-score-gauge__grade {
+  font-size: 0.75rem;
+}
+
+.greeble-score-gauge--large .greeble-score-gauge__ring {
+  inline-size: 16rem;
+  block-size: 16rem;
+}
+
+.greeble-score-gauge--large .greeble-score-gauge__value {
+  font-size: 3.5rem;
+}
+
+.greeble-score-gauge--large .greeble-score-gauge__grade {
+  font-size: 1rem;
+}
+
+/* Color modifiers (can be set via CSS custom property or class) */
+.greeble-score-gauge--success .greeble-score-gauge__arc {
+  stroke: var(--greeble-color-success, #22c55e);
+}
+
+.greeble-score-gauge--warning .greeble-score-gauge__arc {
+  stroke: var(--greeble-color-warning, #eab308);
+}
+
+.greeble-score-gauge--danger .greeble-score-gauge__arc {
+  stroke: var(--greeble-color-danger, #ef4444);
+}
+
+/* Animation on load */
+@keyframes greeble-gauge-fill {
+  from {
+    stroke-dashoffset: 326.7;
+  }
+}
+
+.greeble-score-gauge[data-animate] .greeble-score-gauge__arc {
+  animation: greeble-gauge-fill 0.8s ease-out forwards;
+}

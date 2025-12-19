@@ -1,7 +1,9 @@
 <p align="center">
-  <img src="assets/greeble-logo-word-white.svg" alt="Greeble Logo" width="400">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/greeble-logo-word-white.svg">
+    <img src="assets/greeble-logo-word-black.svg" alt="Greeble Logo" width="400">
+  </picture>
 </p>
-
 <p align="center">
   <strong>HTML-first, HTMX-powered components for Python-first apps</strong>
 </p>

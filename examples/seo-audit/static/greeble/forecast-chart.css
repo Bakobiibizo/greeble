@@ -1,0 +1,110 @@
+/* Forecast Chart Component */
+.greeble-forecast-chart {
+  display: flex;
+  flex-direction: column;
+  gap: var(--greeble-spacing-3, 0.75rem);
+}
+
+.greeble-forecast-chart__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--greeble-spacing-2, 0.5rem);
+}
+
+.greeble-forecast-chart__legend {
+  display: flex;
+  align-items: center;
+  gap: var(--greeble-spacing-4, 1rem);
+}
+
+.greeble-forecast-chart__legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--greeble-spacing-1, 0.25rem);
+  font-size: 0.75rem;
+  color: var(--greeble-color-muted, rgba(232, 232, 234, 0.6));
+}
+
+.greeble-forecast-chart__legend-dot {
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  border-radius: 50%;
+}
+
+.greeble-forecast-chart__legend-item--min .greeble-forecast-chart__legend-dot {
+  background: #ef4444;
+}
+
+.greeble-forecast-chart__legend-item--expected .greeble-forecast-chart__legend-dot {
+  background: #22c55e;
+}
+
+.greeble-forecast-chart__legend-item--max .greeble-forecast-chart__legend-dot {
+  background: #f97316;
+}
+
+.greeble-forecast-chart__container {
+  position: relative;
+  aspect-ratio: 3 / 1;
+  min-height: 180px;
+  background: var(--greeble-color-background);
+  border-radius: var(--greeble-radius-medium, 12px);
+  border: 1px solid var(--greeble-color-border);
+  overflow: hidden;
+}
+
+.greeble-forecast-chart__svg {
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.greeble-forecast-chart__line {
+  vector-effect: non-scaling-stroke;
+}
+
+.greeble-forecast-chart__area {
+  opacity: 0.8;
+}
+
+/* Hover interaction (optional) */
+.greeble-forecast-chart__container:hover .greeble-forecast-chart__line--expected {
+  stroke-width: 3;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .greeble-forecast-chart__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .greeble-forecast-chart__legend {
+    gap: var(--greeble-spacing-2, 0.5rem);
+  }
+
+  .greeble-forecast-chart__container {
+    aspect-ratio: 2 / 1;
+  }
+}
+
+/* Compact variant */
+.greeble-forecast-chart--compact .greeble-forecast-chart__container {
+  min-height: 120px;
+}
+
+.greeble-forecast-chart--compact .greeble-forecast-chart__header {
+  display: none;
+}
+
+/* Axis labels - use appropriate colors for light and dark modes */
+.greeble-forecast-chart__x-labels,
+.greeble-forecast-chart__y-labels {
+  fill: var(--greeble-color-muted, #5a5a5a);
+}
+
+html.dark .greeble-forecast-chart__x-labels,
+html.dark .greeble-forecast-chart__y-labels {
+  fill: rgba(232, 232, 234, 0.7);
+}

@@ -1,0 +1,146 @@
+{
+  "location": {
+    "brand": "Liquid lifestyles",
+    "location": "",
+    "domain": "www.liquidlifestyles.ca"
+  },
+  "score": {
+    "value": 64,
+    "grade": "C+",
+    "factors": [
+      {
+        "key": "nap_consistency",
+        "label": "NAP Consistency",
+        "weight": 0.4,
+        "value": 1.0
+      },
+      {
+        "key": "listing_completeness",
+        "label": "Listing Completeness",
+        "weight": 0.25,
+        "value": 0.5
+      },
+      {
+        "key": "citation_coverage",
+        "label": "Citation Coverage",
+        "weight": 0.25,
+        "value": 0.25
+      },
+      {
+        "key": "visibility_hint",
+        "label": "Visibility Hint",
+        "weight": 0.1,
+        "value": 0.5
+      }
+    ],
+    "recommendations": [
+      "Build citations on missing high-value directories."
+    ]
+  },
+  "forecast": [
+    {
+      "month": "M1",
+      "min": 118,
+      "expected": 120,
+      "max": 121
+    },
+    {
+      "month": "M2",
+      "min": 124,
+      "expected": 126,
+      "max": 129
+    },
+    {
+      "month": "M3",
+      "min": 128,
+      "expected": 131,
+      "max": 134
+    },
+    {
+      "month": "M4",
+      "min": 143,
+      "expected": 148,
+      "max": 154
+    },
+    {
+      "month": "M5",
+      "min": 153,
+      "expected": 161,
+      "max": 168
+    },
+    {
+      "month": "M6",
+      "min": 154,
+      "expected": 161,
+      "max": 169
+    },
+    {
+      "month": "M7",
+      "min": 150,
+      "expected": 157,
+      "max": 164
+    },
+    {
+      "month": "M8",
+      "min": 153,
+      "expected": 160,
+      "max": 168
+    },
+    {
+      "month": "M9",
+      "min": 165,
+      "expected": 174,
+      "max": 183
+    },
+    {
+      "month": "M10",
+      "min": 194,
+      "expected": 209,
+      "max": 224
+    },
+    {
+      "month": "M11",
+      "min": 184,
+      "expected": 197,
+      "max": 210
+    },
+    {
+      "month": "M12",
+      "min": 213,
+      "expected": 231,
+      "max": 249
+    }
+  ],
+  "competitors": [],
+  "citations": [
+    {
+      "name": "liquidlifestyles.ca i6rsw9",
+      "telephone": null,
+      "address": {},
+      "url": "https://liquidlifestyles.ca/",
+      "_jsonld": true,
+      "_host": "liquidlifestyles.ca",
+      "_url": "https://liquidlifestyles.ca/"
+    },
+    {
+      "name": "Search results for Liquid lifestyles | Search | Better Business Bureau",
+      "telephone": null,
+      "address": {},
+      "url": "",
+      "_jsonld": false,
+      "_host": "bbb.org",
+      "_url": "https://www.bbb.org/search?find_text=Liquid+lifestyles",
+      "_directory": true
+    }
+  ],
+  "diagnostics": {
+    "checked_count": 2,
+    "matched_count": 2,
+    "distinct_hosts": 2,
+    "jsonld_count": 1,
+    "nap_consistency": 1.0,
+    "citation_coverage": 0.25
+  },
+  "insight": "## Liquid Lifestyles Local SEO Health:\n\nLiquid Lifestyles currently has a C+ score (64/100), indicating foundational local SEO is present but underdeveloped. The biggest issue is extremely low citation coverage (25%) \u2013 only 2 citations were found, severely limiting visibility. **Actionable recommendation:** Immediately focus on building citations on high-authority local directories like Yelp, Google My Business (if applicable), and industry-specific sites to boost local search rankings.",
+  "local_rank": null
+}

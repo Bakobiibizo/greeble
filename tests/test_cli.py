@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from importlib import metadata
 from pathlib import Path
 
 import pytest
@@ -24,6 +25,30 @@ def test_manifest_load() -> None:
     manifest = load_manifest(default_manifest_path())
     assert manifest.version >= 1
     assert "button" in manifest.components
+
+
+def test_manifest_default_path_uses_packaged_distribution(monkeypatch: pytest.MonkeyPatch) -> None:
+    class _FakeFile:
+        def __init__(self, name: str, located: Path) -> None:
+            self._name = name
+            self._located = located
+
+        def __str__(self) -> str:
+            return self._name
+
+        def locate(self) -> Path:
+            return self._located
+
+    packaged_manifest = Path("/tmp/greeble.manifest.yaml")
+
+    def _files(_: str):
+        return [
+            _FakeFile("foo.txt", Path("/tmp/foo.txt")),
+            _FakeFile("greeble.manifest.yaml", packaged_manifest),
+        ]
+
+    monkeypatch.setattr(metadata, "files", _files)
+    assert default_manifest_path() == packaged_manifest
 
 
 def test_cli_list(capsys: pytest.CaptureFixture[str]) -> None:
@@ -186,6 +211,91 @@ def test_cli_new_dry_run(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> 
     captured = capsys.readouterr()
     assert "Starter files that would be created" in captured.out
     assert "templates/greeble/modal.html" in captured.out
+
+
+def test_cli_init_baseline_assets(tmp_path: Path) -> None:
+    project_root = tmp_path / "existing"
+    exit_code = main(["init", "--project", str(project_root)])
+    assert exit_code == 0
+    assert (project_root / "static" / "greeble" / "greeble-core.css").exists()
+    assert (project_root / "static" / "greeble" / "greeble-landing.css").exists()
+    assert (project_root / "static" / "greeble" / "hyperscript" / "greeble.hyperscript").exists()
+
+
+def test_cli_init_baseline_assets_dry_run(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    project_root = tmp_path / "existing"
+    exit_code = main(["init", "--project", str(project_root), "--dry-run"])
+    assert exit_code == 0
+    assert not (project_root / "static").exists()
+
+    captured = capsys.readouterr()
+    assert "Baseline assets that would be created" in captured.out
+    assert "static/greeble/greeble-core.css" in captured.out
+    assert "static/greeble/greeble-landing.css" in captured.out
+    assert "static/greeble/hyperscript/greeble.hyperscript" in captured.out
+
+
+def test_cli_init_baseline_assets_existing_files_without_force(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    project_root = tmp_path / "existing"
+
+    existing_paths = [
+        Path("static/greeble/greeble-core.css"),
+        Path("static/greeble/greeble-landing.css"),
+        Path("static/greeble/hyperscript/greeble.hyperscript"),
+    ]
+    for rel_path in existing_paths:
+        file_path = project_root / rel_path
+        file_path.parent.mkdir(parents=True, exist_ok=True)
+        file_path.write_text("", encoding="utf-8")
+
+    exit_code = main(["init", "--project", str(project_root)])
+    assert exit_code == 2
+    captured = capsys.readouterr()
+    assert "error:" in captured.err
+    assert "already exists" in captured.err
+    assert "greeble-core.css" in captured.err
+
+
+def test_cli_add_with_init_scaffolds_baseline(tmp_path: Path) -> None:
+    project_root = tmp_path / "app_init"
+    exit_code = main(["add", "modal", "--project", str(project_root), "--init"])
+    assert exit_code == 0
+    assert (project_root / "templates" / "greeble" / "modal.html").exists()
+    assert (project_root / "static" / "greeble" / "greeble-core.css").exists()
+
+
+def test_cli_sync_with_init_scaffolds_baseline_and_respects_dry_run(tmp_path: Path) -> None:
+    project_root = tmp_path / "sync_init"
+
+    exit_code = main(["sync", "modal", "--project", str(project_root), "--init", "--dry-run"])
+    assert exit_code == 0
+    assert not (project_root / "static" / "greeble" / "greeble-core.css").exists()
+    assert not (project_root / "static" / "greeble" / "greeble-landing.css").exists()
+    assert not (
+        project_root / "static" / "greeble" / "hyperscript" / "greeble.hyperscript"
+    ).exists()
+
+    exit_code = main(["sync", "modal", "--project", str(project_root), "--init"])
+    assert exit_code == 0
+    assert (project_root / "static" / "greeble" / "greeble-core.css").exists()
+    assert (project_root / "static" / "greeble" / "greeble-landing.css").exists()
+    assert (project_root / "static" / "greeble" / "hyperscript" / "greeble.hyperscript").exists()
+
+
+def test_cli_add_with_init_requires_force_when_baseline_assets_exist(tmp_path: Path) -> None:
+    project_root = tmp_path / "idempotent_add"
+    assert main(["add", "modal", "--project", str(project_root), "--init"]) == 0
+    assert (project_root / "static" / "greeble" / "greeble-core.css").exists()
+
+    # Second run should fail without --force since baseline assets already exist
+    assert main(["add", "modal", "--project", str(project_root), "--init"]) == 2
+
+    # With --force it should succeed
+    assert main(["add", "modal", "--project", str(project_root), "--init", "--force"]) == 0
 
 
 def test_cli_theme_init_scaffolds_tailwind_config(tmp_path: Path) -> None:

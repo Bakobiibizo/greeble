@@ -1,0 +1,107 @@
+/* Metric Grid Component */
+.greeble-metric-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--greeble-spacing-3, 0.75rem);
+}
+
+.greeble-metric-grid__header {
+  margin-bottom: var(--greeble-spacing-1, 0.25rem);
+}
+
+.greeble-metric-grid__grid {
+  --metric-columns: 2;
+  display: grid;
+  grid-template-columns: repeat(var(--metric-columns), 1fr);
+  gap: var(--greeble-spacing-3, 0.75rem);
+}
+
+.greeble-metric-grid__card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--greeble-spacing-1, 0.25rem);
+  padding: var(--greeble-spacing-3, 0.75rem);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--greeble-radius-medium, 12px);
+}
+
+.greeble-metric-grid__label {
+  font-size: 0.625rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--greeble-color-muted, rgba(232, 232, 234, 0.5));
+}
+
+.greeble-metric-grid__value {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--greeble-color-foreground, #e8e8ea);
+  line-height: 1.2;
+}
+
+.greeble-metric-grid__value--success {
+  color: var(--greeble-color-success, #22c55e);
+}
+
+.greeble-metric-grid__value--warning {
+  color: var(--greeble-color-warning, #eab308);
+}
+
+.greeble-metric-grid__value--danger {
+  color: var(--greeble-color-danger, #ef4444);
+}
+
+.greeble-metric-grid__value--muted {
+  color: var(--greeble-color-muted, rgba(232, 232, 234, 0.5));
+}
+
+.greeble-metric-grid__empty {
+  grid-column: 1 / -1;
+  padding: var(--greeble-spacing-4, 1rem);
+  text-align: center;
+  color: var(--greeble-color-muted, rgba(232, 232, 234, 0.5));
+  font-size: 0.875rem;
+}
+
+/* Compact variant */
+.greeble-metric-grid--compact .greeble-metric-grid__card {
+  padding: var(--greeble-spacing-2, 0.5rem);
+}
+
+.greeble-metric-grid--compact .greeble-metric-grid__value {
+  font-size: 1.25rem;
+}
+
+/* Inline variant - horizontal cards */
+.greeble-metric-grid--inline .greeble-metric-grid__grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--greeble-spacing-2, 0.5rem);
+}
+
+.greeble-metric-grid--inline .greeble-metric-grid__card {
+  flex: 1 1 auto;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 120px;
+}
+
+.greeble-metric-grid--inline .greeble-metric-grid__value {
+  font-size: 1.125rem;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .greeble-metric-grid__grid {
+    --metric-columns: 2;
+  }
+}
+
+@media (max-width: 320px) {
+  .greeble-metric-grid__grid {
+    --metric-columns: 1;
+  }
+}

@@ -1,0 +1,136 @@
+{
+  "location": {
+    "brand": "Hook & Ladder",
+    "location": "",
+    "domain": "hldigital.ca"
+  },
+  "score": {
+    "value": 73,
+    "grade": "B",
+    "factors": [
+      {
+        "key": "nap_consistency",
+        "label": "NAP Consistency",
+        "weight": 0.4,
+        "value": 1.0
+      },
+      {
+        "key": "listing_completeness",
+        "label": "Listing Completeness",
+        "weight": 0.25,
+        "value": 1.0
+      },
+      {
+        "key": "citation_coverage",
+        "label": "Citation Coverage",
+        "weight": 0.25,
+        "value": 0.12
+      },
+      {
+        "key": "visibility_hint",
+        "label": "Visibility Hint",
+        "weight": 0.1,
+        "value": 0.5
+      }
+    ],
+    "recommendations": [
+      "Build citations on missing high-value directories."
+    ]
+  },
+  "forecast": [
+    {
+      "month": "M1",
+      "min": 121,
+      "expected": 122,
+      "max": 123
+    },
+    {
+      "month": "M2",
+      "min": 128,
+      "expected": 130,
+      "max": 132
+    },
+    {
+      "month": "M3",
+      "min": 140,
+      "expected": 145,
+      "max": 149
+    },
+    {
+      "month": "M4",
+      "min": 144,
+      "expected": 149,
+      "max": 154
+    },
+    {
+      "month": "M5",
+      "min": 145,
+      "expected": 150,
+      "max": 155
+    },
+    {
+      "month": "M6",
+      "min": 162,
+      "expected": 170,
+      "max": 178
+    },
+    {
+      "month": "M7",
+      "min": 166,
+      "expected": 175,
+      "max": 184
+    },
+    {
+      "month": "M8",
+      "min": 181,
+      "expected": 193,
+      "max": 204
+    },
+    {
+      "month": "M9",
+      "min": 187,
+      "expected": 200,
+      "max": 213
+    },
+    {
+      "month": "M10",
+      "min": 172,
+      "expected": 182,
+      "max": 192
+    },
+    {
+      "month": "M11",
+      "min": 191,
+      "expected": 204,
+      "max": 218
+    },
+    {
+      "month": "M12",
+      "min": 195,
+      "expected": 209,
+      "max": 223
+    }
+  ],
+  "competitors": [],
+  "citations": [
+    {
+      "name": "Hook + Ladder",
+      "telephone": null,
+      "address": {},
+      "url": "https://hldigital.ca",
+      "_jsonld": true,
+      "_host": "hldigital.ca",
+      "_url": "https://hldigital.ca/"
+    }
+  ],
+  "diagnostics": {
+    "checked_count": 1,
+    "matched_count": 1,
+    "distinct_hosts": 1,
+    "jsonld_count": 1,
+    "nap_consistency": 1.0,
+    "citation_coverage": 0.12
+  },
+  "insight": "## Hook & Ladder Local SEO Summary:\n\nHook & Ladder has a solid foundation with perfect NAP consistency and complete listing information where found, earning a B grade (73/100). However, citation coverage is extremely low at only 12% \u2013 meaning you're barely visible across the local web. **Immediately focus on building citations on key directories like Yelp, Google My Business (if applicable), and industry-specific sites** to significantly improve local search rankings.",
+  "local_rank": null
+}

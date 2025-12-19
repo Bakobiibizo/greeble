@@ -1,0 +1,147 @@
+{
+  "location": {
+    "brand": "Mr Mikes",
+    "location": "",
+    "domain": "mrmikes.ca"
+  },
+  "score": {
+    "value": 51,
+    "grade": "C",
+    "factors": [
+      {
+        "key": "nap_consistency",
+        "label": "NAP Consistency",
+        "weight": 0.4,
+        "value": 1.0
+      },
+      {
+        "key": "listing_completeness",
+        "label": "Listing Completeness",
+        "weight": 0.25,
+        "value": 0.0
+      },
+      {
+        "key": "citation_coverage",
+        "label": "Citation Coverage",
+        "weight": 0.25,
+        "value": 0.25
+      },
+      {
+        "key": "visibility_hint",
+        "label": "Visibility Hint",
+        "weight": 0.1,
+        "value": 0.5
+      }
+    ],
+    "recommendations": [
+      "Build citations on missing high-value directories.",
+      "Add structured data (JSON-LD) to improve visibility."
+    ]
+  },
+  "forecast": [
+    {
+      "month": "M1",
+      "min": 112,
+      "expected": 113,
+      "max": 114
+    },
+    {
+      "month": "M2",
+      "min": 121,
+      "expected": 124,
+      "max": 127
+    },
+    {
+      "month": "M3",
+      "min": 122,
+      "expected": 125,
+      "max": 128
+    },
+    {
+      "month": "M4",
+      "min": 138,
+      "expected": 144,
+      "max": 150
+    },
+    {
+      "month": "M5",
+      "min": 136,
+      "expected": 141,
+      "max": 147
+    },
+    {
+      "month": "M6",
+      "min": 138,
+      "expected": 144,
+      "max": 150
+    },
+    {
+      "month": "M7",
+      "min": 156,
+      "expected": 166,
+      "max": 175
+    },
+    {
+      "month": "M8",
+      "min": 157,
+      "expected": 166,
+      "max": 176
+    },
+    {
+      "month": "M9",
+      "min": 154,
+      "expected": 163,
+      "max": 172
+    },
+    {
+      "month": "M10",
+      "min": 184,
+      "expected": 198,
+      "max": 212
+    },
+    {
+      "month": "M11",
+      "min": 172,
+      "expected": 184,
+      "max": 196
+    },
+    {
+      "month": "M12",
+      "min": 171,
+      "expected": 183,
+      "max": 194
+    }
+  ],
+  "competitors": [],
+  "citations": [
+    {
+      "name": "MR MIKES SteakhouseCasual | Enjoy Our Premium Steaks & Casual Dining",
+      "telephone": null,
+      "address": {},
+      "url": "",
+      "_jsonld": false,
+      "_host": "mrmikes.ca",
+      "_url": "https://mrmikes.ca"
+    },
+    {
+      "name": "Search results for Mr Mikes | Search | Better Business Bureau",
+      "telephone": null,
+      "address": {},
+      "url": "",
+      "_jsonld": false,
+      "_host": "bbb.org",
+      "_url": "https://www.bbb.org/search?find_text=Mr+Mikes",
+      "_directory": true
+    }
+  ],
+  "diagnostics": {
+    "checked_count": 2,
+    "matched_count": 2,
+    "distinct_hosts": 2,
+    "jsonld_count": 0,
+    "nap_consistency": 1.0,
+    "citation_coverage": 0.25
+  },
+  "insight": "## Mr Mikes Local SEO Health - Executive Summary\n\nMr Mikes is currently performing poorly with a score of 51/100, primarily due to extremely low citation coverage (25%) and a complete lack of structured data (JSON-LD). While current citations *are* consistent, only 2 have been found \u2013 a significant limitation for local visibility. **Immediately focus on building citations on key directories like Yelp, TripAdvisor, and industry-specific sites** to dramatically increase local search rankings.",
+  "local_rank": null
+}

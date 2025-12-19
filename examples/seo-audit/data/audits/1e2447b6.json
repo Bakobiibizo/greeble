@@ -1,0 +1,146 @@
+{
+  "location": {
+    "brand": "Edo Japan",
+    "location": "",
+    "domain": "www.edojapan.com"
+  },
+  "score": {
+    "value": 64,
+    "grade": "C+",
+    "factors": [
+      {
+        "key": "nap_consistency",
+        "label": "NAP Consistency",
+        "weight": 0.4,
+        "value": 1.0
+      },
+      {
+        "key": "listing_completeness",
+        "label": "Listing Completeness",
+        "weight": 0.25,
+        "value": 0.5
+      },
+      {
+        "key": "citation_coverage",
+        "label": "Citation Coverage",
+        "weight": 0.25,
+        "value": 0.25
+      },
+      {
+        "key": "visibility_hint",
+        "label": "Visibility Hint",
+        "weight": 0.1,
+        "value": 0.5
+      }
+    ],
+    "recommendations": [
+      "Build citations on missing high-value directories."
+    ]
+  },
+  "forecast": [
+    {
+      "month": "M1",
+      "min": 117,
+      "expected": 118,
+      "max": 118
+    },
+    {
+      "month": "M2",
+      "min": 122,
+      "expected": 124,
+      "max": 126
+    },
+    {
+      "month": "M3",
+      "min": 130,
+      "expected": 133,
+      "max": 136
+    },
+    {
+      "month": "M4",
+      "min": 135,
+      "expected": 139,
+      "max": 144
+    },
+    {
+      "month": "M5",
+      "min": 144,
+      "expected": 149,
+      "max": 155
+    },
+    {
+      "month": "M6",
+      "min": 148,
+      "expected": 155,
+      "max": 162
+    },
+    {
+      "month": "M7",
+      "min": 157,
+      "expected": 165,
+      "max": 173
+    },
+    {
+      "month": "M8",
+      "min": 179,
+      "expected": 191,
+      "max": 203
+    },
+    {
+      "month": "M9",
+      "min": 177,
+      "expected": 189,
+      "max": 200
+    },
+    {
+      "month": "M10",
+      "min": 175,
+      "expected": 186,
+      "max": 197
+    },
+    {
+      "month": "M11",
+      "min": 168,
+      "expected": 178,
+      "max": 188
+    },
+    {
+      "month": "M12",
+      "min": 202,
+      "expected": 218,
+      "max": 234
+    }
+  ],
+  "competitors": [],
+  "citations": [
+    {
+      "name": "Edo Japan: Grill & Sushi",
+      "telephone": null,
+      "address": {},
+      "url": "https://edojapan.com",
+      "_jsonld": true,
+      "_host": "www.edojapan.com",
+      "_url": "https://www.edojapan.com/locations/edo-japan-park-and-tilford-north-vancouver?menu&location=Park+&+Tilford&utm_source=GMB&utm_medium=menu&utm_campaign=Store_482"
+    },
+    {
+      "name": "Search results for Edo Japan | Search | Better Business Bureau",
+      "telephone": null,
+      "address": {},
+      "url": "",
+      "_jsonld": false,
+      "_host": "bbb.org",
+      "_url": "https://www.bbb.org/search?find_text=Edo+Japan",
+      "_directory": true
+    }
+  ],
+  "diagnostics": {
+    "checked_count": 2,
+    "matched_count": 2,
+    "distinct_hosts": 2,
+    "jsonld_count": 1,
+    "nap_consistency": 1.0,
+    "citation_coverage": 0.25
+  },
+  "insight": "## Edo Japan Local SEO Health - Executive Summary\n\nEdo Japan currently has a C+ local SEO score (64/100), indicating a need for improvement, despite perfect NAP consistency. The biggest weakness is extremely low citation coverage (25%) \u2013 only 2 citations were found, limiting online visibility. **Actionable Recommendation:** Immediately focus on building citations on key directories like Yelp, Google My Business (if applicable), and relevant industry-specific sites to boost local ranking potential.",
+  "local_rank": null
+}

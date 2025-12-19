@@ -1,6 +1,10 @@
 <!-- Drop Canvas (Copy & Paste Ready)
 A drop target for building pipelines/workflows from draggable cards.
 Use with draggable-card component for complete drag-and-drop UIs.
+
+SECURITY: Ensure your backend implements CSRF protection.
+Add hx-headers with your CSRF token, e.g.:
+  hx-headers='{"X-CSRF-Token": "{{ csrf_token }}"}'
 -->
 <div class="greeble-drop-canvas" id="drop-canvas" data-greeble-drop-canvas>
   <!-- Header with actions -->

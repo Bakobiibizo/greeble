@@ -1,0 +1,147 @@
+{
+  "location": {
+    "brand": "Mucho Burrito",
+    "location": "",
+    "domain": "muchoburrito.com"
+  },
+  "score": {
+    "value": 44,
+    "grade": "D",
+    "factors": [
+      {
+        "key": "nap_consistency",
+        "label": "NAP Consistency",
+        "weight": 0.4,
+        "value": 0.5
+      },
+      {
+        "key": "listing_completeness",
+        "label": "Listing Completeness",
+        "weight": 0.25,
+        "value": 0.5
+      },
+      {
+        "key": "citation_coverage",
+        "label": "Citation Coverage",
+        "weight": 0.25,
+        "value": 0.25
+      },
+      {
+        "key": "visibility_hint",
+        "label": "Visibility Hint",
+        "weight": 0.1,
+        "value": 0.5
+      }
+    ],
+    "recommendations": [
+      "Fix NAP inconsistencies on top directories.",
+      "Build citations on missing high-value directories."
+    ]
+  },
+  "forecast": [
+    {
+      "month": "M1",
+      "min": 108,
+      "expected": 110,
+      "max": 111
+    },
+    {
+      "month": "M2",
+      "min": 113,
+      "expected": 115,
+      "max": 116
+    },
+    {
+      "month": "M3",
+      "min": 119,
+      "expected": 123,
+      "max": 126
+    },
+    {
+      "month": "M4",
+      "min": 135,
+      "expected": 141,
+      "max": 147
+    },
+    {
+      "month": "M5",
+      "min": 140,
+      "expected": 147,
+      "max": 154
+    },
+    {
+      "month": "M6",
+      "min": 145,
+      "expected": 153,
+      "max": 160
+    },
+    {
+      "month": "M7",
+      "min": 159,
+      "expected": 169,
+      "max": 179
+    },
+    {
+      "month": "M8",
+      "min": 143,
+      "expected": 151,
+      "max": 158
+    },
+    {
+      "month": "M9",
+      "min": 158,
+      "expected": 168,
+      "max": 178
+    },
+    {
+      "month": "M10",
+      "min": 153,
+      "expected": 162,
+      "max": 171
+    },
+    {
+      "month": "M11",
+      "min": 167,
+      "expected": 179,
+      "max": 191
+    },
+    {
+      "month": "M12",
+      "min": 195,
+      "expected": 212,
+      "max": 229
+    }
+  ],
+  "competitors": [],
+  "citations": [
+    {
+      "name": "itmty",
+      "telephone": null,
+      "address": {},
+      "url": "https://muchoburrito.com",
+      "_jsonld": true,
+      "_host": "muchoburrito.com",
+      "_url": "https://muchoburrito.com/"
+    },
+    {
+      "name": "Search results for Mucho Burrito | Search | Better Business Bureau",
+      "telephone": null,
+      "address": {},
+      "url": "",
+      "_jsonld": false,
+      "_host": "bbb.org",
+      "_url": "https://www.bbb.org/search?find_text=Mucho+Burrito",
+      "_directory": true
+    }
+  ],
+  "diagnostics": {
+    "checked_count": 2,
+    "matched_count": 1,
+    "distinct_hosts": 2,
+    "jsonld_count": 1,
+    "nap_consistency": 0.5,
+    "citation_coverage": 0.25
+  },
+  "insight": "## Mucho Burrito Local SEO Health - Executive Summary\n\nThis Mucho Burrito location has poor local SEO health, scoring a D (44/100) largely due to extremely limited and inconsistent citations. Only 2 citations were found, with only 50% showing consistent NAP (Name, Address, Phone number) information \u2013 a critical ranking factor. **Immediately prioritize building citations on key directories like Yelp, Google Business Profile, and Facebook, ensuring 100% NAP consistency across all listings.**",
+  "local_rank": null
+}

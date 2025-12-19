@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 from dataclasses import dataclass
+from importlib import metadata
 from pathlib import Path
 
 import yaml
@@ -165,4 +166,19 @@ def load_manifest(path: Path) -> Manifest:
 
 
 def default_manifest_path() -> Path:
-    return Path(__file__).resolve().parents[2] / "greeble.manifest.yaml"
+    manifest_name = "greeble.manifest.yaml"
+
+    try:
+        files = metadata.files("greeble")
+    except metadata.PackageNotFoundError:
+        files = None
+
+    if files:
+        for file in files:
+            if str(file).endswith(manifest_name):
+                try:
+                    return Path(file.locate())
+                except Exception:
+                    break
+
+    return Path(__file__).resolve().parents[2] / manifest_name

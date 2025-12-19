@@ -1,0 +1,251 @@
+/* Mobile Menu Component
+ * Slide-in menu with user profile and navigation
+ */
+
+.greeble-mobile-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* Backdrop */
+.greeble-mobile-menu__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  border: 0;
+  cursor: pointer;
+  animation: greeble-mobile-menu-fade-in 0.2s ease-out;
+}
+
+@keyframes greeble-mobile-menu-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Panel */
+.greeble-mobile-menu__panel {
+  position: relative;
+  width: min(20rem, 85vw);
+  height: 100%;
+  background: rgba(18, 18, 27, 0.98);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  animation: greeble-mobile-menu-slide-in 0.25s ease-out;
+}
+
+@keyframes greeble-mobile-menu-slide-in {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+/* Header */
+.greeble-mobile-menu__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.greeble-mobile-menu__title {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.greeble-mobile-menu__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  background: none;
+  border: 0;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  border-radius: 0.375rem;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.greeble-mobile-menu__close:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.greeble-mobile-menu__close:focus-visible {
+  outline: 2px solid var(--greeble-accent, #93c5fd);
+  outline-offset: 2px;
+}
+
+/* User profile */
+.greeble-mobile-menu__profile {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.25rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.greeble-mobile-menu__avatar {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(147, 197, 253, 0.2), rgba(196, 181, 253, 0.2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.greeble-mobile-menu__avatar svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.greeble-mobile-menu__user {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+}
+
+.greeble-mobile-menu__name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.greeble-mobile-menu__email {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Navigation */
+.greeble-mobile-menu__nav {
+  flex: 1;
+  padding: 0.75rem 0;
+}
+
+.greeble-mobile-menu__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.greeble-mobile-menu__item {
+  margin: 0;
+}
+
+.greeble-mobile-menu__link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.25rem;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.greeble-mobile-menu__link:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
+
+.greeble-mobile-menu__link:focus-visible {
+  outline: 2px solid var(--greeble-accent, #93c5fd);
+  outline-offset: -2px;
+}
+
+.greeble-mobile-menu__link[data-active="true"],
+.greeble-mobile-menu__link.is-active {
+  background: rgba(147, 197, 253, 0.1);
+  color: #fff;
+}
+
+.greeble-mobile-menu__icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.greeble-mobile-menu__link:hover .greeble-mobile-menu__icon,
+.greeble-mobile-menu__link[data-active="true"] .greeble-mobile-menu__icon {
+  opacity: 1;
+}
+
+/* Divider */
+.greeble-mobile-menu__divider {
+  margin: 0.5rem 1.25rem;
+  border: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Actions */
+.greeble-mobile-menu__actions {
+  padding: 0.75rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.greeble-mobile-menu__action {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem 1.25rem;
+  background: none;
+  border: 0;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  font-size: 0.95rem;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.greeble-mobile-menu__action:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
+
+.greeble-mobile-menu__action:focus-visible {
+  outline: 2px solid var(--greeble-accent, #93c5fd);
+  outline-offset: -2px;
+}
+
+.greeble-mobile-menu__action--danger {
+  color: #f87171;
+}
+
+.greeble-mobile-menu__action--danger:hover {
+  background: rgba(248, 113, 113, 0.1);
+  color: #fca5a5;
+}
+
+/* Right-side variant */
+.greeble-mobile-menu--right {
+  justify-content: flex-end;
+}
+
+.greeble-mobile-menu--right .greeble-mobile-menu__panel {
+  border-right: 0;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  animation-name: greeble-mobile-menu-slide-in-right;
+}
+
+@keyframes greeble-mobile-menu-slide-in-right {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}

@@ -1,0 +1,42 @@
+<!-- Score Gauge (Copy & Paste Ready)
+A radial gauge for displaying scores 0-100 with grade labels.
+Server-rendered SVG with configurable colors based on score thresholds.
+-->
+<div class="greeble-score-gauge" data-greeble-score-gauge>
+  <div class="greeble-score-gauge__ring">
+    <!-- SVG gauge ring - server-rendered with calculated stroke-dashoffset -->
+    <svg viewBox="0 0 120 120" class="greeble-score-gauge__svg">
+      <!-- Background track -->
+      <circle
+        cx="60"
+        cy="60"
+        r="52"
+        fill="none"
+        stroke="rgba(255, 255, 255, 0.08)"
+        stroke-width="12"
+        stroke-linecap="round"
+      />
+      <!-- Score arc - stroke-dashoffset calculated server-side -->
+      <!-- Full circumference = 2 * PI * 52 ≈ 326.7 -->
+      <!-- dashoffset = circumference * (1 - score/100) -->
+      <circle
+        cx="60"
+        cy="60"
+        r="52"
+        fill="none"
+        stroke="var(--gauge-color, #22c55e)"
+        stroke-width="12"
+        stroke-linecap="round"
+        stroke-dasharray="326.7"
+        stroke-dashoffset="163.35"
+        transform="rotate(-90 60 60)"
+        class="greeble-score-gauge__arc"
+      />
+    </svg>
+    <!-- Center content -->
+    <div class="greeble-score-gauge__center">
+      <span class="greeble-score-gauge__value">50</span>
+      <span class="greeble-score-gauge__grade">Grade C</span>
+    </div>
+  </div>
+</div>

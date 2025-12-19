@@ -1,0 +1,138 @@
+{
+  "location": {
+    "brand": "Mr. Lube",
+    "location": "",
+    "domain": "mrlube.com"
+  },
+  "score": {
+    "value": 48,
+    "grade": "D",
+    "factors": [
+      {
+        "key": "nap_consistency",
+        "label": "NAP Consistency",
+        "weight": 0.4,
+        "value": 1.0
+      },
+      {
+        "key": "listing_completeness",
+        "label": "Listing Completeness",
+        "weight": 0.25,
+        "value": 0.0
+      },
+      {
+        "key": "citation_coverage",
+        "label": "Citation Coverage",
+        "weight": 0.25,
+        "value": 0.12
+      },
+      {
+        "key": "visibility_hint",
+        "label": "Visibility Hint",
+        "weight": 0.1,
+        "value": 0.5
+      }
+    ],
+    "recommendations": [
+      "Build citations on missing high-value directories.",
+      "Add structured data (JSON-LD) to improve visibility."
+    ]
+  },
+  "forecast": [
+    {
+      "month": "M1",
+      "min": 111,
+      "expected": 112,
+      "max": 113
+    },
+    {
+      "month": "M2",
+      "min": 117,
+      "expected": 119,
+      "max": 121
+    },
+    {
+      "month": "M3",
+      "min": 121,
+      "expected": 124,
+      "max": 127
+    },
+    {
+      "month": "M4",
+      "min": 135,
+      "expected": 141,
+      "max": 147
+    },
+    {
+      "month": "M5",
+      "min": 130,
+      "expected": 134,
+      "max": 139
+    },
+    {
+      "month": "M6",
+      "min": 153,
+      "expected": 162,
+      "max": 171
+    },
+    {
+      "month": "M7",
+      "min": 161,
+      "expected": 171,
+      "max": 182
+    },
+    {
+      "month": "M8",
+      "min": 153,
+      "expected": 162,
+      "max": 171
+    },
+    {
+      "month": "M9",
+      "min": 161,
+      "expected": 171,
+      "max": 181
+    },
+    {
+      "month": "M10",
+      "min": 174,
+      "expected": 186,
+      "max": 199
+    },
+    {
+      "month": "M11",
+      "min": 161,
+      "expected": 172,
+      "max": 182
+    },
+    {
+      "month": "M12",
+      "min": 177,
+      "expected": 191,
+      "max": 204
+    }
+  ],
+  "competitors": [],
+  "citations": [
+    {
+      "name": "Search results for Mr. Lube | Search | Better Business Bureau",
+      "telephone": null,
+      "address": {},
+      "url": "",
+      "_jsonld": false,
+      "_host": "bbb.org",
+      "_url": "https://www.bbb.org/search?find_text=Mr.+Lube",
+      "_directory": true
+    }
+  ],
+  "diagnostics": {
+    "checked_count": 1,
+    "matched_count": 1,
+    "distinct_hosts": 1,
+    "jsonld_count": 0,
+    "nap_consistency": 1.0,
+    "citation_coverage": 0.12
+  },
+  "insight": "## Mr. Lube Local SEO Audit Summary:\n\nMr. Lube's local SEO is currently very weak (48/100) due to extremely limited online presence \u2013 only 1 citation was found, and it lacks crucial details like phone number and address. The biggest issue is **low citation coverage (12%)**, significantly hindering local search visibility. **Immediately focus on building citations on key directories** like Yelp, Google My Business (if not claimed/optimized), and industry-specific sites, ensuring complete and consistent NAP information on each.",
+  "local_rank": null
+}

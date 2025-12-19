@@ -1,0 +1,67 @@
+<!-- Citation List Partial (Jinja2)
+Renders a scrollable list of citation cards.
+
+Variables:
+  - title: str (optional, default "Citations")
+  - citations: list of dicts with keys:
+    - name: str (business name)
+    - url: str (source URL)
+    - telephone: str (phone number, optional)
+    - address: dict with 'raw' key or str (optional)
+    - _host: str (source domain)
+    - _jsonld: bool (has structured data)
+    - _title: str (page title, fallback for name)
+  - show_count: bool (optional, default True)
+  - max_height: str (optional, CSS value like "20rem")
+-->
+{% set title = title | default("Citations") %}
+{% set citations = citations | default([]) %}
+{% set show_count = show_count | default(True) %}
+
+<div class="greeble-citation-list" data-greeble-citation-list>
+  <header class="greeble-citation-list__header">
+    <h3 class="greeble-heading-3">{{ title }}</h3>
+    {% if show_count %}
+    <span class="greeble-citation-list__count">{{ citations | length }} source{{ 's' if citations | length != 1 else '' }}</span>
+    {% endif %}
+  </header>
+
+  <div class="greeble-citation-list__scroll" id="citation-list-scroll"
+    {% if max_height %}style="max-height: {{ max_height }};"{% endif %}>
+    {% for citation in citations %}
+    {% set display_name = citation.name or citation._title or 'Unknown' %}
+    {% set display_url = citation.url or citation._url or '' %}
+    {% set display_host = citation._host or '' %}
+    {% set display_phone = citation.telephone or '' %}
+    {% set display_address = citation.address.raw if citation.address is mapping else (citation.address or '') %}
+    {% set has_jsonld = citation._jsonld | default(false) %}
+    
+    <article class="greeble-citation-list__card">
+      <div class="greeble-citation-list__card-header">
+        <span class="greeble-citation-list__name">{{ display_name }}</span>
+        {% if has_jsonld %}
+        <span class="greeble-citation-list__badge greeble-citation-list__badge--jsonld">JSON-LD</span>
+        {% endif %}
+      </div>
+      {% if display_url %}
+      <a href="{{ display_url }}" class="greeble-citation-list__url" target="_blank" rel="noopener">
+        {{ display_url | truncate(50, True) }}
+      </a>
+      {% endif %}
+      <div class="greeble-citation-list__meta">
+        {% if display_host %}
+        <span class="greeble-citation-list__host">{{ display_host }}</span>
+        {% endif %}
+        {% if display_phone %}
+        <span class="greeble-citation-list__phone">{{ display_phone }}</span>
+        {% endif %}
+      </div>
+      {% if display_address %}
+      <div class="greeble-citation-list__address">{{ display_address }}</div>
+      {% endif %}
+    </article>
+    {% else %}
+    <div class="greeble-citation-list__empty">No citations found</div>
+    {% endfor %}
+  </div>
+</div>

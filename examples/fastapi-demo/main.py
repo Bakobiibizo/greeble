@@ -11,6 +11,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, Form, Request
 from fastapi.responses import HTMLResponse, Response, StreamingResponse
 from fastapi.templating import Jinja2Templates
+from greeble.loaders import load_component_stylesheets, load_component_template
 
 from examples.shared.assets import apply_fastapi_assets, head_markup
 from greeble.adapters.fastapi import template_response
@@ -43,12 +44,40 @@ T_PALETTE = Jinja2Templates(directory=str(CPTS / "palette" / "templates"))
 T_STEPPER = Jinja2Templates(directory=str(CPTS / "stepper" / "templates"))
 T_INF_LIST = Jinja2Templates(directory=str(CPTS / "infinite-list" / "templates"))
 
+# Load layout component templates
+NAV_TEMPLATE = load_component_template(CPTS, "nav", "nav.html")
+SIDEBAR_TEMPLATE = load_component_template(CPTS, "sidebar", "sidebar.html")
+FOOTER_TEMPLATE = load_component_template(CPTS, "footer", "footer.html")
+MOBILE_MENU_TEMPLATE = load_component_template(CPTS, "mobile-menu", "mobile-menu.html")
+
+# Load component CSS
+COMPONENT_CSS = load_component_stylesheets(
+    CPTS,
+    (
+        ("button", "button.css"),
+        ("input", "input.css"),
+        ("modal", "modal.css"),
+        ("toast", "toast.css"),
+        ("table", "table.css"),
+        ("drawer", "drawer.css"),
+        ("dropdown", "dropdown.css"),
+        ("palette", "palette.css"),
+        ("stepper", "stepper.css"),
+        ("infinite-list", "infinite-list.css"),
+        ("tabs", "tabs.css"),
+        ("nav", "nav.css"),
+        ("sidebar", "sidebar.css"),
+        ("footer", "footer.css"),
+        ("mobile-menu", "mobile-menu.css"),
+    ),
+)
+
 app = FastAPI(title="Greeble FastAPI Demo")
 apply_fastapi_assets(app)
 
 
 def render_page(title: str, body_html: str) -> HTMLResponse:
-    """Render canonical layout with shared assets and toast region."""
+    """Render canonical layout with nav, sidebar, footer, and toast region."""
 
     html_tpl = Template(
         textwrap.dedent(
@@ -58,31 +87,124 @@ def render_page(title: str, body_html: str) -> HTMLResponse:
               <head>
                 <meta charset="utf-8" />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
-                <title>$title</title>
+                <title>$title - Greeble</title>
                 $assets
+                <style>
+                  :root { color-scheme: light dark; }
+                  body { margin: 0; }
+                  .app-layout {
+                    display: flex;
+                    flex-direction: column;
+                    min-height: 100vh;
+                  }
+                  .app-layout__body {
+                    display: flex;
+                    flex: 1;
+                  }
+                  .app-layout__content {
+                    flex: 1;
+                    min-width: 0;
+                    overflow-x: hidden;
+                  }
+                  main.site-main {
+                    padding: clamp(1.5rem, 3vw, 3rem);
+                    display: grid;
+                    gap: 2.5rem;
+                    max-width: 64rem;
+                    margin: 0 auto;
+                  }
+                  section.demo {
+                    display: grid;
+                    gap: 1.25rem;
+                    padding: 1.5rem;
+                    border-radius: 0.7rem;
+                    background: rgba(255, 255, 255, 0.05);
+                    border: 1px solid rgba(255, 255, 255, 0.08);
+                    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+                  }
+                  section.demo header {
+                    display: flex;
+                    flex-direction: column;
+                    gap: .35rem;
+                  }
+                  .cluster {
+                    display: flex;
+                    gap: .75rem;
+                    flex-wrap: wrap;
+                    align-items: center;
+                  }
+                  .stack {
+                    display: grid;
+                    gap: .75rem;
+                  }
+                  #greeble-toasts {
+                    position: fixed;
+                    inset-inline-end: clamp(1rem, 2vw, 2.5rem);
+                    inset-block-start: clamp(1rem, 2vw, 2.5rem);
+                    display: grid;
+                    gap: .75rem;
+                    z-index: 999;
+                  }
+                  #modal-root {
+                    position: fixed;
+                    inset: 0;
+                    pointer-events: none;
+                    z-index: 999;
+                  }
+                  #modal-root > * { pointer-events: auto; }
+                  #drawer-root {
+                    position: fixed;
+                    inset: 0;
+                    pointer-events: none;
+                    z-index: 998;
+                  }
+                  #drawer-root > * { pointer-events: auto; }
+                  #mobile-menu-root {
+                    position: fixed;
+                    inset: 0;
+                    pointer-events: none;
+                    z-index: 200;
+                  }
+                  #mobile-menu-root > * { pointer-events: auto; }
+                  @media (max-width: 1024px) {
+                    .greeble-sidebar { display: none; }
+                  }
+                  $component_css
+                </style>
               </head>
               <body>
-                <header class="site-header">
-                  <div class="cluster">
-                    <strong>Greeble FastAPI Demo</strong>
-                    <nav class="cluster" aria-label="Demo navigation">
-                      <a href="/">Home</a>
-                    </nav>
+                <div class="app-layout">
+                  <div id="greeble-toasts" aria-live="polite" aria-atomic="false"></div>
+                  <div id="modal-root" hx-target="this"></div>
+                  <div id="drawer-root" hx-target="this"></div>
+                  <div id="mobile-menu-root"></div>
+                  $nav
+                  <div class="app-layout__body">
+                    $sidebar
+                    <div class="app-layout__content">
+                      <main class="site-main">
+                        $body_html
+                      </main>
+                    </div>
                   </div>
-                  <div class="cluster">
-                    <a class="greeble-button greeble-button--ghost" href="https://github.com/bakobiibizo/greeble">Source</a>
-                  </div>
-                </header>
-                <div id="greeble-toasts" class="greeble-toast-region" aria-live="polite" aria-label="Notifications"></div>
-                <main class="site-main">
-                  <div class="card stack">$body_html</div>
-                </main>
+                  $footer
+                </div>
               </body>
             </html>
             """
         )
     )
-    return HTMLResponse(html_tpl.substitute(title=title, body_html=body_html, assets=head_markup()))
+    return HTMLResponse(
+        html_tpl.substitute(
+            title=title,
+            body_html=body_html,
+            assets=head_markup(),
+            component_css=COMPONENT_CSS,
+            nav=NAV_TEMPLATE,
+            sidebar=SIDEBAR_TEMPLATE,
+            footer=FOOTER_TEMPLATE,
+        )
+    )
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -344,6 +466,19 @@ async def _clock_stream() -> AsyncIterator[str]:
 @app.get("/stream")
 async def sse_stream() -> StreamingResponse:
     return StreamingResponse(_clock_stream(), media_type="text/event-stream")
+
+
+# --- Mobile Menu ----------------------------------------------------------------
+
+
+@app.get("/menu/open", response_class=HTMLResponse)
+def menu_open() -> HTMLResponse:
+    return HTMLResponse(MOBILE_MENU_TEMPLATE)
+
+
+@app.get("/menu/close", response_class=HTMLResponse)
+def menu_close() -> HTMLResponse:
+    return HTMLResponse("")
 
 
 if __name__ == "__main__":

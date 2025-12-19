@@ -1,0 +1,224 @@
+/* Footer Component
+ * Page footer with multi-column links and branding
+ */
+
+.greeble-footer {
+  background: rgba(13, 13, 23, 0.8);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  margin-top: auto;
+}
+
+.greeble-footer__container {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 3rem clamp(1.5rem, 4vw, 3rem) 1.5rem;
+}
+
+/* Main content area */
+.greeble-footer__main {
+  display: grid;
+  grid-template-columns: 1.5fr 2fr;
+  gap: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Brand section */
+.greeble-footer__brand {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.greeble-footer__logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: inherit;
+  font-weight: 600;
+  font-size: 1.25rem;
+}
+
+.greeble-footer__logo:hover {
+  color: var(--greeble-accent, #93c5fd);
+}
+
+.greeble-footer__logo-icon {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.greeble-footer__logo-text {
+  background: linear-gradient(135deg, #93c5fd 0%, #c4b5fd 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.greeble-footer__tagline {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  max-width: 28ch;
+}
+
+/* Social links */
+.greeble-footer__social {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.greeble-footer__social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0.5rem;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.greeble-footer__social-link:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.greeble-footer__social-link:focus-visible {
+  outline: 2px solid var(--greeble-accent, #93c5fd);
+  outline-offset: 2px;
+}
+
+.greeble-footer__social-link svg {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+/* Link columns */
+.greeble-footer__links {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.greeble-footer__column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.greeble-footer__heading {
+  margin: 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.greeble-footer__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.greeble-footer__link {
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: color 0.15s ease;
+}
+
+.greeble-footer__link:hover {
+  color: #fff;
+}
+
+.greeble-footer__link:focus-visible {
+  outline: 2px solid var(--greeble-accent, #93c5fd);
+  outline-offset: 2px;
+}
+
+/* Bottom bar */
+.greeble-footer__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 1.5rem;
+}
+
+.greeble-footer__copyright {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.greeble-footer__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.greeble-footer__version {
+  padding: 0.125rem 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0.25rem;
+  font-family: monospace;
+}
+
+.greeble-footer__separator {
+  opacity: 0.5;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .greeble-footer__main {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .greeble-footer__links {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .greeble-footer__bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .greeble-footer__links {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Compact variant */
+.greeble-footer--compact .greeble-footer__container {
+  padding: 2rem clamp(1rem, 3vw, 2rem) 1rem;
+}
+
+.greeble-footer--compact .greeble-footer__main {
+  gap: 2rem;
+  padding-bottom: 1.5rem;
+}
+
+/* Minimal variant (just bottom bar) */
+.greeble-footer--minimal .greeble-footer__main {
+  display: none;
+}
+
+.greeble-footer--minimal .greeble-footer__bottom {
+  padding-top: 0;
+}

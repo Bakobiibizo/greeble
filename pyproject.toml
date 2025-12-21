@@ -45,8 +45,19 @@ build-backend = "hatchling.build"
 default-groups = ["dev"]
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/greeble", "src/greeble_cli"]
-include = ["greeble.manifest.yaml", "packages/**"]
+packages = [
+    "src/greeble",
+    "src/greeble_cli",
+    "packages/greeble_core",
+    "packages/greeble_hyperscript",
+]
+include = [
+    "greeble.manifest.yaml",
+    "packages/greeble_core/assets/**",
+    "packages/greeble_hyperscript/assets/**",
+    "packages/greeble_tailwind_preset/**",
+    "packages/greeble_components/**",
+]
 force-include = {"greeble.manifest.yaml" = "greeble.manifest.yaml"}
 
 [tool.ruff]

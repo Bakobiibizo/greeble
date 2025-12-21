@@ -23,6 +23,7 @@ PORT = int(os.getenv("PORT", 8046))
 ROOT = Path(__file__).resolve().parents[2]
 CORE_ASSETS = ROOT / "packages" / "greeble_core" / "assets" / "css"
 SITE_STATIC = Path(__file__).parent / "static"
+SITE_TEMPLATES = Path(__file__).parent / "templates"
 
 app = FastAPI(title="Greeble Theme Playground")
 
@@ -1883,29 +1884,9 @@ def build_styles() -> str:
 @app.get("/", response_class=HTMLResponse)
 async def playground() -> HTMLResponse:
     """Render the theme playground."""
-    html = Template("""
-    <!doctype html>
-    <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Greeble Theme Playground</title>
-        <link rel="stylesheet" href="/static/greeble/greeble-core.css">
-        <link rel="icon" href="/static/favicon.ico" sizes="any">
-        <link rel="icon" href="/static/greeble-icon-white.svg" type="image/svg+xml">
-        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-        $styles
-    </head>
-    <body>
-        <div class="playground">
-            $sidebar
-            $preview
-            $customizer
-        </div>
-        $javascript
-    </body>
-    </html>
-    """).substitute(
+    template_path = SITE_TEMPLATES / "playground.html"
+    template = Template(template_path.read_text(encoding="utf-8"))
+    html = template.substitute(
         styles=build_styles(),
         sidebar=build_sidebar_html(),
         preview=build_preview_blocks_html(),

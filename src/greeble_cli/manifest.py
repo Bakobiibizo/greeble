@@ -165,11 +165,19 @@ def load_manifest(path: Path) -> Manifest:
     )
 
 
+def _repo_manifest_candidate(manifest_name: str) -> Path:
+    return Path(__file__).resolve().parents[2] / manifest_name
+
+
+def _repo_manifest_exists(path: Path) -> bool:
+    return path.exists()
+
+
 def default_manifest_path() -> Path:
     manifest_name = "greeble.manifest.yaml"
 
-    repo_manifest = Path(__file__).resolve().parents[2] / manifest_name
-    if repo_manifest.exists():
+    repo_manifest = _repo_manifest_candidate(manifest_name)
+    if _repo_manifest_exists(repo_manifest):
         return repo_manifest
 
     try:
@@ -197,5 +205,11 @@ def default_manifest_path() -> Path:
                 return candidate
         except Exception:
             pass
+
+    resolved = Path(__file__).resolve()
+    for parent in resolved.parents:
+        candidate = parent / manifest_name
+        if candidate.exists():
+            return candidate
 
     return repo_manifest

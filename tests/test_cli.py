@@ -28,6 +28,8 @@ def test_manifest_load() -> None:
 
 
 def test_manifest_default_path_uses_packaged_distribution(monkeypatch: pytest.MonkeyPatch) -> None:
+    from greeble_cli import manifest as manifest_mod
+
     class _FakeFile:
         def __init__(self, name: str, located: Path) -> None:
             self._name = name
@@ -41,13 +43,8 @@ def test_manifest_default_path_uses_packaged_distribution(monkeypatch: pytest.Mo
 
     packaged_manifest = Path("/tmp/greeble.manifest.yaml")
 
-    repo_manifest = Path(__file__).resolve().parents[1] / "greeble.manifest.yaml"
-    original_exists = Path.exists
-
-    def _exists(path: Path) -> bool:
-        if path == repo_manifest:
-            return False
-        return original_exists(path)
+    def _repo_manifest_exists(_: Path) -> bool:
+        return False
 
     def _files(_: str):
         return [
@@ -55,7 +52,7 @@ def test_manifest_default_path_uses_packaged_distribution(monkeypatch: pytest.Mo
             _FakeFile("greeble.manifest.yaml", packaged_manifest),
         ]
 
-    monkeypatch.setattr(Path, "exists", _exists)
+    monkeypatch.setattr(manifest_mod, "_repo_manifest_exists", _repo_manifest_exists)
     monkeypatch.setattr(metadata, "files", _files)
     assert default_manifest_path() == packaged_manifest
 

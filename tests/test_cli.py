@@ -44,8 +44,16 @@ def test_manifest_default_path_uses_packaged_distribution(monkeypatch: pytest.Mo
     repo_manifest = Path(__file__).resolve().parents[1] / "greeble.manifest.yaml"
     original_exists = Path.exists
 
+    bundled_manifest = (
+        Path(__file__).resolve().parents[1]
+        / "src"
+        / "greeble_cli"
+        / "data"
+        / "greeble.manifest.yaml"
+    )
+
     def _exists(path: Path) -> bool:
-        if path == repo_manifest:
+        if path in {repo_manifest, bundled_manifest}:
             return False
         return original_exists(path)
 

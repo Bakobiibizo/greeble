@@ -172,6 +172,13 @@ def default_manifest_path() -> Path:
     if repo_manifest.exists():
         return repo_manifest
 
+    # Wheels keep the manifest and every source it references together.  This
+    # makes ``greeble add`` work after a normal PyPI install, rather than only
+    # from a repository checkout.
+    bundled_manifest = Path(__file__).resolve().parent / "data" / manifest_name
+    if bundled_manifest.exists():
+        return bundled_manifest
+
     try:
         files = metadata.files("greeble")
     except metadata.PackageNotFoundError:

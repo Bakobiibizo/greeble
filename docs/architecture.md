@@ -393,7 +393,7 @@ library:
     - greeble-django
     - greeble-fastapi
     - greeble-flask
-  tokens_file: "static/greeble/greeble-core.css"
+  tokens_file: "packages/greeble_core/assets/css/greeble-core.css"
   docs_site: "docs/site"
 
 components:

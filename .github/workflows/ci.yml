@@ -40,12 +40,18 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
     if: >
       github.event_name == 'push' ||
       (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: ${{ matrix.python-version }}
       - name: Pytest
         run: uv run pytest
 
@@ -61,3 +67,10 @@ jobs:
       - uses: astral-sh/setup-uv@v5
       - name: Build package
         run: uv build
+      - name: Verify installed wheel contains component sources
+        run: |
+          uv venv --python 3.12 .wheel-venv
+          uv pip install --python .wheel-venv/bin/python dist/*.whl
+          tmpdir="$(mktemp -d)"
+          .wheel-venv/bin/greeble add modal --project "$tmpdir"
+          test -f "$tmpdir/templates/greeble/modal.html"

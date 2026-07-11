@@ -1,3 +1,13 @@
+# Changelog
+
+## 0.4.0 - 2026-07-11
+
+- Ship the complete component, documentation, and theme source catalog in wheels so CLI add/sync
+  operations work outside a repository checkout.
+- Move framework integrations to optional extras and remove test tooling from runtime dependencies.
+- Support Python 3.10 through 3.13 and validate that matrix in CI.
+- Add package metadata and an installed-wheel CLI smoke test.
+
 ## [0.1.4] - 2025-09-29
 
 ### other
@@ -89,8 +99,6 @@
 - finished the components and added a cli (9033f36)
 - finished component implementation and landing demo (d4962d3)
 - style(modal): implement modal component styles using core tokens (2b8f474)
-
-# Changelog
 
 ## [0.0.3] - 2025-09-20
 
@@ -300,4 +308,3 @@
 - Merge pull request #7 from Bakobiibizo/feat/tailwind-theme-init
 - feat(cli): theme init --force flag; guard overwrites for preset and config; use f-string for require_path
 - feat(cli): add Please ask your administrator. to scaffold Tailwind config and copy preset
-

@@ -20,7 +20,7 @@ def build_tabs_app() -> FastAPI:
 
     @app.get("/", response_class=HTMLResponse)
     def home(request: Request) -> Response:
-        return templates.TemplateResponse("tabs.html", {"request": request})
+        return templates.TemplateResponse(request, "tabs.html")
 
     @app.get("/tabs/{tabKey}", response_class=HTMLResponse)
     def tab_partial(tabKey: str) -> HTMLResponse:

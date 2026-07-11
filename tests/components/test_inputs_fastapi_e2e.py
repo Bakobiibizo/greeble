@@ -20,7 +20,7 @@ def build_inputs_app() -> FastAPI:
 
     @app.get("/", response_class=HTMLResponse)
     def home(request: Request) -> HTMLResponse:
-        return templates.TemplateResponse("input.html", {"request": request})
+        return templates.TemplateResponse(request, "input.html")
 
     @app.post("/input/validate", response_class=HTMLResponse)
     def validate(value: str = Form("")) -> HTMLResponse:

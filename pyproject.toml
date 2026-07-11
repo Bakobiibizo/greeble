@@ -1,14 +1,36 @@
 [project]
 name = "greeble"
-version = "0.3.0"
+version = "0.4.0"
 description = "HTML-first component library that delivers copy and paste snippets powered by HTMX for rapid UI construction"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [{ name = "Bakobiibizo" }]
+keywords = ["htmx", "components", "fastapi", "django", "flask", "accessibility"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+]
 dependencies = [
-    "dotenv>=0.9.9",
-    "pytest>=8.4.2",
     "PyYAML>=6.0",
 ]
+
+[project.optional-dependencies]
+fastapi = ["fastapi>=0.110", "jinja2>=3.1.2"]
+django = ["Django>=4.2"]
+flask = ["Flask>=3.0"]
+
+[project.urls]
+Homepage = "https://github.com/Bakobiibizo/greeble"
+Documentation = "https://bakobiibizo.github.io/greeble/"
+Issues = "https://github.com/Bakobiibizo/greeble/issues"
 
 [dependency-groups]
 dev = [
@@ -46,8 +68,11 @@ default-groups = ["dev"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/greeble", "src/greeble_cli"]
-include = ["greeble.manifest.yaml", "packages/**"]
-force-include = {"greeble.manifest.yaml" = "greeble.manifest.yaml"}
+
+[tool.hatch.build.targets.wheel.force-include]
+"greeble.manifest.yaml" = "greeble_cli/data/greeble.manifest.yaml"
+"packages" = "greeble_cli/data/packages"
+"docs/components" = "greeble_cli/data/docs/components"
 
 [tool.ruff]
 target-version = "py312"

@@ -37,9 +37,11 @@ It is not connected to anything so it will not send emails or sign you up for an
 
 ## Quick start
 
-1. **Install the package** (PyPI release coming soon). Until then, install from the repo:
+1. **Install the package** from PyPI or directly from the repository:
 
    ```bash
+   pip install greeble
+   # latest development version
    pip install git+https://github.com/bakobiibizo/greeble.git
    # or locally
    pip install -e .
@@ -161,8 +163,8 @@ for modals, drawers, tab content, table pagination, infinite lists, and toast qu
 
 - `greeble.adapters.fastapi` – HTMX-aware helpers for partial detection, HX trigger headers, and
   template rendering.
-- Placeholders exist for Django and Flask adapters; contributions are welcome to bring those to
-  parity with the FastAPI implementation.
+- Django and Flask adapters provide the same partial-detection and response-header primitives as
+  the FastAPI adapter, with framework-specific template and CSRF integration.
 - See [docs/adapters.md](docs/adapters.md) for quick-start patterns with the CLI.
 
 ## Repository layout
